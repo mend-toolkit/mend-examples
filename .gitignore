@@ -1,0 +1,23 @@
+# Excluded IDE Directories
+.idea/
+.vs/
+.vscode/
+.ws/
+.mend/
+
+# Excluded Local/User Directories
+_archive/
+_misc/
+_resources/
+local/
+log/
+target/
+
+# Excluded Files - Extensions
+*.iml
+*.png
+*.tar.gz
+*.url
+
+# Excluded Files - Naming Convention
+local-env.*

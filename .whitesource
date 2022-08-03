@@ -1,0 +1,31 @@
+{
+    "scanSettings": {
+        "configMode": "AUTO",
+        "configExternalURL": "",
+        "projectToken": "",
+        "baseBranches": [],
+        "enableLicenseViolations": true,
+        "enableIaC": true,
+        "enableSAST": true
+    },
+    "checkRunSettings": {
+        "vulnerableCheckRunConclusionLevel": "failure",
+        "licenseCheckRunConclusionLevel": "failure",
+        "iacCheckRunConclusionLevel": "failure",
+        "displayMode": "diff",
+        "showWsInfo": true,
+        "useMendCheckNames": true
+    },
+    "issueSettings": {
+        "minSeverityLevel": "LOW",
+        "displayLicenseViolations": true,
+        "issueType": "VULNERABILITY"
+    },
+    "remediateSettings": {
+        "enableRenovate": true,
+        "workflowRules": {
+            "enabled": true,
+            "minVulnerabilitySeverity": "LOW"
+        }
+    }
+}
