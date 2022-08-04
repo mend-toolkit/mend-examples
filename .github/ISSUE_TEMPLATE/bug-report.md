@@ -1,7 +1,7 @@
 ---
 name: Bug Report
 about: Create a report to help us improve
-title: "[BUG] [mend-tool-name] Issue Short Description"
+title: "[BUG] [mend-examples] Issue Short Description"
 labels: bug
 assignees: ''
 

@@ -1,0 +1,85 @@
+name: WhiteSource scan and SPDX report 
+
+on: 
+  push:
+    branches: []
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+
+      - name: Build with Maven
+        run: mvn clean install -DskipTests=true
+
+      - name: WhiteSource Unified Agent Scan
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          WS_APIKEY: ${{secrets.APIKEY}}
+          WS_USERKEY: ${{secrets.USERKEY}}
+          WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+          WS_PRODUCTNAME: GH_${{github.event.repository.name}}
+          WS_PROJECTNAME: ${{github.ref}}_SPDX_report
+          WS_GENERATEPROJECTDETAILSJSON: true
+        run: |
+          curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+          echo Unified Agent downloaded successfully
+          if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
+          echo "Integrity Check Failed"
+          else
+              echo "Integrity Check Passed"
+              echo "Starting WhiteSource Scan"
+          fi
+          java -jar wss-unified-agent.jar -d ./
+
+      - name: Generate WhiteSource SPDX Report
+        env:
+          WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+        run: |
+            export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
+            echo WS_PROJECTTOKEN: $WS_PROJECTTOKEN
+            export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
+            echo WS_URL: $WS_URL
+            echo === Installing WhiteSource SBOM Generator ===
+            pip  install ws_sbom_generator
+            echo === Checking Project State before generating SBOM ===
+            IFS="|"
+            scan_status=true
+            pass_status=("UPDATE"${IFS}"FINISH"${IFS}"DIFF")
+            fail_status=("UNKNOWN"${IFS}"FAIL")
+            while $scan_status
+            do
+              new_status=$(curl -s -X POST -H "Content-Type: application/json" -d '{"requestType":"getProjectState", "userKey": "'$WS_USERKEY'", "projectToken":"'$WS_PROJECTTOKEN'"}' $WS_URL/api/v1.3 | jq '.projectState|.lastProcess' | tr -d '"')
+              if [[ "${IFS}${pass_status[*]}${IFS}" =~ "${IFS}${new_status}${IFS}" ]];
+              then
+                      scan_status=false
+                      echo "Project information has been uploaded successfully!"
+              else
+                      echo "Scan is still processing..."
+                      sleep 10
+              fi
+              if [[ "${IFS}${fail_status[*]}${IFS}" =~ "${IFS}${new_status}${IFS}" ]];
+              then
+                      echo "Scan failed to upload...exiting program"
+                      exit 1
+              fi
+            done
+            unset IFS
+            echo === Generating SBOM ===
+            ws_sbom_generator -u ${{secrets.USERKEY}} -k ${{secrets.APIKEY}} -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ./whitesource-spdx
+
+      - name: Publish WhiteSource SPDX Report
+        uses: actions/upload-artifact@master
+        with:
+           name: WhiteSource SPDX report
+           path: ${{github.workspace}}/whitesource-spdx
+

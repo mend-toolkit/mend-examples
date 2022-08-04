@@ -1,0 +1,45 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '12.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install --only=prod
+  displayName: 'npm install'
+  
+- script: |
+    curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+    echo Unified Agent downloaded successfully
+    if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
+    echo "Integrity Check Failed"
+    else
+        echo "Integrity Check Passed"
+        echo "Starting WhiteSource Scan"
+    fi
+    java -jar wss-unified-agent.jar -appPath ./package.json -d ./
+    
+  env:
+    WS_APIKEY: $(APIKEY)
+    WS_USERKEY: $(USERKEY)
+    WS_WSS_URL: $(WSS_URL)
+    WS_PRODUCTNAME: AZDO_$(System.TeamProject)
+    WS_PROJECTNAME: $(Build.Repository.Name)_$(Build.SourceBranchName)_Prioritize
+    WS_ENABLEIMPACTANALYSIS: true
+    WS_RESOLVEALLDEPENDENCIES: false
+    WS_FILESYSTEMSCAN: false
+    WS_NPM_RESOLVEDEPENDENCIES: true
+    WS_NPM_RESOLVELOCKFILE: false
+    
+  displayName: 'Unified Agent Prioritize Scan'

@@ -1,0 +1,36 @@
+trigger:
+- release*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - Name: 'buildConfiguration'
+    value: 'Release'
+
+steps:
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+
+- script: |
+    curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+    echo Unified Agent downloaded successfully
+    CSPROJ=$(basename $(find ./src -type f -wholename "*.csproj" ! -wholename "*build*" ! -wholename "*test*") .csproj)
+    DLL=$(find ./ -type f -wholename "*/bin/$(buildConfiguration)/*/$CSPROJ.dll" ! -wholename "*build*" ! -wholename "*test*")
+    echo $DLL will be added to appPath
+    java -jar wss-unified-agent.jar -appPath $DLL -d $PWD/src
+  env:
+    WS_APIKEY: $(WS_APIKEY)
+    WS_USERKEY: $(WS_USERKEY)
+    WS_WSS_URL: https://app.whitesourcesoftware.com/agent
+    WS_PRODUCTNAME: AZ_$(System.TeamProject)
+    WS_PROJECTNAME: $(Build.Repository.Name)_$(Build.SourceBranchName)_Prioritize
+    WS_ENABLEIMPACTANALYSIS: true
+    WS_RESOLVEALLDEPENDENCIES: false
+    WS_NUGET_RESOLVEDEPENDENCIES: true
+    WS_NUGET_RUNPRESTEP: true
+    WS_FILESYSTEMSCAN: false
+    WS_GENERATEPROJECTDETAILSJSON: true
+    WS_EXCLUDES: '**/build/** **/tests/**'
+  displayName: 'Unified Agent Prioritize Scan'
+  

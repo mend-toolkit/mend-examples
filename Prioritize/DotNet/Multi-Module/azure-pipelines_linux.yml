@@ -1,0 +1,35 @@
+trigger:
+- release*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  group: 'WhiteSource Keys'
+  buildConfiguration: 'Release'
+
+steps:
+
+- script: ./build.sh
+  displayName: 'Build DotNET projects'
+
+- script: |
+    curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+    echo Unified Agent downloaded successfully
+    curl -LJO https://raw.githubusercontent.com/whitesource-ft/xModuleAnalyzer-NET/main/xModuleAnalyzer-NET.sh
+    echo xModuleAnalyzer-NET downloaded successfully
+    chmod +x ./xModuleAnalyzer-NET.sh && ./xModuleAnalyzer-NET.sh
+  env:
+    WS_APIKEY: $(APIKEY)
+    WS_USERKEY: $(USERKEY)
+    WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+    WS_PRODUCTNAME: AZ_$(System.TeamProject)
+    WS_ENABLEIMPACTANALYSIS: true
+    WS_RESOLVEALLDEPENDENCIES: false
+    WS_NUGET_RESOLVEDEPENDENCIES: true
+    WS_NUGET_RUNPRESTEP: true
+    WS_FILESYSTEMSCAN: false
+    WS_GENERATEPROJECTDETAILSJSON: true
+    WS_EXCLUDES: '**/build/** **/tests/**'
+  displayName: 'Unified Agent Prioritize Scan'
+  

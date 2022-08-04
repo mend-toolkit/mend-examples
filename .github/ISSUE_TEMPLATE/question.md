@@ -1,7 +1,7 @@
 ---
 name: Question
 about: General question/how-to
-title: "[Question] [mend-tool-name] Question Topic"
+title: "[Question] [mend-examples] Question Topic"
 labels: question
 assignees: ''
 

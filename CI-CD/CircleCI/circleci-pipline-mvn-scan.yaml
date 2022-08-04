@@ -1,0 +1,31 @@
+version: 2
+executorType: machine
+jobs:
+  build-and-scan:
+    docker:
+      - image: circleci/openjdk:8u171-jdk
+    working_directory: ~/repo
+    environment:
+      MAVEN_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - run:
+          name: maven install
+          command: mvn clean install -DskipTests
+      # Execute WhiteSource scan, curling the latest unified agent. Remeber to set environment variables (api key, url, project name and product name, they need to be upper case too)
+      # WS_APIKEY
+      # WS_WSS_URL
+      # WS_PRODUCTNAME
+      # WS_PROJECTNAME
+      - run: 
+          name: Download WhiteSource
+          command: bash <(curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar)
+      - run:
+          name: Run WhiteSource
+          command: java -jar wss-unified-agent.jar
+workflows:
+  version: 2
+  WS-scan:
+    jobs:
+      - build-and-scan
+    

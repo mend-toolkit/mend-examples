@@ -1,27 +1,26 @@
 ![Logo](https://resources.mend.io/mend-sig/logo/mend-dark-logo-horizontal.png)  
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
-[![GitHub release](https://img.shields.io/github/release/mend-toolkit/mend-template.svg)](https://github.com/mend-toolkit/mend-template/releases/latest)  
+# Mend Examples
+This repository contains examples of different ways to scan open source component using the [Unified Agent](https://docs.mend.io/bundle/unified_agent/page/overview_of_the_unified_agent.html)
 
-# Mend Tool Name
-Tool description  
+<br>
 
-## Supported Operating Systems
-- **Linux (Bash):**	CentOS, Debian, Ubuntu, RedHat
-- **Windows (PowerShell):**	10, 2012, 2016
+If you can't find something, use search to [search in this repository](https://docs.github.com/en/search-github/getting-started-with-searching-on-github/about-searching-on-github)
 
-## Prerequisites
-Prerequisite list  
+<br>
 
-## Installation
-1. Download **ws-tool-name** to your computer
-1. Edit the file **filename** and add:  
-    `this text`  
+## Example SCM Integration Configs
 
-## Execution
-Execution instructions:  
-  - **Bash:**  
-  `:~/dirname$ [sudo] ./mend-tool-name.sh` (requires setting the file as executable using `chmod +x filename`)  
-  - **PowerShell:**  
-  `PS C:\dirname> mend-tool-name.ps1`  
-  
+* [.whitesource](https://github.com/whitesource-ft/ws-examples/blob/main/.whitesource)
+* [Unified Agent Config](https://github.com/whitesource-ft/ws-examples/blob/main/whitesource.config) - contains SCM integration default settings
+
+## [CI-CD by Pipeline](CI-CD)
+
+## [Generic by Use Case](Generic)
+
+## [Prioritize Scans by Language](Prioritize)
+
+## [Scripts](Scripts)
+
+## [SAST](SAST)

@@ -1,0 +1,40 @@
+name: 'whitesource-ua-azdo-maven'
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'clean install'
+    mavenOptions: -DskipTests=true
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+
+- script: |
+      echo Downloading WhiteSource Unified Agent
+      curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+
+      if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
+        echo "Integrity Check Failed"
+      else
+        echo "Integrity Check Passed"
+        echo Starting WhiteSource Scan
+        java -jar wss-unified-agent.jar
+      fi
+  env:
+    WS_APIKEY: $(APIKEY)
+    WS_USERKEY: $(USERKEY)
+    WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+    WS_PRODUCTNAME: AZDO_$(System.TeamProject)
+    WS_PROJECTNAME: $(Build.Repository.Name)_$(Build.SourceBranchName)
+  displayName: 'WhiteSource Scan'

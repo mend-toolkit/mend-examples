@@ -1,0 +1,54 @@
+name: WhiteSource Prioritize Scala with SBT & Maven
+
+on:
+  push:
+    branches: [ release* ]
+  pull_request:
+    branches: [ release* ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'adopt'
+    - name: SBT Package
+      run: |
+        sbt package
+        sbt makePom
+        mv $(find ./ -type f -wholename "*/target/*.pom") ./pom.xml
+        mvn clean install -DskipTests=true
+
+    - name: WhiteSource Unified Agent Scan
+      continue-on-error: true
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        WS_APIKEY: ${{secrets.APIKEY}}
+        WS_USERKEY: ${{secrets.USERKEY}}
+        WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+        WS_PRODUCTNAME: GH_${{github.event.repository.name}}
+        WS_PROJECTNAME: ${{github.ref}}_Prioritize
+        WS_ENABLEIMPACTANALYSIS: true
+        WS_RESOLVEALLDEPENDENCIES: false
+        WS_MAVEN_RESOLVEDEPENDENCIES: true
+        WS_MAVEN_AGGREGATEMODULES: true
+        WS_FILESYSTEMSCAN: false
+        WS_GENERATEPROJECTDETAILSJSON: true
+      run: |
+        curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+        echo Unified Agent downloaded successfully
+        if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
+        echo "Integrity Check Failed"
+        else
+            echo "Integrity Check Passed"
+            echo "Starting WhiteSource Scan"
+        fi
+        JARFILE=$(find ./ -type f -wholename "*/target/*.jar")
+        echo $JARFILE will be added to appPath
+        java -jar wss-unified-agent.jar -appPath $JARFILE -d ./

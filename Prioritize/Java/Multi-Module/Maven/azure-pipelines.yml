@@ -1,0 +1,45 @@
+trigger:
+- release*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'clean install'
+    mavenOptions: -DskipTests=true
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+- task: CmdLine@2
+  inputs:
+    script: |
+      cat <<EOF > eua.config
+      apiKey=$(APIKEY)
+      userKey=$(USERKEY)
+      wss.url=https://saas.whitesourcesoftware.com/agent
+      productName=$(System.TeamProject)
+      projectName=$(Build.Repository.Name)_$(Build.SourceBranchName)_Prioritize
+      enableImpactAnalysis=true
+      resolveAllDependencies=false
+      maven.resolveDependencies=true
+      maven.aggregateModules=true
+      fileSystemScan=false
+      generateProjectDetailsJson=true
+      EOF
+      cat eua.config
+- task: CmdLine@2
+  inputs:
+    script: |
+      curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+      curl -LJO https://unified-agent.s3.amazonaws.com/xModuleAnalyzer/xModuleAnalyzer.jar
+      java -jar wss-unified-agent.jar -d $PWD -analyzeMultiModuleExclusions '**/*internal* **/*original* **/*sources.jar' -analyzeMultiModule multimodule.txt
+      echo 'multimodule.txt contents'
+      cat multimodule.txt
+      java -jar xModuleAnalyzer.jar -xModulePath multimodule.txt -fsaJarPath ./wss-unified-agent.jar -c ./eua.config -aggregateModules true

@@ -1,0 +1,39 @@
+name: 'whitesource-ua-azdo-gradle'
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Gradle@2
+  inputs:
+    workingDirectory: ''
+    gradleWrapperFile: 'gradlew'
+    gradleOptions: '-Xmx3072m'
+    publishJUnitResults: false
+    testResultsFiles: '**/TEST-*.xml'
+    tasks: 'build'
+
+- script: |
+      echo Downloading WhiteSource Unified Agent
+      curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+      if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
+        echo "Integrity Check Failed"
+      else
+        echo "Integrity Check Passed"
+        echo Starting WhiteSource Scan
+        java -jar wss-unified-agent.jar
+      fi
+  env:
+    WS_APIKEY: $(APIKEY)
+    WS_USERKEY: $(USERKEY)
+    WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+    WS_PRODUCTNAME: AZDO_$(System.TeamProject)
+    WS_PROJECTNAME: $(Build.Repository.Name)_$(Build.SourceBranchName)
+    WS_RESOLVEALLDEPENDENCIES: false
+    WS_FILESYSTEMSCAN: false
+    WS_GRADLE_RESOLVEDEPENDENCIES: true
+    WS_GRADLE_AGGREGATEMODULES: true
+  displayName: 'WhiteSource Scan'

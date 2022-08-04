@@ -1,0 +1,61 @@
+# replace .war with .ear or the following for WARFILE if needed
+# JARFILE=$(find ./build/libs -type f -wholename "*.jar" ! -wholename "*javadoc*" ! -wholename "*groovydoc*" ! -wholename "*sources*")
+name: Whitesource Prioritize Java with Gradle
+
+on:
+  push:
+    branches: [ release* ]
+  pull_request:
+    branches: [ release* ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'adopt'
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew build -x test
+    - name: WhiteSource Unified Agent Scan
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        WS_APIKEY: ${{secrets.APIKEY}}
+        WS_USERKEY: ${{secrets.USERKEY}}
+        WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+        WS_PRODUCTNAME: GH_${{github.event.repository.name}}
+        WS_PROJECTNAME: ${{github.ref}}_Prioritize
+        WS_ENABLEIMPACTANALYSIS: true
+        WS_RESOLVEALLDEPENDENCIES: false
+        WS_GRADLE_RESOLVEDEPENDENCIES: true
+        WS_GRADLE_AGGREGATEMODULES: true
+        WS_FILESYSTEMSCAN: false
+        WS_GENERATEPROJECTDETAILSJSON: true
+      run: |
+        curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+        echo Unified Agent downloaded successfully
+        if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
+          echo "Integrity Check Failed"
+        else
+          echo "Integrity Check Passed"
+        WARFILE=$(find ./build/libs -type f -wholename "*.war")
+        echo $WARFILE will be added to appPath
+        echo Starting WhiteSource Scan
+        java -jar wss-unified-agent.jar -appPath $WARFILE -d ./
+        

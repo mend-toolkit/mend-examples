@@ -1,0 +1,60 @@
+name: Whitesource Prioritize Java with Maven
+
+on:
+  push:
+    branches: [ release* ]
+  pull_request:
+    branches: [ release* ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'adopt'
+    
+    - name: Cache local Maven repository
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Build with Maven
+      run: mvn clean install -DskipTests=true
+
+    - name: WhiteSource Unified Agent Scan
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        WS_APIKEY: ${{secrets.APIKEY}}
+        WS_USERKEY: ${{secrets.USERKEY}}
+      run: |
+        cat <<EOF > eua.config
+        apiKey=$WS_APIKEY
+        userKey=$WS_USERKEY
+        wss.url=https://saas.whitesourcesoftware.com/agent
+        productName=GH_${{ github.event.repository.name }}
+        projectName=${{ github.ref }}_Prioritize
+        enableImpactAnalysis=true
+        resolveAllDependencies=false
+        maven.resolveDependencies=true
+        maven.aggregateModules=true
+        fileSystemScan=false
+        generateProjectDetailsJson=true
+        EOF
+        cat eua.config
+        echo config created successfully
+        curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+        curl -LJO https://unified-agent.s3.amazonaws.com/xModuleAnalyzer/xModuleAnalyzer.jar
+        echo Unified Agent downloaded successfully
+        java -jar wss-unified-agent.jar -d $PWD -analyzeMultiModuleExclusions '**/*internal* **/*original* **/*sources.jar' -analyzeMultiModule multimodule.txt
+        echo 'multimodule.txt contents'
+        cat multimodule.txt
+        java -jar xModuleAnalyzer.jar -xModulePath multimodule.txt -fsaJarPath ./wss-unified-agent.jar -c ./eua.config -aggregateModules true

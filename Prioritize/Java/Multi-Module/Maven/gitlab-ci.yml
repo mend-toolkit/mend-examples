@@ -1,0 +1,32 @@
+# add APIKEY as an environment variable - https://gitlab.com/help/ci/variables/README
+image: maven:3.8-openjdk-8
+build:
+  stage: build
+  only:
+    - merge_requests
+  script: |
+    mvn clean install -DskipTests=true
+    echo build completed successfully
+    cat <<EOF > eua.config
+    apiKey=$APIKEY
+    userKey=$USERKEY
+    wss.url=https://saas.whitesourcesoftware.com/agent
+    productName=GL_$CI_PROJECT_DIR
+    projectName=$CI_COMMIT_BRANCH-_Prioritize
+    enableImpactAnalysis=true
+    resolveAllDependencies=false
+    maven.resolveDependencies=true
+    maven.aggregateModules=true
+    fileSystemScan=false
+    generateProjectDetailsJson=true
+    EOF
+    cat eua.config
+    echo config created successfully
+    curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+    curl -LJO https://unified-agent.s3.amazonaws.com/xModuleAnalyzer/xModuleAnalyzer.jar
+    echo Unified Agent downloaded successfully
+    java -jar wss-unified-agent.jar -d $PWD -analyzeMultiModuleExclusions '**/*internal* **/*original* **/*sources.jar' -analyzeMultiModule multimodule.txt
+    echo 'multimodule.txt contents'
+    cat multimodule.txt
+    java -jar xModuleAnalyzer.jar -xModulePath multimodule.txt -fsaJarPath ./wss-unified-agent.jar -c ./eua.config -aggregateModules true
+    

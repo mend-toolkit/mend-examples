@@ -1,7 +1,7 @@
 ---
 name: Contribution Request
 about: Discuss potential changes you wish to contribute
-title: "[CR] [mend-tool-name] Contribution Request Topic"
+title: "[CR] [mend-examples] Contribution Request Topic"
 labels: enhancement
 assignees: ''
 

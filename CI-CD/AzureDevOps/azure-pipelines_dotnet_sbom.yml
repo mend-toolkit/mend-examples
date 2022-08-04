@@ -1,0 +1,57 @@
+name: 'whitesource-ua-azdo-dotnet-sbom'
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: Release
+  WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+  WS_URL: https://saas.whitesourcesoftware.com
+  WS_PRODUCTNAME: AZ_$(System.TeamProject)
+  WS_PROJECTNAME: $(Build.Repository.Name)_$(Build.SourceBranchName)
+  WS_GENERATEPROJECTDETAILSJSON: true
+
+
+steps:
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+
+- script: |
+    curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+    echo Unified Agent downloaded successfully
+    java -jar wss-unified-agent.jar
+  displayName: 'Unified Agent Scan'
+  env:
+    WS_APIKEY: $(APIKEY)
+    WS_USERKEY: $(USERKEY)
+
+- script: |
+    curl -LJO https://raw.githubusercontent.com/whitesource-ft/ws-examples/main/Scripts/check-project-state.sh
+    chmod +x ./check-project-state.sh && ./check-project-state.sh
+  displayName: 'Check Project State'
+  env:
+    WS_APIKEY: $(APIKEY)
+    WS_USERKEY: $(USERKEY)
+
+- script: |
+    export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
+    pip install ws-sbom-generator
+    ws_sbom_generator -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ./whitesource
+  displayName: 'Generate SBOM'
+  env:
+    WS_APIKEY: $(APIKEY)
+    WS_USERKEY: $(USERKEY)
+
+- script: |
+    export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
+    curl --output ./whitesource/riskreport.pdf --request POST $WS_URL'/api/v1.3' -H 'Content-Type: application/json'  --data-raw '{"requestType":"getProjectRiskReport","userKey":"'$WS_USERKEY'","projectToken":"'$WS_PROJECTTOKEN'"}'
+  displayName: 'Generate Risk Report'
+  env:
+    WS_APIKEY: $(APIKEY)
+    WS_USERKEY: $(USERKEY)
+
+- publish: $(System.DefaultWorkingDirectory)/whitesource
+  artifact: Whitesource

@@ -1,0 +1,24 @@
+# Add GITHUB_COM_TOKEN & RENOVATE_TOKEN as environment variables
+# Configure the RENOVATE_ENDPOINT to match your ADO organization
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: WhiteSource@21
+  inputs:
+    cwd: '$(System.DefaultWorkingDirectory)'
+    projectName: '$(Build.Repository.Name)_$(Build.SourceBranchName)_ADOplugin'
+    configuration: 'productName=ADO_$(System.TeamProject)'
+  displayName: 'WS-Scan'
+
+- script: |
+    export RENOVATE_ENDPOINT='https://dev.azure.com/<ADO org>'
+    export RENOVATE_PLATFORM='azure'
+    export RENOVATE_REPOSITORIES='$(System.TeamProject)/$(Build.Repository.Name)'
+    export RENOVATE_CONFIG='{"onboardingConfig":{"extends":["github>whitesource/merge-confidence:beta","config:base"]}}'
+    docker run --rm -e GITHUB_COM_TOKEN=$(GITHUB_COM_TOKEN) -e RENOVATE_TOKEN=$(RENOVATE_TOKEN) -e RENOVATE_CONFIG -e RENOVATE_ENDPOINT -e RENOVATE_PLATFORM -e RENOVATE_REPOSITORIES renovate/renovate
+  displayName: 'Renovate'

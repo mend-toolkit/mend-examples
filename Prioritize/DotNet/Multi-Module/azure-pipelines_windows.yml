@@ -1,0 +1,50 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Set-Content -Value "apiKey=$(APIKEY)" -Path ./eua.config
+      Set-Content -Value "userKey=$(USERKEY)" -Path ./eua.config
+      Set-Content -Value "wss.url=https://saas.whitesourcesoftware.com/agent" -Path ./eua.config
+      Add-Content -Value "enableImpactAnalysis=true" -Path ./eua.config
+      Add-Content -Value "resolveAllDependencies=false" -Path ./eua.config
+      Add-Content -Value "nuget.resolveDependencies=true" -Path ./eua.config
+      Add-Content -Value "nuget.runPreStep=true" -Path ./eua.config
+      Add-Content -Value "fileSystemScan=false" -Path ./eua.config
+      Add-Content -Value "includes=**/*.dll **/*.exe" -Path ./eua.config
+      Add-Content -Value "excludes=**/tests/**" -Path ./eua.config
+      Get-Content -Path ./eua.config
+  displayName: 'Create whitesource config'
+
+- script: |
+    curl -LJO https://raw.githubusercontent.com/whitesource-ft/xModuleAnalyzer-NET/main/xModuleAnalyzer-NET.ps1
+    echo "xModuleAnalyzer-NET downloaded successfully"
+- task: PowerShell@2
+  inputs:
+    filePath: './xModuleAnalyzer-NET.ps1'
+    arguments: '-d ./ -c ./eua.config -productName AZDO_$(System.TeamProject)'
+  displayName: 'Unified Agent Prioritize Scan'

@@ -1,7 +1,7 @@
 ---
 name: Feature Request
 about: Suggest an idea for this project
-title: "[FR] [mend-tool-name] Feature Short Description"
+title: "[FR] [mend-examples] Feature Short Description"
 labels: feature request
 assignees: ''
 

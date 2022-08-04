@@ -1,0 +1,41 @@
+# replace .war with .jar or .ear if needed
+trigger:
+- release*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'clean install'
+    mavenOptions: -DskipTests=true
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+
+- script: |
+    curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+    echo Unified Agent downloaded successfully
+    WARFILE=$(find ./ -type f -wholename "*/target/*.war")
+    echo $WARFILE will be added to appPath
+    java -jar wss-unified-agent.jar -appPath $WARFILE -d ./
+  env:
+    WS_APIKEY: $(APIKEY)
+    WS_USERKEY: $(USERKEY)
+    WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+    WS_PRODUCTNAME: AZDO_$(System.TeamProject)
+    WS_PROJECTNAME: $(Build.Repository.Name)_$(Build.SourceBranchName)_Prioritize
+    WS_ENABLEIMPACTANALYSIS: true
+    WS_RESOLVEALLDEPENDENCIES: false
+    WS_MAVEN_RESOLVEDEPENDENCIES: true
+    WS_MAVEN_AGGREGATEMODULES: true
+    WS_FILESYSTEMSCAN: false
+    WS_EXCLUDES: '**/build/** **/tests/**'
+  displayName: 'Unified Agent Prioritize Scan'
+    

@@ -12,6 +12,7 @@ _resources/
 local/
 log/
 target/
+whitesource/
 
 # Excluded Files - Extensions
 *.iml
@@ -21,3 +22,4 @@ target/
 
 # Excluded Files - Naming Convention
 local-env.*
+.DS_Store

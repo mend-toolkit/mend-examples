@@ -1,0 +1,58 @@
+version: "2"
+services:
+
+  remediate:
+    build: 
+      context: ${BASE_DIR}/latest/wss-remediate/docker
+    image: wss-remediate:${TAG}
+    container_name: remediate-server
+    ports:
+      - "8080:8080"
+    volumes: 
+      - ${BASE_DIR}/prop.json:/etc/usr/local/whitesource/conf/prop.json
+    environment: 
+      - LOG_LEVEL=debug
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+
+  app:
+    build: 
+      context: ${BASE_DIR}/latest/wss-${SCM}-app/docker
+    image: wss-${SCM}-app:${TAG}
+    container_name: wss-${SCM}-app
+    ports:
+      - "9494:9494"
+      - "5678:5678"
+    volumes: 
+      - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
+    depends_on: 
+      - remediate
+    logging:
+        driver: local
+        options:
+          max-size: 1m
+          max-file: "5"
+    
+  scanner:
+    build: 
+      context: ${BASE_DIR}/latest/wss-scanner/docker
+    image: wss-scanner:${SCANNER}
+    container_name: wss-scanner
+    ports:
+      - "9393:9393"
+    volumes: 
+      - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
+    restart: always
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+        
+networks: 
+  default:
+    name: ${SCM}_bridge
+    external: true
