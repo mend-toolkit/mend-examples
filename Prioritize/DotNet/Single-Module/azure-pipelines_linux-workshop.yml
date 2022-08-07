@@ -5,7 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - Name: 'buildConfiguration'
+  - name: 'buildConfiguration'
     value: 'Release'
 
 steps:
@@ -49,5 +49,3 @@ steps:
     SAST_ORGANIZATION: $(SAST_ORGANIZATION)
     SASTCLI_TOKEN: $(SASTCLI_TOKEN)
     SAST_SERVER: https://sast-demo.whitesourcesoftware.com
-
-  
