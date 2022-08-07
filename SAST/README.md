@@ -7,3 +7,4 @@ This repository contains tool specific examples of how to scan using the [Mend S
 * [GitHub](github-mend_sast.yml)
 * [GitLab](gitlab-mend_sast.yml)
 * [Jenkins](jenkins-mend_sast.yml)
+* [TeamCity](teamcity-mend_sast.yml)
