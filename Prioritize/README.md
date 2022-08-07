@@ -46,7 +46,7 @@ on:
 ## Prioritize Troubleshooting
 * Add ```-viaDebug true``` at the end of the Unified Agent command
 * Publish the following folders using your pipeline publish tool, [GitHub Prioritize Log Publish example](#GitHub-Prioritize-Log-Publish)
-  * /tmp/whitesource*
+  * /tmp/Mend*
   * /tmp/ws-ua*
 * For GitHub actions use ```continue-on-error: true``` in the Priortize step if the step is failing before the log publish
 
@@ -69,7 +69,7 @@ on:
 ```
 
 ### Single Folder Log Publish
-If your pipeline publish does not allow for multi folder publishing like GitHub actions, then add the following script after your scan to copy all required folders to the Mend folder. [AzureDevOps](../CI-CD#Azure-DevOps-Pipelines) is a good example where only single folder publishing is allowed.
+If your pipeline publish does not allow for multi folder publishing like GitHub actions, then add the following script after your scan to copy all required folders to the whitesource folder. [AzureDevOps](../CI-CD#Azure-DevOps-Pipelines) is a good example where only single folder publishing is allowed.
 
 #### Azure DevOps Linux based machines (Bash script)
 ```
@@ -92,5 +92,5 @@ if [ -d "/tmp/ws-ua*" ] ; then cp /tmp/whitesource* ./whitesource ; else echo "/
       {
         Write-Host "No Prioritize logs found"
       } 
-  displayName: 'Copy WhiteSource Prioritize Logs'
+  displayName: 'Copy Mend Prioritize Logs'
 ```

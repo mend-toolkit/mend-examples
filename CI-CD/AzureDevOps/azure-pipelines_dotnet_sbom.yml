@@ -1,4 +1,4 @@
-name: 'whitesource-ua-azdo-dotnet-sbom'
+name: 'mend-ua-azdo-dotnet-sbom'
 
 trigger:
 - main
@@ -39,7 +39,7 @@ steps:
 - script: |
     export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
     pip install ws-sbom-generator
-    ws_sbom_generator -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ./whitesource
+    ws_sbom_generator -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ./Mend
   displayName: 'Generate SBOM'
   env:
     WS_APIKEY: $(APIKEY)
@@ -53,5 +53,5 @@ steps:
     WS_APIKEY: $(APIKEY)
     WS_USERKEY: $(USERKEY)
 
-- publish: $(System.DefaultWorkingDirectory)/whitesource
-  artifact: Whitesource
+- publish: $(System.DefaultWorkingDirectory)/Mend
+  artifact: Mend

@@ -38,7 +38,7 @@ steps:
       Add-Content -Value "includes=**/*.dll **/*.exe" -Path ./eua.config
       Add-Content -Value "excludes=**/tests/**" -Path ./eua.config
       Get-Content -Path ./eua.config
-  displayName: 'Create whitesource config'
+  displayName: 'Create Mend config'
 
 - script: |
     curl -LJO https://raw.githubusercontent.com/whitesource-ft/xModuleAnalyzer-NET/main/xModuleAnalyzer-NET.ps1

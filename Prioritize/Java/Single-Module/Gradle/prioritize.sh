@@ -25,7 +25,7 @@ fi
 # JARFILE=$(find ./build/libs -type f -wholename "*.jar" ! -wholename "*javadoc*" ! -wholename "*groovydoc*" ! -wholename "*sources*")
 export WARFILE=$(find ./build/libs -type f -wholename "*.war")
 echo $WARFILE will be added to appPath
-echo Starting WhiteSource Prioritize Scan
+echo Starting Mend Prioritize Scan
 export WS_APIKEY=<your-api-key>
 export WS_USERKEY=<your-user-key>
 export WS_WSS_URL=https://saas.whitesourcesoftware.com/agent

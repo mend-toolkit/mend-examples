@@ -26,7 +26,7 @@ steps:
     echo "Integrity Check Failed"
     else
         echo "Integrity Check Passed"
-        echo "Starting WhiteSource Scan"
+        echo "Starting Mend Scan"
     fi
     java -jar wss-unified-agent.jar -appPath ./package.json -d ./
     

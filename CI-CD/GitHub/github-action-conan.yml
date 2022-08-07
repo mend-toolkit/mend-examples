@@ -1,4 +1,4 @@
-name: Whitesource Unified Agent Scan - Conan
+name: Mend Unified Agent Scan - Conan
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
         conan install ..
         cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
         cmake --build .
-    - name: WhiteSource Unified Agent Scan
+    - name: Mend Unified Agent Scan
       env:
         WS_APIKEY: ${{secrets.APIKEY}}
         WS_USERKEY: ${{secrets.USERKEY}}
@@ -41,13 +41,13 @@ jobs:
         WS_PROJECTNAME: ${{github.ref}}_ghaction
         WS_EXCLUDES: "**/*conan_export.tgz **/*conan_package.tgz **/*conanfile.py **/node_modules **/src/test **/testdata **/*sources.jar **/*javadoc.jar"
       run: |
-        echo Downloading WhiteSource Unified Agent
+        echo Downloading Mend Unified Agent
         curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
         if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
           echo "Integrity Check Failed"
         else
           echo "Integrity Check Passed"
           cp -r ~/.conan/data ./conan-libraries
-          echo Starting WhiteSource Scan
+          echo Starting Mend Scan
           java -jar wss-unified-agent.jar
         fi

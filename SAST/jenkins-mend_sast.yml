@@ -4,7 +4,7 @@ pipeline {
   environment {
        SAST_ORGANIZATION = "$SAST_ORGANIZATION" //Taken from Jenkins Global Environment Variables 
        SASTCLI_TOKEN = "$SASTCLI_TOKEN"
-       SAST_SERVER = "https://sast.mend.io/sast"
+       SAST_SERVER = "https://saas.mend.io/sast/"
    }
 
 
@@ -24,13 +24,11 @@ pipeline {
     }
                        
     stage('Run Mend SAST') {
-      steps {
-          sh '''
+      steps { 
         repo=$(basename -s .git $(git config --get remote.origin.url))
         branch=$(git branch --show-current)
-        ./mendsastcli --dir ./ --name=$repo_$branch --app=$repo
-        '''
-          }
+        sh './mendsastcli --dir ./ --name=$repo_$branch --app=$repo'
       }
     }
   }
+} 

@@ -1,6 +1,6 @@
 # replace .war with .ear or the following for WARFILE if needed
 # JARFILE=$(find ./build/libs -type f -wholename "*.jar" ! -wholename "*javadoc*" ! -wholename "*groovydoc*" ! -wholename "*sources*")
-name: Whitesource Prioritize Java with Gradle
+name: Mend Prioritize Java with Gradle
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build -x test
-    - name: WhiteSource Unified Agent Scan
+    - name: Mend Unified Agent Scan
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         WS_APIKEY: ${{secrets.APIKEY}}
@@ -56,6 +56,6 @@ jobs:
           echo "Integrity Check Passed"
         WARFILE=$(find ./build/libs -type f -wholename "*.war")
         echo $WARFILE will be added to appPath
-        echo Starting WhiteSource Scan
+        echo Starting Mend Scan
         java -jar wss-unified-agent.jar -appPath $WARFILE -d ./
         

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Generic example for scanning for dependencies with the WhiteSource Unified Agent 
+# Generic example for scanning for dependencies with the Mend Unified Agent 
 
 export WS_APIKEY=<your-api-key>
 export WS_USERKEY=<your-user-key>
@@ -12,6 +12,6 @@ if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.s
     echo "Integrity Check Failed"
 else
     echo "Integrity Check Passed"
-    echo Starting WhiteSource Scan
+    echo Starting Mend Scan
     java -jar wss-unified-agent.jar
 fi

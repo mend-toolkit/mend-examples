@@ -10,7 +10,7 @@ pipelines:
           - npm install
 
     - step:
-        name: "Run WhiteSource Scan"
+        name: "Run Mend Scan"
         script:
             - echo "Downloading unified agent"
             - curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
@@ -19,5 +19,5 @@ pipelines:
             - export WS_WSS_URL=https://saas.whitesourcesoftware.com/agent
             - export WS_PRODUCTNAME=$BITBUCKET_REPO_SLUG
             - export WS_PROJECTNAME=$BITBUCKET_BRANCH
-            - echo "Running Whitesouce"
+            - echo "Running Mend"
             - java -jar wss-unified-agent.jar

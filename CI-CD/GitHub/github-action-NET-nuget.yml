@@ -1,4 +1,4 @@
-name: Whitesource Unified Agent Scan - .NET (NuGet)
+name: Mend Unified Agent Scan - .NET (NuGet)
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
     - name: Restore dependencies
       run: nuget restore $SOLUTION
       
-    - name: WhiteSource Unified Agent Scan
+    - name: Mend Unified Agent Scan
       env:
         WS_APIKEY: ${{secrets.APIKEY}}
         WS_USERKEY: ${{secrets.USERKEY}}
@@ -34,12 +34,12 @@ jobs:
         WS_PROJECTNAME: ${{github.ref}}
         WS_FILESYSTEMSCAN: false
       run: |
-        echo Downloading WhiteSource Unified Agent
+        echo Downloading Mend Unified Agent
         curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
         if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
           echo "Integrity Check Failed"
         else
           echo "Integrity Check Passed"
-          echo Starting WhiteSource Scan
+          echo Starting Mend Scan
           java -jar wss-unified-agent.jar
         fi

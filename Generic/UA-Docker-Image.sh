@@ -1,8 +1,8 @@
 #!/bin/bash
-# Generic example for scanning docker images with the WhiteSource Unified Agent
+# Generic example for scanning docker images with the Mend Unified Agent
 # Glob patterns used scan all pulled images with repository name containing "ubuntu"
 # Scans only the pulled immage "maven:3.8-openjdk-8"
-# See docker.includes & docker.excludes sections section for more detail - https://whitesource.atlassian.net/wiki/spaces/WD/pages/1544880156/Unified+Agent+Configuration+Parameters#Docker-Images
+# See docker.includes & docker.excludes sections section for more detail - https://docs.mend.io/bundle/unified_agent/page/unified_agent_configuration_parameters.html#Docker-Images
 # Scans are only done on repository name, tag version, or image id.  Not repositoryname + tag
 # For specific scans Image ID is recommended using the following - replace maven:3.8-openjdk-8 with your repository name + tag
 # export WS_DOCKER_INCLUDES=$(docker images maven:3.8-openjdk-8 -q)
@@ -27,6 +27,6 @@ if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.s
     echo "Integrity Check Failed"
 else
     echo "Integrity Check Passed"
-    echo Starting WhiteSource Scan
+    echo Starting Mend Scan
     java -jar wss-unified-agent.jar
 fi

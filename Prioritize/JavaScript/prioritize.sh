@@ -24,7 +24,7 @@ if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.s
 echo "Integrity Check Failed"
 else
     echo "Integrity Check Passed"
-    echo "Starting WhiteSource Scan"
+    echo "Starting Mend Scan"
 fi
 export WS_APIKEY=<your-api-key>
 export WS_USERKEY=<your-user-key>

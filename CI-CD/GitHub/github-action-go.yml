@@ -1,4 +1,4 @@
-name: Whitesource Unified Agent Scan - GO
+name: Mend Unified Agent Scan - GO
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
     - name: Build
       run: go build -v ./...
       
-    - name: WhiteSource Unified Agent Scan
+    - name: Mend Unified Agent Scan
       env:
         WS_APIKEY: ${{secrets.APIKEY}}
         WS_USERKEY: ${{secrets.USERKEY}}
@@ -28,12 +28,12 @@ jobs:
         WS_PRODUCTNAME: GH_${{github.event.repository.name}}
         WS_PROJECTNAME: ${{github.ref}}_ghaction
       run: |
-        echo Downloading WhiteSource Unified Agent
+        echo Downloading Mend Unified Agent
         curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
         if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
           echo "Integrity Check Failed"
         else
           echo "Integrity Check Passed"
-          echo Starting WhiteSource Scan
+          echo Starting Mend Scan
           java -jar wss-unified-agent.jar
         fi

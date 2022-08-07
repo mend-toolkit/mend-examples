@@ -25,9 +25,9 @@ object Build : BuildType({
             dockerImage = "node:14.18.3-buster-slim"
         }
         script {
-            name = "WhiteSource"
+            name = "Mend"
             scriptContent = """
-                echo "Downloading WS"
+                echo "Downloading Mend"
                 if ! [ -f ./wss-unified-agent.jar ]; then
                   curl -fSL -R -JO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
                   if [[ "${'$'}(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "${'$'}(sha256sum wss-unified-agent.jar)" ]]; then

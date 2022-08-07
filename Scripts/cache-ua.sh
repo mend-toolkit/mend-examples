@@ -19,7 +19,7 @@ if [ $latestVerDate -gt $curVerDate ] ; then
     echo "Integrity Check Failed"
     else
         echo "Integrity Check Passed"
-        echo "Starting WhiteSource Scan"
+        echo "Starting Mend Scan"
     fi
 else
     echo "No newer versions"

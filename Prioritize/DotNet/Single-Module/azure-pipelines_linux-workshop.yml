@@ -23,7 +23,7 @@ steps:
     CSPROJ=$(basename $(find ./src -type f -wholename "*.csproj" ! -wholename "*build*" ! -wholename "*test*") .csproj)
     DLL=$(find ./ -type f -wholename "*/bin/$(buildConfiguration)/*/$CSPROJ.dll" ! -wholename "*build*" ! -wholename "*test*")
     echo $DLL will be added to appPath
-    echo Starting WhiteSource Scan
+    echo Starting Mend Scan
     java -jar wss-unified-agent.jar -appPath $DLL -d $PWD/src
   env:
     WS_APIKEY: $(WS_APIKEY)

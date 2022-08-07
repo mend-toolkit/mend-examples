@@ -43,10 +43,10 @@ pipeline {
             }
         }   
         
-        stage('Download WS Script') {
+        stage('Download Mend') {
           steps {
               script {
-                    echo "Downloading WhiteSource Unified Agent and Checking Integrity"
+                    echo "Downloading Mend Unified Agent and Checking Integrity"
                     sh 'curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar'
                     ua_jar_checksum=sh(returnStdout: true, script: "sha256sum 'wss-unified-agent.jar'")
                     ua_integrity_file=sh(returnStdout: true, script: "curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256")
@@ -59,7 +59,7 @@ pipeline {
              }
         }
         
-        stage('Run WS Script') {
+        stage('Run Mend') {
              steps { 
                script {
                    withEnv(["WS_USERKEY=${WORKING_USERKEY}", "WS_APIKEY=${WORKING_APIKEY}", "WS_PROJECTNAME=${JOB_NAME}-${GIT_COMMIT_BRANCH}"]) {

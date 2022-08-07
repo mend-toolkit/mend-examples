@@ -28,7 +28,7 @@ See also: [Cache the Latest Version of the Unified Agent](../Scripts/README.md#c
 
 ## Pipeline Log Publishing
 
-* Publish the `whitesource` folder with logs & reports by adding the following commands depending on each pipeline
+* Publish the `Mend` folder with logs & reports by adding the following commands depending on each pipeline
 
 ### Azure DevOps Pipelines
 
@@ -39,11 +39,11 @@ See also: [Cache the Latest Version of the Unified Agent](../Scripts/README.md#c
 ### GitHub Actions
 
 ```
-- name: 'Upload WhiteSource folder'
+- name: 'Upload Mend folder'
   uses: actions/upload-artifact@v2
   with:
-    name: WhiteSource
-    path: whitesource
+    name: Mend
+    path: Mend
     retention-days: 1
 ```
 

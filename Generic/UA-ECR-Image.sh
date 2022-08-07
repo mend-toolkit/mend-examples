@@ -1,8 +1,8 @@
 #!/bin/bash
-# Generic example for scanning docker images with the WhiteSource Unified Agent from Amazon Elastic Container Registry
+# Generic example for scanning docker images with the Mend Unified Agent from Amazon Elastic Container Registry
 # Glob patterns used scans & pulls all images with repositoryName containing "ubuntu"
 # docker.pull.tags can be used instead of docker.pull.images - the default pulls all tags with associated images
-# See docker.includes & docker.excludes sections for more detail - https://whitesource.atlassian.net/wiki/spaces/WD/pages/1544880156/Unified+Agent+Configuration+Parameters#Docker-Images
+# See docker.includes & docker.excludes sections for more detail - https://docs.mend.io/bundle/unified_agent/page/unified_agent_configuration_parameters.html#Docker-Images
 
 # Ensure the aws cli is configured with the correct login information - https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html
 # aws configure
@@ -39,6 +39,6 @@ if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.s
     echo "Integrity Check Failed"
 else
     echo "Integrity Check Passed"
-    echo Starting WhiteSource Scan
+    echo Starting Mend Scan
     java -jar wss-unified-agent.jar
 fi 

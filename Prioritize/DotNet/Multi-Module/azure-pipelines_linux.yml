@@ -5,7 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  group: 'WhiteSource Keys'
+  group: 'Mend Keys'
   buildConfiguration: 'Release'
 
 steps:

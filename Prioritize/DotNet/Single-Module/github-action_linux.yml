@@ -1,4 +1,4 @@
-name: Whitesource Prioritize DotNET Core
+name: Mend Prioritize DotNET Core
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         dotnet-version: 3.1.402
     - name: Build 
       run: dotnet build -c Release
-    - name: WhiteSource Unified Agent Scan
+    - name: Mend Unified Agent Scan
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         WS_APIKEY: ${{secrets.APIKEY}}
@@ -40,7 +40,7 @@ jobs:
           echo "Integrity Check Failed"
         else
           echo "Integrity Check Passed"
-          echo Starting WhiteSource Scan
+          echo Starting Mend Scan
         java -jar wss-unified-agent.jar
         fi
         CSPROJ=$(basename $(find ./src -type f -wholename "*.csproj" ! -wholename "*build*" ! -wholename "*test*") .csproj)

@@ -1,4 +1,4 @@
-name: Whitesource Prioritize Java with Gradle
+name: Mend Prioritize Java with Gradle
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ release* ]
 
 jobs:
-  WhiteSource-Prioritize:
+  Mend-Prioritize:
 
     runs-on: ubuntu-latest
 
@@ -31,7 +31,7 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build -x test
-    - name: WhiteSource Prioritize Scan
+    - name: Mend Prioritize Scan
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         WS_APIKEY: ${{secrets.APIKEY}}

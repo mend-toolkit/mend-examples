@@ -7,13 +7,13 @@
 # WS_USERKEY = {MASKED_USERKEY}
 
 # Download Unified Agent
-echo Downloading WhiteSource Unified Agent
+echo Downloading Mend Unified Agent
 curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
 if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
     echo "Integrity Check Failed"
 else
     echo "Integrity Check Passed"
-    echo "Starting WhiteSource Scan"
+    echo "Starting Mend Scan"
     java -jar wss-unified-agent.jar
 fi
 
