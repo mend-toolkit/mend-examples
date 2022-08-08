@@ -22,9 +22,9 @@ object WebGoat : BuildType({
             goals = "clean install -DskipTests"
         }
         script {
-            name = "WhiteSource"
+            name = "Mend"
             scriptContent = """
-                echo "Downloading WS"
+                echo "Downloading Mend"
                 if ! [ -f ./wss-unified-agent.jar ]; then
                   curl -fSL -R -JO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
                   if [[ "${'$'}(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "${'$'}(sha256sum wss-unified-agent.jar)" ]]; then
@@ -32,7 +32,7 @@ object WebGoat : BuildType({
                     exit -7
                   fi
                 fi
-                echo "Exceute WS"
+                echo "Exceute Mend"
                 export WS_APIKEY=${'$'}{APIKEY} #Taken from TeamCity Environment Variables
                 export WS_USERKEY=${'$'}{USERKEY} #Taken from TeamCity Environment Variables
                 export WS_WSS_URL="https://saas.whitesourcesoftware.com/agent"
