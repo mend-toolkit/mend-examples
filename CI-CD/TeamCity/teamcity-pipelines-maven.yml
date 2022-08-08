@@ -12,9 +12,6 @@ object WebGoat : BuildType({
         password("env.APIKEY", "******", display = ParameterDisplay.HIDDEN)
         password("env.USERKEY", "******", display = ParameterDisplay.HIDDEN)
     }
-    vcs {
-        root(WebGoat_HttpsGithubComLukebroganwsWebGoatRefsHeadsDevelop)
-    }
 
     steps {
         maven {
