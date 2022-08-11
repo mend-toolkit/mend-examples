@@ -26,6 +26,7 @@ Options Defined:<BR />
 Execution instructions:  
 ```
 git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration
+export ws_key='<your activation key here>'
 chmod +x ./setup.sh && ./setup.sh <option>
 docker-compose up
 ```
