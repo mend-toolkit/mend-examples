@@ -42,6 +42,7 @@ if [ -z "${ws_key}" ]
 then
     echo "${red}Please set your Activation Key as an environment variable using the following command${end}"
     echo "${cyn}export ws_key='replace-with-your-activation-key-inside-single-quotes'${end}"
+    exit
 else
     echo "WS_ACTIVATION_KEY=${ws_key}" > ${MEND_DIR}/${SCM}_settings.env
 fi
@@ -83,7 +84,7 @@ else
     echo "${cyn}Docker Network ${SCM}_bridge already exists${end}"
 fi
 
-echo "${grn}Download Success!!!  Please use the following command to add your activation key to a local repo_settings.env file${end}"
+echo "${grn}Download Success!!!${end}"
 
 }
 
