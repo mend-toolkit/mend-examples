@@ -61,6 +61,17 @@ echo "SCANNER=${SCANNER}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "BASE_DIR=${BASE_DIR}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "SCM=$SCM" >> ${REPO_INTEGRATION_DIR}/.env
 
+## Create Docker Network
+DNETWORK=$(docker network ls -f name=${SCM}_bridge)
+if [ -z "$DNETWORK" ]
+then
+    echo "${yel}Docker Network does not exist${end}"
+    docker network create -d bridge ${SCM}_bridge
+    echo "${cyn}Docker Network ${SCM}_bridge created${end}"
+else
+    echo "${cyn}Docker Network ${SCM}_bridge already exists${end}"
+fi
+
 echo "${grn}Download Success!!!  Please use the following command to add your activation key to a local repo_settings.env file${end}"
 echo "${cyn}echo \"WS_ACTIVATION_KEY=replace-with-your-activation-key\" > ~/mend/${SCM}/repo_settings.env${end}"
 
