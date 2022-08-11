@@ -37,7 +37,16 @@ case $SCM in
 
 esac
 
-# Dowload agent file and copy to latest
+## Look for Activation Key
+if [ -z "${ws_key}" ]
+then
+    echo "${red}Please set your Activation Key as an environment variable using the following command${end}"
+    echo "${cyn}export ws_key='replace-with-your-activation-key-inside-single-quotes'${end}"
+else
+    echo "WS_ACTIVATION_KEY=${ws_key}" > ${MEND_DIR}/${SCM}_settings.env
+fi
+
+## Dowload agent file and copy to latest
 wget https://integrations.mend.io/release/$AGENT_PATH/$AGENT_TAR -P $BASE_DIR
 AGENT_FILE=$(basename $AGENT_TAR .tar.gz)
 echo "${grn}$AGENT_FILE is the agent${end}"
@@ -75,11 +84,10 @@ else
 fi
 
 echo "${grn}Download Success!!!  Please use the following command to add your activation key to a local repo_settings.env file${end}"
-echo "${cyn}echo \"WS_ACTIVATION_KEY=replace-with-your-activation-key\" > ${MEND_DIR/${SCM}_settings.env${end}"
 
 }
 
-if [ -z "$1"]
+if [ -z "$1" ]
 then 
     echo "${red}Please pass an scm variable such as gls, bb, or ghe${end}"
 else
