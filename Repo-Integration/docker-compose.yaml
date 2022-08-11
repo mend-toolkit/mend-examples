@@ -9,7 +9,9 @@ services:
     ports:
       - "8080:8080"
     volumes: 
-      - ${BASE_DIR}/prop.json:/etc/usr/local/whitesource/conf/prop.json
+      - ${BASE_DIR}/latest/wss-gls-app/conf/prop.json:/etc/usr/local/whitesource/conf/prop.json
+    env_file:
+      - ${BASE_DIR}/repo_settings.env
     environment: 
       - LOG_LEVEL=debug
     logging:
@@ -27,7 +29,9 @@ services:
       - "9494:9494"
       - "5678:5678"
     volumes: 
-      - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
+      - ${BASE_DIR}/latest/wss-gls-app/conf/:/etc/usr/local/whitesource/conf/
+    env_file:
+      - ${BASE_DIR}/repo_settings.env
     depends_on: 
       - remediate
     logging:
@@ -44,7 +48,9 @@ services:
     ports:
       - "9393:9393"
     volumes: 
-      - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
+      - ${BASE_DIR}/latest/wss-gls-app/conf/:/etc/usr/local/whitesource/conf/
+    env_file:
+      - ${BASE_DIR}/repo_settings.env
     restart: always
     logging:
       driver: local
