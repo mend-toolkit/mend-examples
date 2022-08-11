@@ -1,7 +1,8 @@
 #!/bin/bash
 
 SCM=$1
-BASE_DIR=$HOME/mend/$SCM
+MEND_DIR=$HOME/mend
+BASE_DIR=$MEND_DIR/$SCM
 REPO_INTEGRATION_DIR=$(pwd)
 
 rm -rf $BASE_DIR && mkdir -p $BASE_DIR
@@ -58,6 +59,7 @@ SCANNER=$(grep -v ^\# ${BASE_DIR}/latest/build.sh | grep . | awk -F "[ ]" 'NR==2
 rm -rf ${REPO_INTEGRATION_DIR}/.env
 echo "TAG=${TAG}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "SCANNER=${SCANNER}" >> ${REPO_INTEGRATION_DIR}/.env
+echo "MEND_DIR=${MEND_DIR}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "BASE_DIR=${BASE_DIR}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "SCM=$SCM" >> ${REPO_INTEGRATION_DIR}/.env
 
@@ -73,7 +75,7 @@ else
 fi
 
 echo "${grn}Download Success!!!  Please use the following command to add your activation key to a local repo_settings.env file${end}"
-echo "${cyn}echo \"WS_ACTIVATION_KEY=replace-with-your-activation-key\" > ~/mend/${SCM}/repo_settings.env${end}"
+echo "${cyn}echo \"WS_ACTIVATION_KEY=replace-with-your-activation-key\" > ${MEND_DIR/${SCM}_settings.env${end}"
 
 }
 

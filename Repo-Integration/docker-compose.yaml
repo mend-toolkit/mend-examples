@@ -11,7 +11,7 @@ services:
     volumes: 
       - ${BASE_DIR}/latest/wss-gls-app/conf/prop.json:/etc/usr/local/whitesource/conf/prop.json
     env_file:
-      - ${BASE_DIR}/repo_settings.env
+      - ${MEND_DIR}/${SCM}_settings.env
     environment: 
       - LOG_LEVEL=debug
     logging:
@@ -31,7 +31,7 @@ services:
     volumes: 
       - ${BASE_DIR}/latest/wss-gls-app/conf/:/etc/usr/local/whitesource/conf/
     env_file:
-      - ${BASE_DIR}/repo_settings.env
+      - ${MEND_DIR}/${SCM}_settings.env
     depends_on: 
       - remediate
     logging:
@@ -50,7 +50,7 @@ services:
     volumes: 
       - ${BASE_DIR}/latest/wss-gls-app/conf/:/etc/usr/local/whitesource/conf/
     env_file:
-      - ${BASE_DIR}/repo_settings.env
+      - ${MEND_DIR}/${SCM}_settings.env
     restart: always
     logging:
       driver: local
