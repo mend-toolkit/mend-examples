@@ -1,17 +1,5 @@
 #!/bin/bash
 
-#Enable Error Handler
-set -e
-trap 'catch $? $LINENO' EXIT
-
-#Error Handler Logic
-catch() {
-if [ "$1" != "0" ]; then
-        echo "Error $1 occurred on $2.  Exiting..." 
-    fi
-    exit
-}
-
 SCM=$1
 MEND_DIR=$HOME/mend
 BASE_DIR=$MEND_DIR/$SCM
@@ -97,7 +85,7 @@ function key_check(){
 ## Look for Activation Key
 if [ -z "${ws_key}" ]
 then
-    echo "${red}Please set your Activation Key as an environment variable using the following command in order to create ${MEND_DIR}/${SCM}_settings.env${end}"
+    echo "${red}Please set your Activation Key as an environment variable using the following command in order to create the prop.json${end}"
     echo "${cyn}export ws_key='replace-with-your-activation-key-inside-single-quotes'${end}"
     exit
 else
@@ -119,9 +107,9 @@ else
 fi
 }
 
-if [ -z "$1" ]
+if [ $1 = "gls" ] || [ $1 = "bb" ] || [ $1 = "ghe" ]
 then 
-    echo "${red}Please pass an scm variable such as gls, bb, or ghe${end}"
-else
     jq_exists
+else
+    echo "${red}Please pass an scm variable such as gls, bb, or ghe${end}"
 fi
