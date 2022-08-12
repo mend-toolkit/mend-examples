@@ -12,7 +12,7 @@ When used, these scripts will download the lastest repository integration run vi
 - **Linux (Bash):**	CentOS, Debian, Ubuntu, RedHat
 
 ## Prerequisites
-- Docker, Docker Compose, GIT, WGET, SCM Repository instance up and running
+- Docker, Docker Compose, GIT, WGET, JQ, SCM Repository instance up and running
 
 ## Options
 setup.sh options: **ghe**, **gls**, **bb**
