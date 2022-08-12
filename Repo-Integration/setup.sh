@@ -94,22 +94,11 @@ fi
 
 }
 
-function jq_exists(){
-## Check if jq exists on the machine
-JQ_CHECK=$(rpm -qa | grep jq)
-if [ -z "$JQ_CHECK" ]
-then
-    echo "${red}jq could not be found please install with the following command${end}"
-    echo "${cyn}sudo yum install jq${end}"
-    exit
-else
-    key_check
-fi
-}
-
-if [ $1 = "gls" ] || [ $1 = "bb" ] || [ $1 = "ghe" ]
+if [ $1 != "gls" ] && [ $1 != "bb" ] && [ $1 != "ghe" ]
 then 
-    jq_exists
-else
     echo "${red}Please pass an scm variable such as gls, bb, or ghe${end}"
+    exit
 fi
+
+## Check for valid key and start the process
+key_check
