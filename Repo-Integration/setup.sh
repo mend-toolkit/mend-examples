@@ -1,5 +1,17 @@
 #!/bin/bash
 
+#Enable Error Handler
+set -e
+trap 'catch $? $LINENO' EXIT
+
+#Error Handler Logic
+catch() {
+if [ "$1" != "0" ]; then
+        echo "Error $1 occurred on $2.  Exiting..." 
+    fi
+    exit
+}
+
 SCM=$1
 MEND_DIR=$HOME/mend
 BASE_DIR=$MEND_DIR/$SCM
