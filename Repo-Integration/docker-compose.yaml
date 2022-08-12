@@ -9,11 +9,7 @@ services:
     ports:
       - "8080:8080"
     volumes: 
-      - ${BASE_DIR}/latest/wss-gls-app/conf/prop.json:/etc/usr/local/whitesource/conf/prop.json
-    env_file:
-      - ${MEND_DIR}/${SCM}_settings.env
-    environment: 
-      - LOG_LEVEL=debug
+      - ${BASE_DIR}/prop.json:/etc/usr/local/whitesource/conf/prop.json
     logging:
       driver: local
       options:
@@ -29,9 +25,7 @@ services:
       - "9494:9494"
       - "5678:5678"
     volumes: 
-      - ${BASE_DIR}/latest/wss-gls-app/conf/:/etc/usr/local/whitesource/conf/
-    env_file:
-      - ${MEND_DIR}/${SCM}_settings.env
+      - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
     depends_on: 
       - remediate
     logging:
@@ -48,9 +42,7 @@ services:
     ports:
       - "9393:9393"
     volumes: 
-      - ${BASE_DIR}/latest/wss-gls-app/conf/:/etc/usr/local/whitesource/conf/
-    env_file:
-      - ${MEND_DIR}/${SCM}_settings.env
+      - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
     restart: always
     logging:
       driver: local
