@@ -89,16 +89,55 @@ then
     echo "${cyn}export ws_key='replace-with-your-activation-key-inside-single-quotes'${end}"
     exit
 else
-    scm
+    jq_exists
 fi
 
 }
 
-if [ $1 != "gls" ] && [ $1 != "bb" ] && [ $1 != "ghe" ]
+function jq_exists(){
+## Check if jq exists on the machine
+. /etc/os-release
+OS=$(echo "$NAME")
+PKG="jq"
+if [ "$OS" = "Ubuntu" ]
 then 
-    echo "${red}Please pass an scm variable such as gls, bb, or ghe${end}"
+    DEBIAN_CHECK=$(dpkg-query -W --showformat='${Status}\n' $PKG|grep "install ok installed")
+        if [ "" = "$DEBIAN_CHECK" ]
+        then
+            echo "${red}jq could not be found please install with the following command${end}"
+            echo "${cyn}sudo apt install jq${end}"
+        else
+            scm
+        fi
+
+elif [ "$OS" = "Amazon Linux" ]
+then
+    RPM_CHECK=$(rpm -qa | grep ${PKG})
+        if [ -z "$RPM_CHECK" ]
+        then
+            echo "${red}jq could not be found please install with one the following command${end}"
+            echo "${cyn}sudo yum install jq${end}"
+        else
+            scm
+        fi
+else
+    echo "${red}Your OS is not supported, please open a Github issue${end}"
     exit
 fi
+}
 
-## Check for valid key and start the process
-key_check
+if [ -z "$1" ]
+then
+    echo "${red}Please pass an scm variable such as gls, bb, or ghe${end}"
+else
+    if [ "$1" = "gls" ] || [ "$1" = "bb" ] || [ "$1" = "ghe" ]
+        then 
+            ## Check for valid key and start the process
+            key_check
+        else
+            echo "${red}Please pass an scm variable such as gls, bb, or ghe${end}"
+            exit
+        fi
+fi
+
+
