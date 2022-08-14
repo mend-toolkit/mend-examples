@@ -10,8 +10,6 @@ services:
       - "8080:8080"
     volumes: 
       - ${BASE_DIR}/prop.json:/etc/usr/local/whitesource/conf/prop.json
-    environment: 
-      - LOG_LEVEL=debug
     logging:
       driver: local
       options:
