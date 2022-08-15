@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
 [![GitHub release](https://img.shields.io/github/release/whitesource-ft/ws-template.svg)](https://github.com/whitesource-ft/ws-template/releases/latest)  
 # Repository Integration Automation Scripts
-When used, these scripts will download the lastest repository integration run via docker compose.<BR />
+When used, these scripts will download the latest repository integration run via docker compose:
 - Remediate Server
 - Controller
 - Scanner
@@ -12,15 +12,15 @@ When used, these scripts will download the lastest repository integration run vi
 - **Linux (Bash):**	CentOS, Debian, Ubuntu, RedHat
 
 ## Prerequisites
-- Docker, Docker Compose, GIT, WGET, JQ, SCM Repository instance up and running
+- Docker, Docker Compose, git, wget, jq, SCM Repository instance up and running
 
 ## Options
-setup.sh options: **ghe**, **gls**, **bb**
+`setup.sh` options: **ghe**, **gls**, **bb**
 
-Options Defined:<BR />
-**ghe** - Github Enterprise<BR />
-**gls** - Gitlab <BR />
-**bb** - Bitbucket On-Prem
+Options Defined:  
+**ghe** - GitHub Enterprise
+**gls** - GitLab (self-hosted)
+**bb** - Bitbucket Server
 
 ## Execution
 Execution instructions:  
