@@ -16,7 +16,7 @@ steps:
 - script: |
     curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
     echo Unified Agent downloaded successfully
-    curl -LJO https://raw.githubusercontent.com/whitesource-ft/xModuleAnalyzer-NET/main/xModuleAnalyzer-NET.sh
+    curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/Prioritize/DotNet/Multi-Module/xModuleAnalyzer-NET.sh
     echo xModuleAnalyzer-NET downloaded successfully
     chmod +x ./xModuleAnalyzer-NET.sh && ./xModuleAnalyzer-NET.sh
   env:
@@ -31,5 +31,7 @@ steps:
     WS_FILESYSTEMSCAN: false
     WS_GENERATEPROJECTDETAILSJSON: true
     WS_EXCLUDES: '**/build/** **/tests/**'
+    SEARCHDIR: $(Pipeline.Workspace)
+    RELEASEDIR: /bin/
   displayName: 'Unified Agent Prioritize Scan'
   
