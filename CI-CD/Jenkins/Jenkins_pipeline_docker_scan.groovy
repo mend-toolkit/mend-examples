@@ -7,7 +7,7 @@ pipeline {
        WS_USERKEY = "${USERKEY}" //Taken from Jenkins Global Environment Variables
        WS_PRODUCTNAME = "Jenkins_Pipeline"
        WS_PROJECTNAME = "${JOB_NAME}"
-   }
+  }
 
   tools {
     maven "mvn_3.6.3"
@@ -45,6 +45,11 @@ pipeline {
             docker images | grep myImage | awk '{ print \0443 }'
             """
             ).trim()
+            WS_DOCKER_SCANIMAGES = true
+            WS_DOCKER_LAYERS = true
+            WS_DOCKER_PROJECTNAMEFORMAT = repositoryNameAndTag
+            WS_ARCHIVEEXTRACTIONDEPTH = 2
+            WS_ARCHIVEINCLUDES = '**/*war **/*ear **/*zip **/*whl **/*tar.gz **/*tgz **/*tar **/*car **/*jar'
         }
       steps {
         sh 'java -jar wss-unified-agent.jar'
