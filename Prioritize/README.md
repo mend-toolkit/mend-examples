@@ -15,7 +15,7 @@ For all examples above, make sure to change the branches defined within the .yml
 
 **Important .NET Note** 
 <br>
-[xModuleAnalyzer](https://github.com/whitesource-ft/xModuleAnalyzer-NET) scripts may require some customization due to different build and exclusion types
+[xModuleAnalyzer](https://github.com/mend-toolkit/mend-examples/Prioritize/DotNet/Multi-Module/xModuleAnalyzer-NET.sh) script may require some customization due to different build and exclusion types
 
 ##  [GitHub Actions](https://docs.github.com/en/actions)
 YAML files beginning with "github-action"
