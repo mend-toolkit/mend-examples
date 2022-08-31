@@ -57,11 +57,13 @@ jq --arg ws_key $ws_key '(.properties[] | select(.propertyName=="bolt.op.activat
 echo "${grn}${MEND_DIR}/prop.json created successfully${end}"
 
 ## Grab scanner tags
-TAG=$(grep -v ^\# ${BASE_DIR}/latest/build.sh | grep . | awk -F "[ ]" 'NR==1 {print $4}' | awk -F ":" '{print $2}')
+CONTROLLER=$(grep -v ^\# ${BASE_DIR}/latest/build.sh | grep . | awk -F "[ ]" 'NR==1 {print $4}' | awk -F ":" '{print $2}')
 SCANNER=$(grep -v ^\# ${BASE_DIR}/latest/build.sh | grep . | awk -F "[ ]" 'NR==2 {print $4}'| awk -F ":" '{print $2}')
+REMEDIATE=$(grep -v ^\# ${BASE_DIR}/latest/build.sh | grep . | awk -F "[ ]" 'NR==3 {print $4}' | awk -F ":" '{print $2}')
 rm -rf ${REPO_INTEGRATION_DIR}/.env
-echo "TAG=${TAG}" >> ${REPO_INTEGRATION_DIR}/.env
+echo "CONTROLLER=${CONTROLLER}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "SCANNER=${SCANNER}" >> ${REPO_INTEGRATION_DIR}/.env
+echo "REMEDIATE=${REMEDIATE}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "MEND_DIR=${MEND_DIR}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "BASE_DIR=${BASE_DIR}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "SCM=$SCM" >> ${REPO_INTEGRATION_DIR}/.env
