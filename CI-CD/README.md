@@ -24,7 +24,7 @@ In the following examples, the `wss-unified-agent.jar` artifact is stored in the
 
 See also: [Cache the Latest Version of the Unified Agent](../Scripts/README.md#cache-the-latest-version-of-the-unified-agent) (generic example script)  
 
-
+## [Mend Report Publishing](../Scripts/README.md)
 
 ## Pipeline Log Publishing
 
@@ -45,6 +45,11 @@ See also: [Cache the Latest Version of the Unified Agent](../Scripts/README.md#c
     name: WhiteSource
     path: whitesource
     retention-days: 1
+- name: 'Upload WhiteSource folder if failure'
+  uses: actions/upload-artifact@v2
+  if: failure()
+  with:
+    name: WhiteSource
+    path: whitesource
+    retention-days: 1
 ```
-
-## [Mend Report Publishing](../Scripts/README.md)

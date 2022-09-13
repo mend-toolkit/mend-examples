@@ -1,38 +1,29 @@
-name: Whitesource Unified Agent Scan - .NET (NuGet)
+name: Mend Unified Agent Scan + Policy Check for Feature  Branch
 
 on:
   push:
-    branches:
-      - master
-      - main
-
-
-jobs:
-
-  build:
-    env:
-      BUILD_CONFIG: 'Release'
-      SOLUTION: 'MySolution.sln'
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.5
+    branches: [ feature/* ]
     
-    - name: Restore dependencies
-      run: nuget restore $SOLUTION
-      
-    - name: WhiteSource Unified Agent Scan
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+# Replace lines 14-6 with your relevant build steps
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 14
+
+    - name: Mend Unified Agent Scan
       env:
         WS_APIKEY: ${{secrets.APIKEY}}
         WS_USERKEY: ${{secrets.USERKEY}}
         WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
         WS_PRODUCTNAME: ${{github.event.repository.name}}
-        WS_PROJECTNAME: ${{github.event.repository.name}}_${{github.ref_name}}
-        WS_FILESYSTEMSCAN: false
+        WS_PROJECTNAME: ${{github.event.repository.name}}_${{github.event.repository.default_branch}}
+        WS_CHECKPOLICIES: TRUE
+        WS_UPDATEINVENTORY: FALSE
       run: |
         echo Downloading WhiteSource Unified Agent
         curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
@@ -43,3 +34,11 @@ jobs:
           echo Starting WhiteSource Scan
           java -jar wss-unified-agent.jar
         fi
+    - name: 'Upload WhiteSource folder'
+      uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: WhiteSource
+        path: whitesource
+        retention-days: 1
+        
