@@ -2,7 +2,9 @@ name: Mend Unified Agent Scan - NPM
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+      - main
     
 jobs:
   build:

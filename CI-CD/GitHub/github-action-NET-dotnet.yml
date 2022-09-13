@@ -2,9 +2,9 @@ name: Whitesource Unified Agent Scan - .NET (dotnet)
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ develop ]
+    branches:
+      - master
+      - main
 
 
 jobs:
@@ -33,7 +33,7 @@ jobs:
         WS_USERKEY: ${{secrets.USERKEY}}
         WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
         WS_PRODUCTNAME: ${{github.event.repository.name}}
-        WS_PROJECTNAME: ${{github.ref}}
+        WS_PROJECTNAME: ${{github.event.repository.name}}_${{github.ref_name}}
         WS_FILESYSTEMSCAN: false
       run: |
         echo Downloading WhiteSource Unified Agent

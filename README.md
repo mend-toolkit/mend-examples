@@ -19,7 +19,11 @@ If you can't find something, use search to [search in this repository](https://d
 
 ## [Generic by Use Case](Generic)
 
+## [Policy Check Examples](Policy-Check)
+
 ## [Prioritize Scans by Language](Prioritize)
+
+## [Repo Integration Setup](Repo-Integration)
 
 ## [Scripts](Scripts)
 
