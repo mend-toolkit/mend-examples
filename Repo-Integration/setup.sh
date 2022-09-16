@@ -52,8 +52,10 @@ mkdir $BASE_DIR/latest
 mv $BASE_DIR/untar/$AGENT_LATEST* $BASE_DIR/latest
 rm -rf $BASE_DIR/untar
 
-# Copy Activation Key
-jq --arg ws_key $ws_key '(.properties[] | select(.propertyName=="bolt.op.activation.key")).propertyValue |= $ws_key' ${BASE_DIR}/latest/wss-configuration/config/prop.json > ${BASE_DIR}/prop.json
+
+# Copy Activation Key & update with fake value
+cp ${BASE_DIR}/latest/wss-configuration/config/prop.json ${BASE_DIR}/prop.json
+sed -i 's/your-activation-key/fakevalue/1' ${BASE_DIR}/prop.json
 echo "${grn}${MEND_DIR}/prop.json created successfully${end}"
 
 ## Grab scanner tags
@@ -67,17 +69,8 @@ echo "REMEDIATE=${REMEDIATE}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "MEND_DIR=${MEND_DIR}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "BASE_DIR=${BASE_DIR}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "SCM=$SCM" >> ${REPO_INTEGRATION_DIR}/.env
+echo "WS_ACTIVATION_KEY=${ws_key}" >> ${REPO_INTEGRATION_DIR}/.env
 
-## Create Docker Network
-DNETWORK=$(docker network ls -f name=${SCM}_bridge -q)
-if [ -z "$DNETWORK" ]
-then
-    echo "${yel}Docker Network does not exist${end}"
-    docker network create -d bridge ${SCM}_bridge
-    echo "${cyn}Docker Network ${SCM}_bridge created${end}"
-else
-    echo "${cyn}Docker Network ${SCM}_bridge already exists with Network ID ${DNETWORK}${end}"
-fi
 
 echo "${grn}Download Success!!!${end}"
 
@@ -91,41 +84,9 @@ then
     echo "${cyn}export ws_key='replace-with-your-activation-key-inside-single-quotes'${end}"
     exit
 else
-    jq_exists
+    scm
 fi
 
-}
-
-function jq_exists(){
-## Check if jq exists on the machine
-. /etc/os-release
-OS=$(echo "$NAME")
-PKG="jq"
-if [ "$OS" = "Ubuntu" ]
-then 
-    DEBIAN_CHECK=$(dpkg-query -W --showformat='${Status}\n' $PKG|grep "install ok installed")
-        if [ "" = "$DEBIAN_CHECK" ]
-        then
-            echo "${red}jq could not be found please install with the following command${end}"
-            echo "${cyn}sudo apt install jq${end}"
-        else
-            scm
-        fi
-
-elif [ "$OS" = "Amazon Linux" ]
-then
-    RPM_CHECK=$(rpm -qa | grep ${PKG})
-        if [ -z "$RPM_CHECK" ]
-        then
-            echo "${red}jq could not be found please install with one the following command${end}"
-            echo "${cyn}sudo yum install jq${end}"
-        else
-            scm
-        fi
-else
-    echo "${red}Your OS is not supported, please open a Github issue${end}"
-    exit
-fi
 }
 
 if [ -z "$1" ]
