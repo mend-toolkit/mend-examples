@@ -25,8 +25,11 @@ Options Defined:
 ## Execution
 Execution instructions:  
 ```
-git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration
+git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration && chmod +x setup.sh
+
 export ws_key='<your activation key here>'
-chmod +x ./setup.sh && ./setup.sh <option>
+
+./setup.sh <option>
+
 docker-compose up
 ```
