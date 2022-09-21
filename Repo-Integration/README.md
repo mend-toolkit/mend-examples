@@ -25,10 +25,17 @@ Options Defined:
 ## Execution
 Execution instructions:  
 
+- Clone the repository & give setup.sh permissions to run
+
 ```git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration && chmod +x setup.sh```
+- Add your activation key as an environment variable which will be copied to the .env file which is created by setup.sh
 
 ```export ws_key='your activation key between single quotes'```
+- Run the setup.sh script for your appropriate source control management system as shown in options above
 
-```chmod +x ./setup.sh && ./setup.sh <option>```
+```./setup.sh <option>```
+- Run docker compose depending on how it was installed
 
-```docker-compose up```
+```docker-compose up``` 
+
+```docker compose up```
