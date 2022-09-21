@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8080:8080"
+      - "8582:8080"
     volumes: 
       - ${BASE_DIR}/prop.json:/etc/usr/local/whitesource/conf/prop.json
     restart: always
