@@ -12,7 +12,7 @@ When used, these scripts will download the latest repository integration run via
 - **Linux (Bash):**	CentOS, Debian, Ubuntu, RedHat
 
 ## Prerequisites
-- Docker, Docker Compose, git, wget, jq, SCM Repository instance up and running
+- Docker, Docker Compose, git, wget, SCM Repository instance up and running
 
 ## Options
 `setup.sh` options: **ghe**, **gls**, **bb**
@@ -24,9 +24,10 @@ Options Defined:
 
 ## Execution
 Execution instructions:  
-```
-git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration
-export ws_key='<your activation key here>'
-chmod +x ./setup.sh && ./setup.sh <option>
-docker-compose up
-```
+```git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration && chmod +x setup.sh```
+
+```export ws_key='your activation key between single quotes'```
+
+```./setup.sh <option>```
+
+```docker-compose up```
