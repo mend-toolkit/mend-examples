@@ -29,6 +29,6 @@ Execution instructions:
 
 ```export ws_key='your activation key between single quotes'```
 
-```./setup.sh <option>```
+```chmod +x ./setup.sh && ./setup.sh <option>```
 
 ```docker-compose up```
