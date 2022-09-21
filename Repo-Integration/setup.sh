@@ -70,6 +70,7 @@ echo "MEND_DIR=${MEND_DIR}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "BASE_DIR=${BASE_DIR}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "SCM=$SCM" >> ${REPO_INTEGRATION_DIR}/.env
 echo "WS_ACTIVATION_KEY=${ws_key}" >> ${REPO_INTEGRATION_DIR}/.env
+echo "WS_UA_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
 
 
 echo "${grn}Download Success!!!${end}"

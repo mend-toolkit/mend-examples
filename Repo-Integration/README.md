@@ -24,12 +24,11 @@ Options Defined:
 
 ## Execution
 Execution instructions:  
-```
-git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration && chmod +x setup.sh
 
-export ws_key='<your activation key here>'
+```git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration && chmod +x setup.sh```
 
-./setup.sh <option>
+```export ws_key='your activation key between single quotes'```
 
-docker-compose up
-```
+```chmod +x ./setup.sh && ./setup.sh <option>```
+
+```docker-compose up```
