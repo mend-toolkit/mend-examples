@@ -39,4 +39,5 @@ Execution instructions:
 ```docker-compose up``` 
 
 - Run docker compose in detached mode depending on how it was installed.
+
 ```docker-compose up -d```
