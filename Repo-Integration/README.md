@@ -24,6 +24,7 @@ Options Defined:
 
 ## Execution
 Execution instructions:  
+
 ```git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration && chmod +x setup.sh```
 
 ```export ws_key='your activation key between single quotes'```

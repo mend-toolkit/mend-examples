@@ -12,6 +12,7 @@ services:
       - "8080:8080"
     volumes: 
       - ${BASE_DIR}/prop.json:/etc/usr/local/whitesource/conf/prop.json
+    restart: always
     logging:
       driver: local
       options:
@@ -32,6 +33,7 @@ services:
       - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
     depends_on: 
       - remediate
+    restart: always
     logging:
         driver: local
         options:
