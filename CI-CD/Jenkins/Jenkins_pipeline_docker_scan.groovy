@@ -7,6 +7,7 @@ pipeline {
        WS_USERKEY = "${USERKEY}" //Taken from Jenkins Global Environment Variables
        WS_PRODUCTNAME = "Jenkins_Pipeline"
        WS_PROJECTNAME = "${JOB_NAME}"
+       myImage = "myImage"
   }
 
   tools {
@@ -17,7 +18,7 @@ pipeline {
 
     stage('Some docker build') {
       steps {
-        sh 'docker build -t myImage .'
+        sh 'docker build -t ${myImage} .'
       }
     }
 
@@ -39,10 +40,10 @@ pipeline {
 
     stage('Run Mend Script') {
       environment{
-            WS_DOCKER_INCLUDES = sh (returnStdout: true, script:
+            WS_DOCKER_INCLUDES = 
             """
             #!/bin/bash
-            docker images | grep myImage | awk '{ print \0443 }'
+            docker images --filter=reference="${myImage}" -q
             """
             ).trim()
             WS_DOCKER_SCANIMAGES = true
