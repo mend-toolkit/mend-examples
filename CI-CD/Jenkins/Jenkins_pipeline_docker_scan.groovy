@@ -40,6 +40,10 @@ pipeline {
 
     stage('Run Mend Script') {
       environment{
+        /*
+        The following command uses the image name provided in the environment section and provides its Image ID.
+        This is the image ID which will be scanned be Mend in case having multiple images with same prefix.
+        */
             WS_DOCKER_INCLUDES = 
             """
             #!/bin/bash
