@@ -1,13 +1,16 @@
-name: Whitesource Unified Agent Scan - Conan
+name: Mend ws-conan-scanner Release Scan
 
 on:
   push:
     branches:
-      - master
-      - main
+      - '**release**'
 
 jobs:
-  prioritize:
+  mendscan:
+    env:
+        WS_APIKEY: ${{secrets.PROD_APIKEY}}
+        WS_USERKEY: ${{secrets.PROD_USERKEY}}
+        WS_WSS_URL: https://saas.mend.io/agent
 
     runs-on: ubuntu-latest
     strategy:
@@ -34,22 +37,20 @@ jobs:
         conan install ..
         cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
         cmake --build .
-    - name: WhiteSource Unified Agent Scan
+    - name: ws-conan-scanner
       env:
-        WS_APIKEY: ${{secrets.APIKEY}}
-        WS_USERKEY: ${{secrets.USERKEY}}
-        WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
         WS_PRODUCTNAME: ${{github.event.repository.name}}
         WS_PROJECTNAME: ${{github.event.repository.name}}_${{github.ref_name}}
         WS_EXCLUDES: "**/*conan_export.tgz **/*conan_package.tgz **/*conanfile.py **/node_modules **/src/test **/testdata **/*sources.jar **/*javadoc.jar"
       run: |
-        echo Downloading WhiteSource Unified Agent
+        echo Downloading Mend Unified Agent
         curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
         if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
           echo "Integrity Check Failed"
         else
           echo "Integrity Check Passed"
-          cp -r ~/.conan/data ./conan-libraries
-          echo Starting WhiteSource Scan
-          java -jar wss-unified-agent.jar
+          echo "Starting ws-conan-scanner install"
+          pip install ws-conan-scanner
+          export WS_URL=$(echo $WS_WSS_URL | awk -F "/agent" '{print $1}')
+          ws_conan_scanner  -a $PWD -d $PWD -u $WS_URL -k $WS_USERKEY -t $WS_APIKEY --productName $WS_PRODUCTNAME --projectName $WS_PROJECTNAME
         fi

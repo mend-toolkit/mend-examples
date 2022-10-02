@@ -1,15 +1,78 @@
 # Scripts
 This repository contains scripts for use with Mend Unified agent scanning within a CI/CD pipeline.
 
-- [Adding Red Shield Comment Links to GitHub Issues](#adding-red-shield-comment-links-to-github-issues)
-- [Adding Red Shield Comments Links to GitHub Issues and Closing Green Shield Issues](#adding-red-shield-comments-links-to-github-issues-and-closing-green-shield-issues)
 - [Reports Within a Pipeline](#reports-within-a-pipeline)
 - [Pipeline SBOM Generation](#pipeline-sbom-generation)
+- [Adding Red Shield Comment Links to GitHub Issues](#adding-red-shield-comment-links-to-github-issues)
+- [Adding Red Shield Comments Links to GitHub Issues and Closing Green Shield Issues](#adding-red-shield-comments-links-to-github-issues-and-closing-green-shield-issues)
 - [Display Vulnerabilities Affecting a Project](#display-vulnerabilities-affecting-a-project)
 - [Display Policy Violations Following a Scan](#display-policy-violations-following-a-scan)
 - [Cache the Latest Version of the Unified Agent](#cache-the-latest-version-of-the-unified-agent)
+---
+> **All scripts & snippets should call [check-project-state.sh](check-project-state.sh) before running to ensure that the scan has completed.**
+<br>
+---
 
-All scripts should call [check-project-state.sh](check-project-state.sh) before running to ensure that the project scan has completed.
+## Reports Within a Pipeline
+
+Any report can also be published as a part of the pipeline.  
+Add the following snippet after calling the Unified Agent in any pipeline file to save reports from the scanned project to the `./whitesource` logs folder, then use your [pipeline publish](../CI-CD#Pipeline-Log-Publishing) feature to save the whitesource log folder as an artifact.  
+
+<br>
+
+**Prerequisites:**  
+
+* `jq` and `awk` must be installed
+* ENV variables must be set
+  * WS_GENERATEPROJECTDETAILSJSON: true
+  * WS_USERKEY
+  * WS_WSS_URL
+
+<br>
+
+**Execution:**  
+
+```
+export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
+export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
+  #RiskReport-Example
+curl -o ./whitesource/riskreport.pdf -X POST "${WS_URL}/api/v1.3" -H "Content-Type: application/json"  -d '{"requestType":"getProjectRiskReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+curl -o ./whitesource/inventoryreport.xlsx -X POST "${WS_URL}/api/v1.3" -H "Content-Type: application/json"  -d '{"requestType":"getProjectInventoryReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+curl -o ./whitesource/duediligencereport.xlsx -X POST "${WS_URL}/api/v1.3" -H "Content-Type: application/json"  -d '{"requestType":"getProjectDueDiligenceReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+```
+
+<br>
+<hr>
+
+## Pipeline SBOM Generation
+
+Add the following snippet after calling the Unified Agent in any pipeline to create an SPDX tag value output from the scanned project to the `./whitesource` logs folder, then use your [pipeline publish](../CI-CD#Pipeline-Log-Publishing) feature to save the whitesource log folder as an artifact.  
+
+<br>
+
+**Prerequisites:**  
+
+* `jq`, `awk`, `python3` and `python3-pip` must be installed
+* ENV variables must be set
+  * WS_GENERATEPROJECTDETAILSJSON: true
+  * WS_USERKEY
+  * WS_APIKEY
+  * WS_WSS_URL
+
+<br>
+
+**Execution:**  
+
+```
+export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
+export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
+pip install ws-sbom-generator
+ws_sbom_generator -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ./whitesource
+```
+
+More information & usage regarding the [WS SBOM generator](https://github.com/whitesource-ps/ws-sbom-spdx-report)
+
+
 <br>
 <hr>
 
@@ -24,7 +87,6 @@ Add the following lines after the Unified Agent command in a GitHub action to ad
 **Prerequisites:**  
 
 * `jq` and `awk` must be installed
-  * 99.9% of pipelines have these pre-installed
 * ENV variables must be set
   * WS_GENERATEPROJECTDETAILSJSON: true
   * WS_USERKEY
@@ -55,7 +117,6 @@ Add the following lines after the Unified Agent command in a CI/CD pipeline to i
 **Prerequisites:**  
 
 * `jq` and `awk` must be installed
-  * 99.9% of pipelines have these pre-installed
 * ENV variables must be set
   * WS_GENERATEPROJECTDETAILSJSON: true
   * WS_USERKEY
@@ -72,73 +133,6 @@ Add the following lines after the Unified Agent command in a CI/CD pipeline to i
 curl -LJO https://raw.githubusercontent.com/whitesource-ft/ws-examples/main/Scripts/prioritize-ignore.sh 
 chmod +x ./prioritize-ignore.sh && ./prioritize-ignore.sh
 ```
-
-<br>
-<hr>
-
-## Reports Within a Pipeline
-
-Any WhiteSource report can also be published as a part of the pipeline.  
-Add the following snippet after calling the Unified Agent in any pipeline file to save reports from the scanned project to the `./whitesource` logs folder, then use your [pipeline publish](../CI-CD#Pipeline-Log-Publishing) feature to save the whitesource log folder as an artifact.  
-
-<br>
-
-**Prerequisites:**  
-
-* `jq` and `awk` must be installed
-  * 99.9% of pipelines have these pre-installed
-* ENV variables must be set
-  * WS_GENERATEPROJECTDETAILSJSON: true
-  * WS_USERKEY
-  * WS_WSS_URL
-
-<br>
-
-**Execution:**  
-
-```
-export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
-export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
-  #RiskReport-Example
-curl --output ./whitesource/riskreport.pdf --request POST $WS_URL'/api/v1.3' --header 'Content-Type: application/json'  --data-raw '{"requestType":"getProjectRiskReport","userKey":"$WS_USERKEY","projectToken":"$WS_PROJECTTOKEN"}'
-  #InventoryReport-Example
-curl --output ./whitesource/inventoryreport.xlsx --request POST $WS_URL'/api/v1.3' --header 'Content-Type: application/json'  --data-raw '{"requestType":"getProductInventoryReport","userKey":"$WS_USERKEY","projectToken":"$WS_PROJECTTOKEN"}'
-  #DueDiligenceReport-Example
-curl --output ./whitesource/duediligencereport.pdf --request POST $WS_URL'/api/v1.3' --header 'Content-Type: application/json'  --data-raw '{"requestType":"getProjectDueDiligenceReport","userKey":"$WS_USERKEY","projectToken":"$WS_PROJECTTOKEN"}'
-```
-
-<br>
-<hr>
-
-## Pipeline SBOM Generation
-
-Add the following snippet after calling the Unified Agent in any pipeline to create an SPDX tag value output from the scanned project to the `./whitesource` logs folder, then use your [pipeline publish](../CI-CD#Pipeline-Log-Publishing) feature to save the whitesource log folder as an artifact.  
-
-<br>
-
-**Prerequisites:**  
-
-* `jq`, `awk`, `python3` and `python3-pip` must be installed
-  * 99.9% of pipelines have these pre-installed
-* ENV variables must be set
-  * WS_GENERATEPROJECTDETAILSJSON: true
-  * WS_USERKEY
-  * WS_APIKEY
-  * WS_WSS_URL
-
-<br>
-
-**Execution:**  
-
-```
-export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
-export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
-pip install ws-sbom-generator
-ws_sbom_generator -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ./whitesource
-```
-
-More information & usage regarding the [WS SBOM generator](https://github.com/whitesource-ps/ws-sbom-spdx-report)
-
 
 <br>
 <hr>
