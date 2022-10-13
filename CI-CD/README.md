@@ -24,7 +24,7 @@ In the following examples, the `wss-unified-agent.jar` artifact is stored in the
 
 See also: [Cache the Latest Version of the Unified Agent](../Scripts/README.md#cache-the-latest-version-of-the-unified-agent) (generic example script)  
 
-## [Mend Report Publishing](../Scripts/README.md)
+## [Mend Reports](../Scripts/README.md)
 
 ## Pipeline Log Publishing
 
