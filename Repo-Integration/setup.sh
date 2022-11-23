@@ -80,48 +80,38 @@ echo "${grn}Download Success!!!${end}"
 
 function cert_add(){
     if [ -z $CERTFILE ]
-        then  (
-            echo "No .crt file supplied as 2nd argument. Integration will be prepared with no additional certs."
-        )
-        else (
-            if [ $AGENT_LATEST != "agent-4-gitlab-server-22.11.1/" ]
-                then (
+        then  echo "No .crt file supplied as 2nd argument. Integration will be prepared with no additional certs."
+        else
+            if [[ $AGENT_LATEST != *22.11.1/ ]]
+                then
                     echo "These changes to include certs are only tested to be valid against integration version 22.11.1.  Leaving all files unchanged.";
-                    exit;
-                )
+                    return;
             fi
-            if !(echo $CERTFILE | grep -q "\.crt$");
-                then echo Argument 2 to this script must be a certificate file whose name ends in ".crt";
-                exit;
-            fi
-            if [ ! -r $CERTFILE ]
-                then (
+            if [[ $CERTFILE != *.crt ]]
+                then
                     echo Argument 2 to this script must be a certificate file whose name ends in ".crt";
-                    exit;
-                )
+                    return;
             fi
             if !(grep -ne "-----BEGIN CERTIFICATE-----" $CERTFILE | grep -q '^1:');
-                then (
+                then
                     echo File supplied as 2nd argument must be a .crt file with first line equal to "-----BEGIN CERTIFICATE-----";
-                    exit;
-                )
-                else (
+                    return;
+                else
                     if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-gls-app/docker/Dockerfile | grep -q '^27:');
                         then
                             echo wss-gls-app Dockerfile not in expected format from version 22.11.1.  Leaving all files unchanged.
-                            exit;
+                            return;
                     fi
                     if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-scanner/docker/Dockerfile | grep -q '^356:');
                         then
                             echo wss-scanner Dockerfile not in expected format from version 22.11.1.  Leaving all files unchanged.
-                            exit;
+                            return;
                     fi
                     if !(grep -nF 'COPY package.json yarn.lock ./' ${BASE_DIR}/latest/wss-remediate/docker/Dockerfile | grep -q '^129:');
                         then
                             echo wss-remediate Dockerfile not in expected format from version 22.11.1.  Leaving all files unchanged.
-                            exit;
+                            return;
                     fi
-                )
             fi
             cp $CERTFILE ${BASE_DIR}/latest/wss-gls-app/docker/docker-image
             cp $CERTFILE ${BASE_DIR}/latest/wss-scanner/docker/docker-image
@@ -146,8 +136,7 @@ ENV NODE_EXTRA_CA_CERTS='"$CERTFILE_BASE"'\
 RUN /opt/buildpack/tools/java/11.0.12+7/bin/keytool -import -keystore /opt/buildpack/ssl/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
 RUN update-ca-certificates\
 ' ${BASE_DIR}/latest/wss-remediate/docker/Dockerfile
-            echo Supplied certfile $CERTFILE has been copied to the appropriate places and Dockerfiles have been modified so that TLS operations in the containers will trust this certificate.
-        )
+            echo Supplied certfile $CERTFILE has been copied to the appropriate places and Dockerfiles have been modified, so that TLS operations in the containers will trust this certificate.
     fi
 }
 
