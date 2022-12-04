@@ -1,4 +1,4 @@
-name: NPM Prioritize Scan
+name: Mend NPM Prioritize Scan
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ release* ]
 
 jobs:
-  WhiteSource-Prioritize:
+  Mend-Prioritize:
     runs-on: ubuntu-latest
 
     strategy:
@@ -36,7 +36,7 @@ jobs:
       - name: Install dependencies
         run: npm install --only=prod
         
-      - name: WhiteSource Unified Agent Scan
+      - name: Mend Unified Agent Scan
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           WS_APIKEY: ${{secrets.APIKEY}}
@@ -57,6 +57,6 @@ jobs:
           echo "Integrity Check Failed"
           else
               echo "Integrity Check Passed"
-              echo "Starting WhiteSource Scan"
+              echo "Starting Mend Scan"
           fi
           java -jar wss-unified-agent.jar -appPath ./package.json -d ./

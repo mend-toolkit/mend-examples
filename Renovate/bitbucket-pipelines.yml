@@ -5,7 +5,7 @@ pipelines:
   default:
     - parallel:
       - step:
-          name: 'Renovate' 
+          name: 'Mend Renovate' 
           script:
             - export RENOVATE_ENDPOINT='https://api.bitbucket.org/'
             - export RENOVATE_PLATFORM='bitbucket'

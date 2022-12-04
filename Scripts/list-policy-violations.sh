@@ -2,7 +2,7 @@
 
 # Description:
 # This script parses the policyRejectionSummary.json file, following a 
-# WhiteSource Unified Agent scan, and prints to the stdout the policies
+# Mend Unified Agent scan, and prints to the stdout the policies
 # that where violated, as well as the libraries that violated them.
 
 # The policyRejectionSummary.json file is created automatically under
@@ -23,7 +23,7 @@ if [[ "$1" =~ ^(--includePath|-p)$ ]] ; then
 fi
 
 echo ""
-echo "WhiteSource Policy Violations"
+echo "Mend Policy Violations"
 echo "============================="
 if [[ ! -f $jsonFile ]] ; then
     echo "[ERROR] File not found: $jsonFile"

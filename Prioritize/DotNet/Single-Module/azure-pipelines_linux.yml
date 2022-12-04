@@ -14,7 +14,7 @@ steps:
 
 - script: |
     curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
-    echo Unified Agent downloaded successfully
+    echo Mend Unified Agent downloaded successfully
     CSPROJ=$(basename $(find ./src -type f -wholename "*.csproj" ! -wholename "*build*" ! -wholename "*test*") .csproj)
     DLL=$(find ./ -type f -wholename "*/bin/$(buildConfiguration)/*/$CSPROJ.dll" ! -wholename "*build*" ! -wholename "*test*")
     echo $DLL will be added to appPath

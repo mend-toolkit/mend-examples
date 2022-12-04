@@ -5,7 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  group: 'WhiteSource Keys'
+  group: 'Mend Keys'
   buildConfiguration: 'Release'
 
 steps:
@@ -33,5 +33,5 @@ steps:
     WS_EXCLUDES: '**/build/** **/tests/**'
     SEARCHDIR: $(Pipeline.Workspace)
     RELEASEDIR: /bin/
-  displayName: 'Unified Agent Prioritize Scan'
+  displayName: 'Mend Unified Agent Prioritize Scan'
   

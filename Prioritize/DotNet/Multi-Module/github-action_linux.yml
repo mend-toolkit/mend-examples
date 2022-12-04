@@ -1,4 +1,4 @@
-name: Whitesource Prioritize DotNET Core
+name: Mend Prioritize DotNET Core
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         dotnet-version: 3.1.402
     - name: Build DotNET projects
       run: ./build.sh
-    - name: WhiteSource Unified Agent Scan
+    - name: Mend Unified Agent Scan
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         WS_APIKEY: ${{secrets.APIKEY}}

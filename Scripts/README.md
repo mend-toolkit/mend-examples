@@ -99,7 +99,7 @@ Add the following lines after the Unified Agent command in a GitHub action to ad
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/whitesource-ft/ws-examples/main/Scripts/ghissue-eua.sh 
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/ghissue-eua.sh 
 chmod +x ./ghissue-eua.sh && ./ghissue-eua.sh
 ```
 
@@ -130,7 +130,7 @@ Add the following lines after the Unified Agent command in a CI/CD pipeline to i
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/whitesource-ft/ws-examples/main/Scripts/prioritize-ignore.sh 
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/prioritize-ignore.sh 
 chmod +x ./prioritize-ignore.sh && ./prioritize-ignore.sh
 ```
 
@@ -291,7 +291,7 @@ The [cache-ua.sh](cache-ua.sh) script can be added to the CI/CD pipeline on a st
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/whitesource-ft/ws-examples/main/Scripts/cache-ua.sh.sh 
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/cache-ua.sh.sh 
 chmod +x ./cache-ua.sh.sh && ./cache-ua.sh.sh
 ```
 

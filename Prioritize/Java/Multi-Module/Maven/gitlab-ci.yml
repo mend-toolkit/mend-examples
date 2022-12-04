@@ -24,7 +24,7 @@ build:
     echo config created successfully
     curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
     curl -LJO https://unified-agent.s3.amazonaws.com/xModuleAnalyzer/xModuleAnalyzer.jar
-    echo Unified Agent downloaded successfully
+    echo Mend Unified Agent downloaded successfully
     java -jar wss-unified-agent.jar -d $PWD -analyzeMultiModuleExclusions '**/*internal* **/*original* **/*sources.jar' -analyzeMultiModule multimodule.txt
     echo 'multimodule.txt contents'
     cat multimodule.txt

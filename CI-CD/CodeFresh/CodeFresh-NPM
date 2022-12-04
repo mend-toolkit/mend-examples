@@ -4,13 +4,13 @@
 
 version: "1.0"
 stages:
-  - "WhiteSource"
+  - "Mend"
 
 steps:
   Freestyle:
-    title: WhiteSource-E2E
+    title: Mend-E2E
     type: freestyle
-    stage: "WhiteSource"
+    stage: "Mend"
     working_directory: "${{CF_BRANCH}}"
     arguments:
       image: 'quay.io/codefreshplugins/alpine:3.8'

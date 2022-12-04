@@ -1,7 +1,7 @@
-# Generic example for scanning docker images with the WhiteSource Unified Agent from Amazon Elastic Container Registry
+# Generic example for scanning docker images with the Mend Unified Agent from Amazon Elastic Container Registry
 
 # Add AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY as environment variables for the AWS CLI configuration/authentication (https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html).
-# Add WS_APIKEY & WS_USERKEY as environment variables for the WhiteSource authentication.
+# Add WS_APIKEY & WS_USERKEY as environment variables for the Mend authentication.
 # Adjust variables to match your Image URI.
 
 trigger:
@@ -48,10 +48,15 @@ stages:
         WS_FILESYSTEMSCAN: false
         WS_ARCHIVEEXTRACTIONDEPTH: 2
         WS_ARCHIVEINCLUDES: "**/*war **/*ear **/*zip **/*whl **/*tar.gz **/*tgz **/*tar **/*car **/*jar"
-      displayName: WhiteSource Docker Image Scan
+      displayName: Mend Docker Image Scan
       inputs:
         script: |
+          echo Downloading Mend Unified Agent
           curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
-          echo Unified Agent downloaded successfully
-          java -jar wss-unified-agent.jar
-
+          if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
+            echo "Integrity Check Failed"
+          else
+            echo "Integrity Check Passed"
+            echo Starting Mend Scan
+            java -jar wss-unified-agent.jar
+          fi

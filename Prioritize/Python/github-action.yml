@@ -1,4 +1,4 @@
-name: Whitesource Prioritize Python
+name: Mend Prioritize Python
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
         pip install virtualenv --user
         pip install -r requirements.txt
     
-    - name: WhiteSource Prioritize Scan
+    - name: Mend Prioritize Scan
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         WS_APIKEY: ${{secrets.APIKEY}}
@@ -55,6 +55,6 @@ jobs:
         echo "Integrity Check Failed"
         else
             echo "Integrity Check Passed"
-            echo "Starting WhiteSource Scan"
+            echo "Starting Mend Scan"
         fi
         java -jar wss-unified-agent.jar -appPath ./requirements.txt -d ./

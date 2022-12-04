@@ -1,4 +1,4 @@
-name: WhiteSource Prioritize Scala with SBT & Maven
+name: Mend Prioritize Scala with SBT & Maven
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
         mv $(find ./ -type f -wholename "*/target/*.pom") ./pom.xml
         mvn clean install -DskipTests=true
 
-    - name: WhiteSource Unified Agent Scan
+    - name: Mend Unified Agent Scan
       continue-on-error: true
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -47,7 +47,7 @@ jobs:
         echo "Integrity Check Failed"
         else
             echo "Integrity Check Passed"
-            echo "Starting WhiteSource Scan"
+            echo "Starting Mend WhiteSource Scan"
         fi
         JARFILE=$(find ./ -type f -wholename "*/target/*.jar")
         echo $JARFILE will be added to appPath

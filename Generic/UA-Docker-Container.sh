@@ -17,7 +17,7 @@ export WS_DOCKER_SCANCONTAINERS=true
 export WS_ARCHIVEEXTRACTIONDEPTH=2
 export WS_ARCHIVEINCLUDES='**/*war **/*ear **/*zip **/*whl **/*tar.gz **/*tgz **/*tar **/*car **/*jar'
 curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
-echo Unified Agent downloaded successfully
+echo Mend Unified Agent downloaded successfully
 if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
     echo "Integrity Check Failed"
 else
