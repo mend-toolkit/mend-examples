@@ -40,7 +40,7 @@ export WARFILE=$(find ./ -type f -wholename "*/target/*.war")
 echo $WARFILE will be added to appPath
 export WS_APIKEY=<your-api-key>
 export WS_USERKEY=<your-user-key>
-export WS_WSS_URL=https://saas.whitesourcesoftware.com/agent
+export WS_WSS_URL=https://saas.mend.io/agent
 export WS_ENABLEIMPACTANALYSIS=true
 export WS_RESOLVEALLDEPENDENCIES=false
 export WS_MAVEN_RESOLVEDEPENDENCIES=true

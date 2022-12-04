@@ -16,7 +16,7 @@ pipelines:
             - curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
             - export WS_APIKEY=$APIKEY #add as a variable to the pipeline
             - export WS_USERKEY=$USERKEY #add as a variable to the pipeline
-            - export WS_WSS_URL=https://saas.whitesourcesoftware.com/agent
+            - export WS_WSS_URL=https://saas.mend.io/agent
             - export WS_PRODUCTNAME=$BITBUCKET_REPO_SLUG
             - export WS_PROJECTNAME=$BITBUCKET_BRANCH
             - echo "Running Mend"

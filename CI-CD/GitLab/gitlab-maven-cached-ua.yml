@@ -26,7 +26,7 @@ ws_scan:
     WS_APIKEY: $API_KEY
     WS_USERKEY: $USER_KEY
     WS_MAVEN_AGGREGATEMODULES: true
-    WS_WSS_URL: "https://saas.whitesourcesoftware.com/agent"
+    WS_WSS_URL: "https://saas.mend.io/agent"
     WS_PRODUCTNAME: $CI_PROJECT_NAME
     WS_PROJECTNAME: $CI_COMMIT_REF_NAME
   script: |

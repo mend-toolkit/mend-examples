@@ -39,7 +39,7 @@ jobs:
         cat <<EOF > eua.config
         apiKey=$WS_APIKEY
         userKey=$WS_USERKEY
-        wss.url=https://saas.whitesourcesoftware.com/agent
+        wss.url=https://saas.mend.io/agent
         productName=GH_${{ github.event.repository.name }}
         projectName=${{ github.ref }}_Prioritize
         enableImpactAnalysis=true

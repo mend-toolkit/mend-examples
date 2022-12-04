@@ -28,7 +28,7 @@ else
 fi
 export WS_APIKEY=<your-api-key>
 export WS_USERKEY=<your-user-key>
-export WS_WSS_URL=https://saas.whitesourcesoftware.com/agent
+export WS_WSS_URL=https://saas.mend.io/agent
 export WS_ENABLEIMPACTANALYSIS=true
 export WS_RESOLVEALLDEPENDENCIES=false
 export WS_NPM_RESOLVEDEPENDENCIES=true

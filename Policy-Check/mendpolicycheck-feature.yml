@@ -19,7 +19,7 @@ jobs:
       env:
         WS_APIKEY: ${{secrets.APIKEY}}
         WS_USERKEY: ${{secrets.USERKEY}}
-        WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+        WS_WSS_URL: https://saas.mend.io/agent
         WS_PRODUCTNAME: ${{github.event.repository.name}}
         WS_PROJECTNAME: ${{github.event.repository.name}}_${{github.event.repository.default_branch}}
         WS_CHECKPOLICIES: TRUE

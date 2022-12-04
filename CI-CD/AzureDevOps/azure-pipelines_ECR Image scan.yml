@@ -34,7 +34,7 @@ stages:
       env:
         WS_APIKEY: $(APIKEY)
         WS_USERKEY: $(USERKEY)
-        WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+        WS_WSS_URL: https://saas.mend.io/agent
         WS_PRODUCTNAME: $(System.TeamProject)
         WS_PROJECTNAME: doesnotmatter
         WS_DOCKER_SCANIMAGES: true

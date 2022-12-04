@@ -22,7 +22,7 @@ steps:
   env:
     WS_APIKEY: $(APIKEY)
     WS_USERKEY: $(USERKEY)
-    WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+    WS_WSS_URL: https://saas.mend.io/agent
     WS_PRODUCTNAME: AZ_$(System.TeamProject)
     WS_ENABLEIMPACTANALYSIS: true
     WS_RESOLVEALLDEPENDENCIES: false

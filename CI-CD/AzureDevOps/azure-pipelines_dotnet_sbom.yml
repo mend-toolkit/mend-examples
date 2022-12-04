@@ -8,8 +8,8 @@ pool:
 
 variables:
   buildConfiguration: Release
-  WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
-  WS_URL: https://saas.whitesourcesoftware.com
+  WS_WSS_URL: https://saas.mend.io/agent
+  WS_URL: https://saas.mend.io
   WS_PRODUCTNAME: AZ_$(System.TeamProject)
   WS_PROJECTNAME: $(Build.Repository.Name)_$(Build.SourceBranchName)
   WS_GENERATEPROJECTDETAILSJSON: true

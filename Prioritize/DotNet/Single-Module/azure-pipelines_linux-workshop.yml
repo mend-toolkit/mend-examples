@@ -28,7 +28,7 @@ steps:
   env:
     WS_APIKEY: $(WS_APIKEY)
     WS_USERKEY: $(WS_USERKEY)
-    WS_WSS_URL: https://app.whitesourcesoftware.com/agent
+    WS_WSS_URL: https://app.mend.io/agent
     WS_PRODUCTNAME: AZ_$(System.TeamProject)
     WS_PROJECTNAME: $(Build.Repository.Name)_$(Build.SourceBranchName)_Prioritize
     WS_ENABLEIMPACTANALYSIS: true
@@ -40,12 +40,12 @@ steps:
     WS_EXCLUDES: '**/build/** **/tests/**'
   displayName: 'Unified Agent Prioritize Scan'
 
-- script: curl -LJO https://downloads-sast.whitesourcesoftware.com/sast-cli/linux/wscli && chmod +x wscli
+- script: curl -LJO https://downloads-sast.mend.io/sast-cli/linux/mendsastcli && chmod +x mendsastcli
   displayName: 'Downloading WS SAST Tool'
 
-- script: ./wscli --dir ./ --name=$(Build.Repository.Name)$(Build.SourceBranchName) --app AZ$(System.TeamProject)
+- script: ./mendsastcli --dir ./ --name=$(Build.Repository.Name)$(Build.SourceBranchName) --app AZ$(System.TeamProject)
   displayName: 'Run WS SAST'
   env:
     SAST_ORGANIZATION: $(SAST_ORGANIZATION)
     SASTCLI_TOKEN: $(SASTCLI_TOKEN)
-    SAST_SERVER: https://sast-demo.whitesourcesoftware.com
+    SAST_SERVER: https://saas.mend.io/sast

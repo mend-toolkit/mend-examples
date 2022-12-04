@@ -3,7 +3,7 @@ version: 0.2
 env:
   shell: bash
   variables:
-    WS_WSS_URL: "https://saas.whitesourcesoftware.com/agent"
+    WS_WSS_URL: "https://saas.mend.io/agent"
   secrets-manager: # for more information: https://aws.amazon.com/about-aws/whats-new/2019/11/aws-codebuild-adds-support-for-aws-secrets-manager/
     WS_APIKEY: "SecretName:Value"
     
