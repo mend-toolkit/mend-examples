@@ -85,7 +85,7 @@ If your pipeline publish does not allow for multi folder publishing like GitHub 
 
       echo "Prioritize log: " $eua_log
       eua_dir=`dirname $eua_log`
-      echo "Prooritize folder log location: " $eua_dir
+      echo "Prioritize folder log location: " $eua_dir
       echo "cp -R $eua_dir $curr_dir"
       cp -R $eua_dir $curr_dir
   displayName: Copy Mend Prioritize Logs
