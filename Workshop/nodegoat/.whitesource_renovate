@@ -1,0 +1,28 @@
+{                               
+  "scanSettings": {
+    "configMode": "AUTO",
+    "configExternalURL": "",
+    "projectToken": "",
+    "baseBranches": [],
+    "enableLicenseViolations": "true"
+  },
+  "checkRunSettings": {
+    "vulnerableCheckRunConclusionLevel": "failure",
+    "displayMode": "diff",
+    "useMendCheckNames": true
+  },
+  "issueSettings": {
+    "minSeverityLevel": "HIGH",
+    "issueType": "DEPENDENCY"
+  },
+  "remediateSettings": {
+    "enableRenovate": "true",
+    "extends": [
+      "config:base"
+    ],
+    "workflowRules": {
+      "enabled": false,
+      "minVulnerabilitySeverity": "HIGH"
+    }
+  }
+}
