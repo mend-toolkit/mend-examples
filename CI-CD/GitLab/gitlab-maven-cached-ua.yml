@@ -19,18 +19,18 @@ cache:
 ws_scan:
   stage: scan
   cache:
-    key: WhiteSource
+    key: Mend
     paths: 
       - ./wss-unified-agent.jar
   variables:
     WS_APIKEY: $API_KEY
     WS_USERKEY: $USER_KEY
     WS_MAVEN_AGGREGATEMODULES: true
-    WS_WSS_URL: "https://saas.whitesourcesoftware.com/agent"
+    WS_WSS_URL: "https://saas.mend.io/agent"
     WS_PRODUCTNAME: $CI_PROJECT_NAME
     WS_PROJECTNAME: $CI_COMMIT_REF_NAME
   script: |
-    echo "Checking for the newer versions for WhiteSource Unified Agent"
+    echo "Checking for the newer versions for Mend Unified Agent"
     res="$(curl -s -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/whitesource/unified-agent-distribution/releases")"
     latestRelease="$(echo "$res" | jq -s '.[] | sort_by(.published_at) | last')"
     latestVer="$(echo "$latestRelease" | jq -rs '.[] | .tag_name')"
@@ -41,11 +41,11 @@ ws_scan:
       curVerDate=0
     fi
     if [ $latestVerDate -gt $curVerDate ] ; then
-        echo "Downloading WhiteSource Unified Agent latest version ($latestVer)"
+        echo "Downloading Mend Unified Agent latest version ($latestVer)"
         curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
     else
-        echo "Already using the latest version of the WhiteSource Unified Agent"
+        echo "Already using the latest version of the Mend Unified Agent"
     fi
 
-    echo "WhiteSource Scan"
+    echo "Mend Scan"
     java -jar ./wss-unified-agent.jar

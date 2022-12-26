@@ -1,4 +1,4 @@
-name: Whitesource Prioritize Java with Gradle
+name: Mend Prioritize Java with Gradle
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ release* ]
 
 jobs:
-  WhiteSource-Prioritize:
+  Mend-Prioritize:
 
     runs-on: ubuntu-latest
 
@@ -31,7 +31,7 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build -x test
-    - name: WhiteSource Prioritize Scan
+    - name: Mend Prioritize Scan
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         WS_APIKEY: ${{secrets.APIKEY}}
@@ -40,7 +40,7 @@ jobs:
         cat <<EOF > eua.config
         apiKey=$WS_APIKEY
         userKey=$WS_USERKEY
-        wss.url=https://saas.whitesourcesoftware.com/agent
+        wss.url=https://saas.mend.io/agent
         productName=GH_${{ github.event.repository.name }}
         projectName=${{ github.ref }}_Prioritize
         enableImpactAnalysis=true
@@ -54,7 +54,7 @@ jobs:
         echo config created successfully
         curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
         curl -LJO https://unified-agent.s3.amazonaws.com/xModuleAnalyzer/xModuleAnalyzer.jar
-        echo Unified Agent downloaded successfully
+        echo Mend Unified Agent downloaded successfully
         java -jar wss-unified-agent.jar -d $PWD -analyzeMultiModule multimodule.txt
         echo 'multimodule.txt contents'
         cat multimodule.txt

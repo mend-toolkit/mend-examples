@@ -5,7 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  group: 'WhiteSource Keys'
+  group: 'Mend Keys'
   buildConfiguration: 'Release'
 
 steps:
@@ -22,7 +22,7 @@ steps:
   env:
     WS_APIKEY: $(APIKEY)
     WS_USERKEY: $(USERKEY)
-    WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+    WS_WSS_URL: https://saas.mend.io/agent
     WS_PRODUCTNAME: AZ_$(System.TeamProject)
     WS_ENABLEIMPACTANALYSIS: true
     WS_RESOLVEALLDEPENDENCIES: false
@@ -33,5 +33,5 @@ steps:
     WS_EXCLUDES: '**/build/** **/tests/**'
     SEARCHDIR: $(Pipeline.Workspace)
     RELEASEDIR: /bin/
-  displayName: 'Unified Agent Prioritize Scan'
+  displayName: 'Mend Unified Agent Prioritize Scan'
   

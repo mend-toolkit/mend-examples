@@ -14,4 +14,4 @@ Two options to store the “key” information
 * DEV_APIKEY (Integration -> Organization APIKEY from your development organization)
 * USERKEY (User Profile -> User Keys section from your production organization)
 * DEV_USERKEY (User Profile -> User Keys section from your development organization)
-* WSURL (https://&lt;WhiteSource URL&gt;/agent)
+* WSURL (https://&lt;Mend URL&gt;/agent)

@@ -5,9 +5,9 @@ export WS_APIKEY=<your-api-key>
 export WS_USERKEY=<your-user-key>
 export WS_PRODUCTNAME=<your-product-name>
 export WS_PROJECTNAME=<your-project-name>
-export WS_WSS_URL=https://saas.whitesourcesoftware.com/agent
+export WS_WSS_URL=https://saas.mend.io/agent
 curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
-echo Unified Agent downloaded successfully
+echo Mend Unified Agent downloaded successfully
 if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
     echo "Integrity Check Failed"
 else

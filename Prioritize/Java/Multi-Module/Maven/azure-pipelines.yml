@@ -23,7 +23,7 @@ steps:
       cat <<EOF > eua.config
       apiKey=$(APIKEY)
       userKey=$(USERKEY)
-      wss.url=https://saas.whitesourcesoftware.com/agent
+      wss.url=https://saas.mend.io/agent
       productName=$(System.TeamProject)
       projectName=$(Build.Repository.Name)_$(Build.SourceBranchName)_Prioritize
       enableImpactAnalysis=true

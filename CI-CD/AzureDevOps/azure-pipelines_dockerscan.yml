@@ -23,19 +23,19 @@ steps:
 
 
 - script: |
-      echo Downloading WhiteSource Unified Agent
+      echo Downloading Mend Unified Agent
       curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
       if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
         echo "Integrity Check Failed"
       else
         echo "Integrity Check Passed"
-        echo Starting WhiteSource Scan
+        echo Starting Mend Scan
         java -jar wss-unified-agent.jar
       fi
   env:
     WS_APIKEY: $(APIKEY)
     WS_USERKEY: $(USERKEY)
-    WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+    WS_WSS_URL: https://saas.mend.io/agent
     WS_PRODUCTNAME: $(System.TeamProject)
     WS_PROJECTNAME: doesnotmatter
     WS_DOCKER_SCANIMAGES: true
@@ -44,5 +44,5 @@ steps:
     WS_DOCKER_PROJECTNAMEFORMAT: repositoryNameAndTag
     WS_ARCHIVEEXTRACTIONDEPTH: 2
     WS_ARCHIVEINCLUDES: '**/*war **/*ear **/*zip **/*whl **/*tar.gz **/*tgz **/*tar **/*car **/*jar'
-  displayName: WhiteSource Docker Image Scan
+  displayName: Mend Docker Image Scan
   

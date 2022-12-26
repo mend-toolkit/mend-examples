@@ -31,12 +31,12 @@ steps:
       $DLL=(Get-ChildItem -Path ./ -Recurse -Filter "$CSPROJ.dll" | where{$_.DirectoryName -match "bin\\Release" -and $_.DirectoryName -notmatch "test"} | Select-Object -ExpandProperty FullName)
       echo $DLL will be added to appPath
       wget https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar -OutFile wss-unified-agent.jar
-      echo Unified Agent downloaded successfully
+      echo Mend Unified Agent downloaded successfully
       java -jar wss-unified-agent.jar -appPath $DLL -d ./
   env:
     WS_APIKEY: $(APIKEY)
     WS_USERKEY: $(USERKEY)
-    WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
+    WS_WSS_URL: https://saas.mend.io/agent
     WS_PRODUCTNAME: AZDO_$(System.TeamProject)
     WS_PROJECTNAME: $(Build.Repository.Name)_$(Build.SourceBranchName)_Prioritize
     WS_ENABLEIMPACTANALYSIS: true
@@ -46,4 +46,4 @@ steps:
     WS_FILESYSTEMSCAN: false
     WS_GENERATEPROJECTDETAILSJSON: true
     WS_EXCLUDES: '**/build/** **/tests/**'
-  displayName: 'Unified Agent Prioritize Scan'
+  displayName: 'Mend Unified Agent Prioritize Scan'

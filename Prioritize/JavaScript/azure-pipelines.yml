@@ -26,7 +26,7 @@ steps:
     echo "Integrity Check Failed"
     else
         echo "Integrity Check Passed"
-        echo "Starting WhiteSource Scan"
+        echo "Starting Mend Scan"
     fi
     java -jar wss-unified-agent.jar -appPath ./package.json -d ./
     
@@ -42,4 +42,4 @@ steps:
     WS_NPM_RESOLVEDEPENDENCIES: true
     WS_NPM_RESOLVELOCKFILE: false
     
-  displayName: 'Unified Agent Prioritize Scan'
+  displayName: 'Mend Unified Agent Prioritize Scan'

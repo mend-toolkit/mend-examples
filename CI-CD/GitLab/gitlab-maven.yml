@@ -22,18 +22,18 @@ ws_scan:
     WS_APIKEY: $API_KEY
     WS_USERKEY: $USER_KEY
     WS_MAVEN_AGGREGATEMODULES: "true"
-    WS_WSS_URL: "https://saas.whitesourcesoftware.com/agent"
+    WS_WSS_URL: "https://saas.mend.io/agent"
     WS_PRODUCTNAME: $CI_PROJECT_NAME
     WS_PROJECTNAME: $CI_COMMIT_REF_NAME
   script: |
-    echo "Downloading WhiteSource Unified Agent"
+    echo "Downloading Mend Unified Agent"
     curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
     if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
       echo "Integrity Check Failed"
     else
       echo "Integrity Check Passed"
-      echo Starting WhiteSource Scan
+      echo Starting Mend Scan
       java -jar wss-unified-agent.jar
     fi
-    echo "WhiteSource Scan"
+    echo "Mend Scan"
     java -jar ./wss-unified-agent.jar

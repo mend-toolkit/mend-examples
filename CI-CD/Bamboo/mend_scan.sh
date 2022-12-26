@@ -22,5 +22,5 @@ else
     java -jar wss-unified-agent.jar
 fi
 
-# Scan with Unified Agent
+# Scan with Mend Unified Agent
 java -jar wss-unified-agent.jar 
