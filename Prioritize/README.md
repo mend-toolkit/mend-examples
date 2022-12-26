@@ -73,8 +73,27 @@ If your pipeline publish does not allow for multi folder publishing like GitHub 
 
 #### Azure DevOps Linux based machines (Bash script)
 ```
-if [ -d "/tmp/whitesource*" ] ; then cp /tmp/whitesource* ./whitesource ; else echo "/tmp/whitesource* does not exist" ; fi
-if [ -d "/tmp/ws-ua*" ] ; then cp /tmp/whitesource* ./whitesource ; else echo "/tmp/ws-ua* does not exist" ; fi
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      curr_dir='$(System.DefaultWorkingDirectory)/whitesource'
+      log_file=`find $(System.DefaultWorkingDirectory)/whitesource/ -type f -name "*whitesource*"`
+      echo "The log file is: " $log_file
+
+      eua_log=`cat $log_file | grep "For more details please check the log file" | awk -F ":" '{print $4}'`
+
+      echo "Prioritize log: " $eua_log
+      eua_dir=`dirname $eua_log`
+      echo "Prioritize folder log location: " $eua_dir
+      echo "cp -R $eua_dir $curr_dir"
+      cp -R $eua_dir $curr_dir
+  displayName: Copy Mend Prioritize Logs
+
+  - task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(System.DefaultWorkingDirectory)/whitesource'
+    artifactName: drop
 ```
 #### Azure DevOps Windows based machines (Powershell script)
 ```
