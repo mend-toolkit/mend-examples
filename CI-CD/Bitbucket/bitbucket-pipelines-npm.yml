@@ -19,5 +19,6 @@ pipelines:
             - export WS_WSS_URL=https://saas.mend.io/agent
             - export WS_PRODUCTNAME=$BITBUCKET_REPO_SLUG
             - export WS_PROJECTNAME=$BITBUCKET_BRANCH
+            - export WS_FILESYSTEMSCAN=false
             - echo "Running Mend"
             - java -jar wss-unified-agent.jar

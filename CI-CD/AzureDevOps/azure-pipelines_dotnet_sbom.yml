@@ -28,10 +28,12 @@ steps:
     else
       echo "Integrity Check Passed"
     fi
+    java -jar wss-unified-agent.jar
   displayName: 'Mend Unified Agent Scan'
   env:
     WS_APIKEY: $(APIKEY)
     WS_USERKEY: $(USERKEY)
+    WS_FILESYSTEMSCAN: false
 
 - script: |
     curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/check-project-state.sh

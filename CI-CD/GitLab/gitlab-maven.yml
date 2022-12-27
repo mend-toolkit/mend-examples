@@ -25,6 +25,7 @@ ws_scan:
     WS_WSS_URL: "https://saas.mend.io/agent"
     WS_PRODUCTNAME: $CI_PROJECT_NAME
     WS_PROJECTNAME: $CI_COMMIT_REF_NAME
+    WS_FILESYSTEMSCAN: false
   script: |
     echo "Downloading Mend Unified Agent"
     curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar

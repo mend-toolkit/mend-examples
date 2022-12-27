@@ -8,6 +8,7 @@ pipeline {
        WS_USERKEY = "${USERKEY}" //Taken from Jenkins Global Environment Variables
        WS_PRODUCTNAME = "Jenkins_Pipeline"
        WS_PROJECTNAME = "${JOB_NAME}"
+       WS_FILESYSTEMSCAN = false
    }
   
   tools {
