@@ -1,0 +1,59 @@
+# Environment variables are taken from local file as static variables: https://concourse-ci.org/vars.html#static-vars
+resources:
+- name: repo
+  type: git
+  icon: github
+  source:
+    uri: https://github.com/org/somerepo.git
+
+- name: java-node-image
+  type: registry-image
+  source:
+    repository: timbru31/java-node
+    tag: 11-jdk-18
+
+jobs:
+- name: build
+  public: true
+  plan:
+  - get: java-node-image
+  - get: repo
+    trigger: true
+  - task: install
+    image: java-node-image
+    config:
+      inputs:
+      - name: repo
+      outputs:
+      - name: dependencies
+        path: repo/node_modules
+      platform: linux
+      run:
+        path: npm
+        args: ["install"]
+        dir: repo
+  - task: download-and-execute-mend
+    vars:
+      WS_APIKEY: (("mend_creds.WS_APIKEY"))
+      WS_USERKEY: (("mend_creds.WS_USERKEY"))
+      WS_PRODUCTNAME: (("mend_creds.WS_PRODUCTNAME"))
+      WS_PROJECTNAME: (("mend_creds.WS_PROJECTNAME"))
+    image: java-node-image
+    config:
+      inputs:
+      - name: repo
+      platform: linux
+      run:  
+          path: /bin/bash
+          args:
+          - -c
+          - |
+            curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+            export WS_WSS_URL="https://saas.mend.io/agent"
+            export WS_APIKEY=((WS_APIKEY))
+            export WS_USERKEY=((WS_USERKEY))
+            export WS_PRODUCTNAME="((WS_PRODUCTNAME))"
+            export WS_PROJECTNAME="((WS_PROJECTNAME))"
+            export WS_FILESYSTEMSCAN=false
+            java -jar wss-unified-agent.jar 
+            
