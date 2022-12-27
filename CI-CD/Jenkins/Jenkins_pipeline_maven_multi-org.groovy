@@ -6,6 +6,7 @@ pipeline {
        WS_PRODUCTNAME = "Jenkins_Pipeline"
        WS_PROJECTNAME = "${JOB_NAME}"
        WS_PRODUCTION_BRANCH = "main"
+       WS_FILESYSTEMSCAN = false
     }
 
     tools {

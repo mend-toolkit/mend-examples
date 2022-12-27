@@ -12,4 +12,5 @@ export WS_USERKEY=${USERKEY} #Taken from Jenkins Global Environment Variables
 export WS_WSS_URL="https://saas.mend.io/agent"
 export WS_PRODUCTNAME=Jenkins
 export WS_PROJECTNAME=${JOB_NAME}
+export WS_FILESYSTEMSCAN=false
 java -jar wss-unified-agent.jar

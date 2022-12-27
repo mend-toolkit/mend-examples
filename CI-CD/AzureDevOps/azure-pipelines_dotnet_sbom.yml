@@ -57,6 +57,7 @@ steps:
   env:
     WS_APIKEY: $(APIKEY)
     WS_USERKEY: $(USERKEY)
+    WS_FILESYSTEMSCAN: false
 
 - publish: $(System.DefaultWorkingDirectory)/whitesource
   artifact: Whitesource

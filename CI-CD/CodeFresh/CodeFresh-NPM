@@ -23,4 +23,5 @@ steps:
         - npm install 
         - export WS_PRODUCTNAME=CodeFresh
         - export WS_PROJECTNAME=$CF_BRANCH
+        - export WS_FILESYSTEMSCAN=false
         - java -jar wss-unified-agent.jar
