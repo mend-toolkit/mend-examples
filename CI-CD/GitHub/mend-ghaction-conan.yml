@@ -11,7 +11,7 @@ jobs:
         WS_APIKEY: ${{secrets.PROD_APIKEY}}
         WS_USERKEY: ${{secrets.PROD_USERKEY}}
         WS_WSS_URL: https://saas.mend.io/agent
-        WS_FILESYSTEMSCAN: false
+        WS_RESOLVEALLDEPENDENCIES: false
 
     runs-on: ubuntu-latest
     strategy:
