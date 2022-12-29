@@ -9,7 +9,7 @@ on: workflow_dispatch
 #    branches: [ master ]
 
 jobs:
-  WhiteSource-Prioritize:
+  Mend-Prioritize:
     runs-on: ubuntu-latest
 
     strategy:
