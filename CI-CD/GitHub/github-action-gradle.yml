@@ -34,6 +34,7 @@ jobs:
         WS_WSS_URL: https://saas.mend.io/agent
         WS_PRODUCTNAME: GH_${{github.event.repository.name}}
         WS_PROJECTNAME: ${{github.ref}}_ghaction
+        WS_FILESYSTEMSCAN: false
       run: |
         echo Downloading Mend Unified Agent
         curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
