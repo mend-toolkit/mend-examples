@@ -31,4 +31,4 @@ steps:
       WS_WSS_URL: https://saas.mend.io/agent
       WS_PRODUCTNAME: AZDO_$(System.TeamProject)
       WS_PROJECTNAME: $(Build.Repository.Name)_$(Build.SourceBranchName)
-    displayName: Mend Unified Agent Mend Scan
+    displayName: Mend Unified Agent Scan
