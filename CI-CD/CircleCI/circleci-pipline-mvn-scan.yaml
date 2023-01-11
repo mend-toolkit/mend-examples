@@ -14,6 +14,7 @@ jobs:
           command: mvn clean install -DskipTests
       # Execute Mend scan, curling the latest unified agent. Remeber to set environment variables (api key, url, project name and product name, they need to be upper case too)
       # WS_APIKEY
+      # WS_USERKEY
       # WS_WSS_URL
       # WS_PRODUCTNAME
       # WS_PROJECTNAME
