@@ -1,7 +1,10 @@
 #!/bin/bash
 
 SCM=$1
-CERTFILE=`readlink -f $2`
+if [ "$2" ]
+then
+    CERTFILE=`readlink -f $2`
+fi
 MEND_DIR=$HOME/mend
 BASE_DIR=$MEND_DIR/$SCM
 REPO_INTEGRATION_DIR=$(pwd)
