@@ -122,7 +122,7 @@ function cert_add(){
 COPY docker-image/'"$CERTFILE_BASE"' /usr/local/share/ca-certificates\
 \
 RUN /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/keytool -import -keystore /etc/ssl/certs/java/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
-RUN update-ca-certificates' ${BASE_DIR}/latest/wss-gls-app/docker/Dockerfile
+RUN update-ca-certificates' ${BASE_DIR}/latest/wss-$SCM-app/docker/Dockerfile
             sed -i '359a\
 COPY docker-image/'"$CERTFILE_BASE"' /usr/local/share/ca-certificates\
 \
