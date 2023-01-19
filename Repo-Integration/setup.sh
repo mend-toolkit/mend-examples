@@ -79,12 +79,13 @@ echo "${grn}Download Success!!!${end}"
 }
 
 function cert_add(){
+    SUPPORTEDVERSION=22.12.2
     if [ -z $CERTFILE ]
         then  echo "No .crt file supplied as 2nd argument. Integration will be prepared with no additional certs."
         else
-            if [[ $AGENT_LATEST != *22.12.2/ ]]
+            if [[ $AGENT_LATEST != *$SUPPORTEDVERSION/ ]]
                 then
-                    echo "These changes to include certs are only tested to be valid against integration version 22.12.2.  Leaving all files unchanged.";
+                    echo "These changes to include certs are only tested to be valid against integration version $SUPPORTEDVERSION.  Leaving all files unchanged.";
                     return;
             fi
             if [[ $CERTFILE != *.crt ]]
@@ -97,19 +98,19 @@ function cert_add(){
                     echo File supplied as 2nd argument must be a .crt file with first line equal to "-----BEGIN CERTIFICATE-----";
                     return;
                 else
-                    if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-gls-app/docker/Dockerfile | grep -q '^27:');
+                    if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-$SCM-app/docker/Dockerfile | grep -q '^27:');
                         then
-                            echo wss-gls-app Dockerfile not in expected format from version 22.11.1.  Leaving all files unchanged.
+                            echo wss-$SCM-app Dockerfile not in expected format from version $SUPPORTEDVERSION.  Leaving all files unchanged.
                             return;
                     fi
                     if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-scanner/docker/Dockerfile | grep -q '^356:');
                         then
-                            echo wss-scanner Dockerfile not in expected format from version 22.11.1.  Leaving all files unchanged.
+                            echo wss-scanner Dockerfile not in expected format from version $SUPPORTEDVERSION.  Leaving all files unchanged.
                             return;
                     fi
                     if !(grep -nF 'COPY package.json yarn.lock ./' ${BASE_DIR}/latest/wss-remediate/docker/Dockerfile | grep -q '^129:');
                         then
-                            echo wss-remediate Dockerfile not in expected format from version 22.11.1.  Leaving all files unchanged.
+                            echo wss-remediate Dockerfile not in expected format from version $SUPPORTEDVERSION.  Leaving all files unchanged.
                             return;
                     fi
             fi
