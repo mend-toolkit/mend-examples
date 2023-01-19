@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCM=$1
-CERTFILE=$2
+CERTFILE=`readlink -f $2`
 MEND_DIR=$HOME/mend
 BASE_DIR=$MEND_DIR/$SCM
 REPO_INTEGRATION_DIR=$(pwd)
@@ -82,9 +82,9 @@ function cert_add(){
     if [ -z $CERTFILE ]
         then  echo "No .crt file supplied as 2nd argument. Integration will be prepared with no additional certs."
         else
-            if [[ $AGENT_LATEST != *22.11.1/ ]]
+            if [[ $AGENT_LATEST != *22.12.2/ ]]
                 then
-                    echo "These changes to include certs are only tested to be valid against integration version 22.11.1.  Leaving all files unchanged.";
+                    echo "These changes to include certs are only tested to be valid against integration version 22.12.2.  Leaving all files unchanged.";
                     return;
             fi
             if [[ $CERTFILE != *.crt ]]
