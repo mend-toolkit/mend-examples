@@ -103,7 +103,7 @@ function cert_add(){
                             echo wss-$SCM-app Dockerfile not in expected format from version $SUPPORTEDVERSION.  Leaving all files unchanged.
                             return;
                     fi
-                    if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-scanner/docker/Dockerfile | grep -q '^356:');
+                    if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-scanner/docker/Dockerfile | grep -q '^359:');
                         then
                             echo wss-scanner Dockerfile not in expected format from version $SUPPORTEDVERSION.  Leaving all files unchanged.
                             return;
