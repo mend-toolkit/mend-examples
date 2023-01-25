@@ -3,11 +3,11 @@ image: atlassian/default-image:latest
 pipelines:
   default:
     - step:
-        name: NPM Build
+        name: Build Maven Project
         caches:
-          - node
+          - maven
         script:
-          - npm install
+          - mvn clean install -DskipTests
 
     - step:
         name: Run Mend Scan
@@ -26,5 +26,6 @@ pipelines:
           export WS_PRODUCTNAME=$BITBUCKET_REPO_SLUG
           export WS_PROJECTNAME=$BITBUCKET_BRANCH
           export WS_FILESYSTEMSCAN=false
+          export WS_CHECKPOLICIES=true
           echo "Starting Mend Unified Agent Scan"
           java -jar wss-unified-agent.jar
