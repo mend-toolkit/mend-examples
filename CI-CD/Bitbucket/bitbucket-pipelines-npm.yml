@@ -26,6 +26,5 @@ pipelines:
           export WS_PRODUCTNAME=$BITBUCKET_REPO_SLUG
           export WS_PROJECTNAME=$BITBUCKET_BRANCH
           export WS_FILESYSTEMSCAN=false
-          export WS_CHECKPOLICIES=true
           echo "Starting Mend Unified Agent Scan"
           java -jar wss-unified-agent.jar
