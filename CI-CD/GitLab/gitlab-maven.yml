@@ -16,7 +16,7 @@ cache:
   paths:
   - ${CI_PROJECT_DIR}/
 
-ws_scan:
+mend_scan:
   stage: scan
   variables:
     WS_APIKEY: $API_KEY
@@ -25,7 +25,7 @@ ws_scan:
     WS_WSS_URL: "https://saas.mend.io/agent"
     WS_PRODUCTNAME: $CI_PROJECT_NAME
     WS_PROJECTNAME: $CI_COMMIT_REF_NAME
-    WS_FILESYSTEMSCAN: false
+    WS_FILESYSTEMSCAN: "false"
   script: |
     echo "Downloading Mend Unified Agent"
     curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
