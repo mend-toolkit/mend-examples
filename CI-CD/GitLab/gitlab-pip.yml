@@ -16,7 +16,7 @@ pip_build:
     paths:
     - ${CI_PROJECT_DIR}/
 
-ws_scan:
+mend_scan:
   stage: scan
   variables:
     WS_APIKEY: $API_KEY

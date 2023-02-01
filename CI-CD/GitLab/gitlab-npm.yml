@@ -30,7 +30,7 @@ npm_build:
         npm install --package-lock
       fi
 
-ws_scan:
+mend_scan:
   stage: scan
   variables:
     WS_APIKEY: $API_KEY

@@ -16,7 +16,7 @@ cache:
   paths:
   - ${CI_PROJECT_DIR}/
 
-ws_scan:
+mend_scan:
   stage: scan
   cache:
     key: Mend
