@@ -5,14 +5,15 @@ default:
 stages:
   - scan
 
-ws_scan:
+mend_sast_scan:
   stage: scan
   variables:
     SAST_ORGANIZATION: $SAST_ORGANIZATION
     SASTCLI_TOKEN: $SASTCLI_TOKEN
     SAST_SERVER: "https://saas.mend.io/sast/"
-  script:
-    - echo "Downloading Mend SAST Tool"
-    - curl -LJO https://downloads-sast.mend.io/sast-cli/linux/mendsastcli && chmod +x mendsastcli
-    - echo "Run Mend SAST"
-    - ./mendsastcli --dir ./ --name=$CI_PROJECT_NAME_$CI_COMMIT_BRANCH --app=$CI_PROJECT_NAME
+  script: |
+    apt update && apt install -y curl
+    echo "Downloading Mend SAST Tool"
+    curl -LJO https://downloads-sast.mend.io/sast-cli/linux/mendsastcli && chmod +x mendsastcli
+    echo "Run Mend SAST"
+    ./mendsastcli --dir ./ --name=$CI_PROJECT_NAME-$CI_COMMIT_BRANCH --app=$CI_PROJECT_NAME
