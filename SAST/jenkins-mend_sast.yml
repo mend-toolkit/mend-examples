@@ -2,9 +2,9 @@ pipeline {
   agent any
   
   environment {
-       SAST_ORGANIZATION = "$SAST_ORGANIZATION" //Taken from Jenkins Global Environment Variables 
-       SASTCLI_TOKEN = "$SASTCLI_TOKEN"
-       SAST_SERVER = "https://sast.mend.io/sast"
+       MEND_SAST_ORGANIZATION = "$MEND_SAST_ORGANIZATION" //Taken from Jenkins Global Environment Variables 
+       MEND_SAST_API_TOKEN = "$MEND_SAST_API_TOKEN"
+       MEND_SAST_SERVER_URL = "https://sast.mend.io/sast"
    }
 
 

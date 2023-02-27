@@ -1,8 +1,8 @@
 # All environment variables are defined per: https://support.atlassian.com/bitbucket-cloud/docs/variables-and-secrets/#User-defined-variables
 # The required parameters are:
-# SASTCLI_TOKEN
-# SAST_ORGANIZATION
-# SAST_SERVER
+# MEND_SAST_API_TOKEN
+# MEND_SAST_ORGANIZATION
+# MEND_SAST_SERVER_URL
 
 image: atlassian/default-image:3
 

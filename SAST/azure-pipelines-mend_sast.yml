@@ -11,6 +11,6 @@ steps:
 - script: ./mendsastcli --dir ./ --name=$(Build.Repository.Name)$(Build.SourceBranchName) --app AZ$(System.TeamProject)
   displayName: 'Run Mend SAST'
   env:
-    SAST_ORGANIZATION: $(SAST_ORGANIZATION)
-    SASTCLI_TOKEN: $(SASTCLI_TOKEN)
-    SAST_SERVER: https://saas.mend.io/sast/
+    MEND_SAST_ORGANIZATION: $(MEND_SAST_ORGANIZATION)
+    MEND_SAST_API_TOKEN: $(MEND_SAST_API_TOKEN)
+    MEND_SAST_SERVER_URL: https://saas.mend.io/sast/
