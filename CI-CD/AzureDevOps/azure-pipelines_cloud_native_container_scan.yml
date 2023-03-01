@@ -1,0 +1,19 @@
+name: 'mend-cloud-native-cli-scan'
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: |
+    echo Downloading Mend CLI
+    sudo curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && sudo chmod +x /usr/local/bin/mend
+    echo Start Mend CLI scan
+    mend image ubuntu:18.04
+  env:
+    MEND_EMAIL: $(EMAIL)
+    MEND_USER_KEY: $(USERKEY)
+    MEND_URL: https://saas-eu.whitesourcesoftware.com
+  displayName: 'Scan with Mend Cloud Native Security'
