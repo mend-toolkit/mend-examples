@@ -1,4 +1,4 @@
-name: Mend Cloud Native CLI SCA Maven Scan
+name: Mend CLI SCA Maven Scan
 
 on:
   push:
