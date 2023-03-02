@@ -11,11 +11,12 @@ jobs:
       MEND_EMAIL: ${{secrets.EMAIL}}
       MEND_USER_KEY: ${{secrets.USERKEY}}
       MEND_URL: https://saas-eu.whitesourcesoftware.com
+      MEND_ORG_UUID: ${{secrets.SCAORG}}
     runs-on: ubuntu-latest
     steps:
       # Downloading Mend CLI
       - name: Downloading Mend CLI
-        run: sudo curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && sudo chmod +x /usr/local/bin/mend
+        run: curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
       # Start Mend CLI scan
       - name: Start Mend CLI scan
-        run: mend image ubuntu:18.04
+        run: mend image ubuntu:22.10
