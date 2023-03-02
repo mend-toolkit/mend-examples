@@ -33,4 +33,4 @@ jobs:
         run: mvn clean package -DskipTests=true  
       # Start Mend CLI scan
       - name: Start Mend CLI scan
-        run: mend sca
+        run: mend sca -u
