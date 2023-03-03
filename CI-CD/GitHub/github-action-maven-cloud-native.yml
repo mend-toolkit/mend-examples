@@ -15,7 +15,7 @@ jobs:
     steps:
       # Downloading Mend CLI
       - name: Downloading Mend CLI
-        run: sudo curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && sudo chmod +x /usr/local/bin/mend
+        run:  curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
       - uses: actions/checkout@v2
       - name: Set up JDK
         uses: actions/setup-java@v2
