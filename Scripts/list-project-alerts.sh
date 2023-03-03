@@ -34,7 +34,7 @@
 #   violation, so if you rely on the exit code (-2) for other tasks in your
 #   pipeline, make sure to also enable WS_FORCEUPDATE_FAILBUILDONPOLICYVIOLATION.
 
-WS_API_URL="$(echo "${WS_WSS_URL/agent/'api/v1.3'}")"
+WS_API_URL="$(echo "${WS_WSS_URL}/api/v1.4")"
 PROJECT_DETAILS="./whitesource/scanProjectDetails.json"
 showColors=true
 
