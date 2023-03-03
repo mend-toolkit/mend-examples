@@ -1,4 +1,4 @@
-name: Mend CLI NPM Maven Scan
+name: Mend CLI SCA NPM Scan
 
 on:
   push:
