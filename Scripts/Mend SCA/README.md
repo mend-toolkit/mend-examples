@@ -1,5 +1,5 @@
-# Scripts
-This repository contains scripts for use with Mend Unified agent scanning within a CI/CD pipeline.
+# Mend SCA Scripts
+This folder contains scripts for use with the Mend SCA platform and Unified agent scanning within a CI/CD pipeline.
 
 - [Reports Within a Pipeline](#reports-within-a-pipeline)
 - [Pipeline SBOM Generation](#pipeline-sbom-generation)
