@@ -1,5 +1,5 @@
 # Prioritize Examples by Language
-This repository contains language specific examples of different ways to scan using [Mend Prioritize](https://docs.mend.io/bundle/sca_user_guide/page/scanning_with_mend_prioritize.html)
+This folder contains language specific examples of different ways to scan using [Mend Prioritize](https://docs.mend.io/bundle/sca_user_guide/page/scanning_with_mend_prioritize.html)
 
 * [.NET](DotNet)
   * [Multi-Module](DotNet/Multi-Module)
