@@ -15,6 +15,6 @@ steps:
   env:
     MEND_EMAIL: $(EMAIL)
     MEND_USER_KEY: $(USERKEY)
-    MEND_URL: https://saas-eu.whitesourcesoftware.com
+    MEND_URL: https://saas.whitesourcesoftware.com
     MEND_ORG_UUID: $(SCAORG)
   displayName: 'Scan with Mend Cloud Native Security'
