@@ -19,9 +19,9 @@ jobs:
          # command: ls src/main
           command: ./mendsastcli --dir ./ --app=circleci --baseline=true
           environment:
-            SAST_ORGANIZATION: sast_organization_secret
-            SASTCLI_TOKEN: sast_cli_secret
-            SAST_SERVER: https://saas.mend.io/sast/
+            MEND_SAST_ORGANIZATION: MEND_SAST_ORGANIZATION
+            MEND_SAST_API_TOKEN: MEND_SAST_API_TOKEN
+            MEND_SAST_SERVER_URL: https://saas.mend.io/sast/
 workflows:
   example-workflow:
     jobs:

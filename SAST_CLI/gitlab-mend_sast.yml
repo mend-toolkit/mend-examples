@@ -8,9 +8,9 @@ stages:
 mend_sast_scan:
   stage: scan
   variables:
-    SAST_ORGANIZATION: $SAST_ORGANIZATION
-    SASTCLI_TOKEN: $SASTCLI_TOKEN
-    SAST_SERVER: "https://saas.mend.io/sast/"
+    MEND_SAST_ORGANIZATION: $MEND_SAST_ORGANIZATION
+    MEND_SAST_API_TOKEN: $MEND_SAST_API_TOKEN
+    MEND_SAST_SERVER_URL: "https://saas.mend.io/sast/"
   script: |
     apt update && apt install -y curl
     echo "Downloading Mend SAST Tool"
