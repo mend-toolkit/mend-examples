@@ -1,0 +1,70 @@
+name: Mend Scan and SBOM export
+
+on: 
+  push:
+    branches:
+    - '**release**'
+
+jobs:
+  mendscan:
+    env:
+      WS_APIKEY: ${{secrets.MEND_APIKEY}}
+      WS_USERKEY: ${{secrets.MEND_USERKEY}}
+      WS_PRODUCTNAME: GH_${{github.event.repository.name}}
+      WS_PROJECTNAME: GH_${{github.event.repository.name}}_${{github.ref_name}}
+      WS_WSS_URL: https://saas.mend.io/agent
+      WS_GENERATEPROJECTDETAILSJSON: true
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Build with Maven
+        run: mvn clean install -DskipTests=true
+
+      - name: Mend Unified Agent Scan
+        run: |
+          curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+          echo Unified Agent downloaded successfully
+          if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
+          echo "Integrity Check Failed"
+          else
+              echo "Integrity Check Passed"
+              echo "Starting Mend Scan"
+          fi
+          java -jar wss-unified-agent.jar -d ./
+          
+      - name: Check Project State
+        run: |
+          curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/check-project-state.sh
+          chmod +x check-project-state.sh && ./check-project-state.sh
+
+      - name: Mend SBOM Report Generation
+        run: |
+          export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
+          export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
+          curl -X POST "${WS_URL}/api/v1.3" -H "Content-Type: application/json"  -d '{"requestType":"generateProjectReportAsync", "reportType":"ProjectSBOMReport", "standard": "spdx", "format":"json", "userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'","format":"json"}'
+          curl -X POST "${WS_URL}/api/v1.3" -H "Content-Type: application/json"  -d '{"requestType":"generateProjectReportAsync", "reportType":"ProjectSBOMReport", "standard": "cycloneDX", "format":"json", "maxDepthLevel": "4", "userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'","format":"json"}'
+
+
+      - name: 'Upload WhiteSource Logs folder'
+        uses: actions/upload-artifact@v3
+        with:
+          name: WhiteSource
+          path: whitesource
+          retention-days: 1
+      - name: 'Upload WhiteSource folder if failure'
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: WhiteSource
+          path: whitesource
+          retention-days: 1
+

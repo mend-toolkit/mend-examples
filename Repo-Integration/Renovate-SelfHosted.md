@@ -5,17 +5,6 @@ This repository contains examples of a Self-hosted instance of [Renovate](https:
 
 It is highly recommend to configure a GitHub.com [Personal Access Token](https://github.com/settings/tokens) (with the scope repos) as GITHUB_COM_TOKEN so that your bot can make authenticated requests to GitHub.com for changelog retrieval as well as for any dependency that uses GitHub tags (without such a token, GitHub.com's API will rate limit requests and make such lookups unreliable).
 
-## [Azure DevOps pipelines](https://docs.microsoft.com/en-us/azure/devops/pipelines/?view=azure-devops)
-* Set a [Personal Access Token](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page) as RENOVATE_TOKEN for the bot account.
-* Create a new pipeline for the desired project and replace contents with the attached azure-pipelines.yml file.
-* Add GITHUB_COM_TOKEN and RENOVATE_TOKEN as [Environment variables](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch)
-* Update the RENOVATE_ENDPOINT to match your ADO organization (e.g. https://dev.azure.com/MyOrg).
-
-## [Bitbucket pipelines](https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/)
-*  Set an [App password](https://bitbucket.org/account/settings/app-passwords/) as RENOVATE_PASSWORD for the bot account.
-*  Create a new pipeline for the desired project and replace contents with the attached bitbucket-pipelines.yml file.
-*  Add GITHUB_COM_TOKEN and RENOVATE_PASSWORD as [Environment variables](https://support.atlassian.com/bitbucket-cloud/docs/variables-and-secrets/)
-
 ## [GitLab pipelines](https://docs.gitlab.com/ee/ci/pipelines/)
 The gitlab [renovate runner](https://docs.renovatebot.com/getting-started/running/#gitlab-runner) can implemented using the following steps:
 * Create a [Personal Access Token](https://gitlab.com/-/profile/personal_access_tokens) (PAT) for the runner to use (scopes: read_user, api and write_repository).

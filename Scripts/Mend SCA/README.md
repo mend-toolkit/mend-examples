@@ -1,5 +1,5 @@
-# Scripts
-This repository contains scripts for use with Mend Unified agent scanning within a CI/CD pipeline.
+# Mend SCA Scripts
+This folder contains scripts for use with the Mend SCA platform and Unified agent scanning within a CI/CD pipeline.
 
 - [Reports Within a Pipeline](#reports-within-a-pipeline)
 - [Pipeline SBOM Generation](#pipeline-sbom-generation)
@@ -44,33 +44,9 @@ curl -o ./whitesource/duediligencereport.xlsx -X POST "${WS_URL}/api/v1.3" -H "C
 <br>
 <hr>
 
-## Pipeline SBOM Generation
+## [SBOM Report Generation](./sbomreports.yml)
 
-Add the following snippet after calling the Unified Agent in any pipeline to create an SPDX tag value output from the scanned project to the `./whitesource` logs folder, then use your [pipeline publish](../CI-CD#Pipeline-Log-Publishing) feature to save the whitesource log folder as an artifact.  
-
-<br>
-
-**Prerequisites:**  
-
-* `jq`, `awk`, `python3` and `python3-pip` must be installed
-* ENV variables must be set
-  * WS_GENERATEPROJECTDETAILSJSON: true
-  * WS_USERKEY
-  * WS_APIKEY
-  * WS_WSS_URL
-
-<br>
-
-**Execution:**  
-
-```
-export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
-export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
-pip install ws-sbom-generator
-ws_sbom_generator -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ./whitesource
-```
-
-More information & usage regarding the [WS SBOM generator](https://github.com/whitesource-ps/ws-sbom-spdx-report)
+In the above linked example, SPDX and CycloneDX async reports are called from the pipeline.  The reports can be downloaded from the User Interface or retrieved using [additional APIs](https://docs.mend.io/bundle/api_sca/page/reports_api_-_asynchronous.html)
 
 
 <br>
