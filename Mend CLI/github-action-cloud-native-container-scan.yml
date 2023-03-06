@@ -1,0 +1,22 @@
+name: Mend Cloud Native CLI Scan
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  mend-cli:
+    name: Mend-CLI
+    env:
+      MEND_EMAIL: ${{secrets.EMAIL}}
+      MEND_USER_KEY: ${{secrets.USERKEY}}
+      MEND_URL: https://saas.whitesourcesoftware.com
+      MEND_ORG_UUID: ${{secrets.SCAORG}}
+    runs-on: ubuntu-latest
+    steps:
+      # Downloading Mend CLI
+      - name: Downloading Mend CLI
+        run: curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+      # Start Mend CLI scan
+      - name: Start Mend CLI scan
+        run: mend image ubuntu:22.10
