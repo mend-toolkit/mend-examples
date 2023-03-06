@@ -1,0 +1,16 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: curl -LJO https://downloads-sast.mend.io/sast-cli/linux/mendsastcli && chmod +x mendsastcli
+  displayName: 'Downloading Mend SAST Tool'
+
+- script: ./mendsastcli --dir ./ --name=$(Build.Repository.Name)$(Build.SourceBranchName) --app AZ$(System.TeamProject)
+  displayName: 'Run Mend SAST'
+  env:
+    MEND_SAST_ORGANIZATION: $(MEND_SAST_ORGANIZATION)
+    MEND_SAST_API_TOKEN: $(MEND_SAST_API_TOKEN)
+    MEND_SAST_SERVER_URL: https://saas.mend.io/sast/

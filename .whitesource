@@ -1,32 +1,13 @@
 {
+    "settingsInheritedFrom": "mend-toolkit/whitesource-config@main",
     "scanSettings": {
-        "configMode": "AUTO",
-        "configExternalURL": "",
-        "projectToken": "",
-        "baseBranches": [],
-        "enableLicenseViolations": true,
-        "enableIaC": true,
-        "enableSAST": true
-    },
-    "checkRunSettings": {
-        "vulnerableCheckRunConclusionLevel": "failure",
-        "licenseCheckRunConclusionLevel": "failure",
-        "iacCheckRunConclusionLevel": "failure",
-        "displayMode": "diff",
-        "showWsInfo": true,
-        "useMendCheckNames": true
+        "enableIaC": false,
+        "enableSAST": false
     },
     "issueSettings": {
-        "minSeverityLevel": "LOW",
-        "displayLicenseViolations": true,
         "issueType": "VULNERABILITY"
     },
     "remediateSettings": {
-        "enableRenovate": true,
-        "workflowRules": {
-            "enabled": true,
-            "minVulnerabilitySeverity": "LOW"
-        },
-        "workflowRules.enabled": true
+        "enableRenovate": false
     }
 }

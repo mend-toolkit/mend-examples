@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
 # Mend Examples
-This repository contains examples of different ways to scan open source component using the [Unified Agent](https://docs.mend.io/bundle/unified_agent/page/overview_of_the_unified_agent.html)
+This repository contains examples of different ways to scan and retrieve results within the [Mend platform](https://docs.mend.io/).
 
 <br>
 
@@ -10,21 +10,21 @@ If you can't find something, use search to [search in this repository](https://d
 
 <br>
 
-## Example SCM Integration Configs
+## [Mend CLI](./Mend%20CLI/)
 
-* [.whitesource](https://github.com/mend-toolkit/mend-examples/blob/main/.whitesource)
-* [Unified Agent Config](https://github.com/mend-toolkit/mend-examples/blob/main/whitesource.config) - contains SCM integration default settings
+## [Self Hosted Repo Integration Setup](Repo-Integration)
 
-## [CI-CD by Pipeline](CI-CD)
+## Unified Agent 
+### [CI-CD by Pipeline](./Unified%20Agent/CI-CD/)
 
-## [Generic by Use Case](Generic)
+### [Policy Check Examples](./Unified%20Agent/Policy-Check/)
 
-## [Policy Check Examples](Policy-Check)
+### [Prioritize Scans by Language](./Unified%20Agent/Prioritize/)
 
-## [Prioritize Scans by Language](Prioritize)
+## [SAST CLI](./SAST_CLI/)
 
-## [Repo Integration Setup](Repo-Integration)
+## Scripts
+### [Mend SCA](./Scripts/Mend%20SCA/)
+### [Mend SAST](./Scripts/Mend%20SAST/)
 
-## [Scripts](Scripts)
 
-## [SAST](SAST)
