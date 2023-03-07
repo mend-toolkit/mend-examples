@@ -1,4 +1,4 @@
-name: 'mend-cloud-native-cli-scan'
+name: 'mend-cli-scan'
 
 trigger:
 - master
@@ -15,6 +15,6 @@ steps:
   env:
     MEND_EMAIL: $(MEND_EMAIL)
     MEND_USER_KEY: $(MEND_USERKEY)
-    MEND_URL: https://saas.whitesourcesoftware.com
+    MEND_URL: https://saas.mend.io
     MEND_ORG_UUID: $(MEND_SCA_ORG)
   displayName: 'Scan with Mend CLI'
