@@ -7,10 +7,10 @@ stages:
 mend_scan:
   stage: scan
   variables:
-    MEND_EMAIL: $(EMAIL)
-    MEND_USER_KEY: $(USERKEY)
-    MEND_URL: https://saas.whitesourcesoftware.com
-    MEND_ORG_UUID: $(SCAORG)
+    MEND_EMAIL: $(MEND_EMAIL)
+    MEND_USER_KEY: $(MEND_USERKEY)
+    MEND_URL: https://saas.mend.io
+    MEND_ORG_UUID: $(MEND_SCA_ORG)
 
   script:
     - echo Downloading Mend CLI
