@@ -1,4 +1,4 @@
-name: Mend Cloud Native CLI Scan
+name: Mend CLI Scan
 
 on:
   push:
@@ -8,10 +8,10 @@ jobs:
   mend-cli:
     name: Mend-CLI
     env:
-      MEND_EMAIL: ${{secrets.EMAIL}}
-      MEND_USER_KEY: ${{secrets.USERKEY}}
-      MEND_URL: https://saas.whitesourcesoftware.com
-      MEND_ORG_UUID: ${{secrets.SCAORG}}
+      MEND_EMAIL: ${{secrets.MEND_EMAIL}}
+      MEND_USER_KEY: ${{secrets.MEND_USERKEY}}
+      MEND_URL: https://saas.mend.io
+      MEND_ORG_UUID: ${{secrets.MEND_SCA_ORG}}
     runs-on: ubuntu-latest
     steps:
       # Downloading Mend CLI
