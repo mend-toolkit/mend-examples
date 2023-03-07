@@ -13,8 +13,8 @@ steps:
     echo Start Mend CLI scan
     mend image ubuntu:22.10
   env:
-    MEND_EMAIL: $(EMAIL)
-    MEND_USER_KEY: $(USERKEY)
+    MEND_EMAIL: $(MEND_EMAIL)
+    MEND_USER_KEY: $(MEND_USERKEY)
     MEND_URL: https://saas.whitesourcesoftware.com
-    MEND_ORG_UUID: $(SCAORG)
-  displayName: 'Scan with Mend Cloud Native Security'
+    MEND_ORG_UUID: $(MEND_SCA_ORG)
+  displayName: 'Scan with Mend CLI'
