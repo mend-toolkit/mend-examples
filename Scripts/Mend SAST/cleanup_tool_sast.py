@@ -69,7 +69,7 @@ def generate_report(id):
             report = open(conf.output_dir + filename + '.' + reports_list_obj[0]["format"] , "wb")
             report.write(reportResdata)
             report.close()
-            print("File written")
+            print("File written to " + conf.output_dir + filename + '.' + reports_list_obj[0]["format"])
 
 def delete_scan(id):
     api_connection.request("DELETE", "/sast/api/scans/{}".format(id), '', headers)
@@ -122,10 +122,10 @@ if not conf.dry_run:
             generate_report(id)
         else:
             print("skipReportGeneration set to true, skipping reports")
-
+        
         if not conf.skip_scan_deletion:
             delete_scan(id)
         else:
             print("skipScanDeletion set to true, skipping deletion")
-            
+        
 print("SAST clean up has been finished")
