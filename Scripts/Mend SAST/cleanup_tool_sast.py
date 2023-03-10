@@ -21,8 +21,8 @@ def valid_date(s):
 parser = argparse.ArgumentParser(description="Mend Sast Clean up tool")
 parser.add_argument('-k', '--apiToken', help="Mend API token", dest='mend_api_token', required=True) 
 parser.add_argument('-t', '--reportFormat', help="Report format to generate. Supported formats (csv, pdf, html, xml, json, sarif)", dest='report_format', default="csv")
-parser.add_argument('-o', '--outputDir', help="Output directory", dest='output_dir', default=os.getcwd() + "\Mend\\Reports\\")
-parser.add_argument('-r', '--daysToKeep', help="Number of days to keep (overridden by --dateToKeep)", dest='days_to_keep', type=int, default=50000)
+parser.add_argument('-o', '--outputDir', help="Output directory", dest='output_dir', default=os.getcwd() + "\\Mend\\Reports\\")
+parser.add_argument('-r', '--daysToKeep', help="Number of days to keep (overridden by --dateToKeep)", dest='days_to_keep', type=int, default=21)
 parser.add_argument('-d', '--dateToKeep', help="Date of latest scan to keep in YYYY-MM-DD format ", dest='date_to_keep', type=valid_date)
 parser.add_argument('-y', '--dryRun', help="Whether to run the tool without performing anything", dest='dry_run', type=strtobool, default=False)
 parser.add_argument('-s', '--skipReportGeneration', help="Skip Report Generation", dest='skip_report_generation', type=strtobool, default=True)
@@ -97,7 +97,8 @@ def get_ids_to_remove():
         id_batch = get_scans(page_size, page_num)
         if len(id_batch) > 0:
             ids_to_remove.extend(id_batch)
-        has_ids_to_remove = len(id_batch) != page_size
+        
+        has_ids_to_remove = len(id_batch) == page_size
         page_num += 1
     return ids_to_remove
 
@@ -106,7 +107,7 @@ if conf.date_to_keep is None:
 else:
     archive_date = conf.date_to_keep
 
-print(archive_date)
+print("Deleting scans older than: {}".format(archive_date))
 print("Getting scans to remove...")
 
 
@@ -118,7 +119,7 @@ if not ids_to_remove or len(ids_to_remove) == 0:
 print("Found {} scans to older than {}, generating reports and removing scans...".format(len(ids_to_remove), archive_date))
 
 if not conf.dry_run:
-
+    
     for id in ids_to_remove:
         if not conf.skip_report_generation:
             generate_report(id)
