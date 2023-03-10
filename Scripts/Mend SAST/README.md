@@ -48,17 +48,17 @@ optional arguments:
   -o OUTPUT_DIR, --outputDir
                     Output directory
 					default [Working_Directory]/Mend/Reports
-  -r DAYS_TO_KEEP, --DaysToKeep
+  -r DAYS_TO_KEEP, --daysToKeep
                     Number of days to keep (overridden by --dateToKeep)
   -d DATE_TO_KEEP, --dateToKeep
                     Date of latest scan to keep in YYYY-MM-DD format
-  -y DRY_RUN, --DryRun
+  -y DRY_RUN, --dryRun
                     Logging the projects that are supposed to be deleted without deleting and creating reports
                     default False
-  -s SKIP_REPORT_GENERATION, --SkipReportGeneration
+  -s SKIP_REPORT_GENERATION, --skipReportGeneration
                     Skip report generation step
                     default False
-  -j SKIP_PROJECT_DELETION, --SkipProjectDeletion
+  -j SKIP_PROJECT_DELETION, --skipProjectDeletion
                     Skip project deletion step
                     default False                                                
 ```
