@@ -17,4 +17,4 @@ steps:
     MEND_USER_KEY: $(MEND_USERKEY)
     MEND_URL: https://saas.mend.io
     MEND_ORG_UUID: $(MEND_SCA_ORG)
-  displayName: 'Scan with Mend CLI'
+  displayName: 'Mend Container Scan'
