@@ -21,6 +21,13 @@ Python 3.8+
 ```
 python3 cleanup_tool_sast.py -k <yourSASTapiToken> -a <yourMendUrl> -r <numberofdaystokeep>
 ```
+**note:** The scripts runs all calls in HTTPS. This does not need to be added to your URL
+
+**Example**
+
+```
+python3 cleanup_tool_sast.py -k XXX -a saas.mend.io -r 30
+```
 
 ** Full Usage flags: **
 ```shell
@@ -50,7 +57,7 @@ optional arguments:
                     default False
   -s SKIP_REPORT_GENERATION, --SkipReportGeneration
                     Skip report generation step
-                    default True
+                    default False
   -j SKIP_PROJECT_DELETION, --SkipProjectDeletion
                     Skip project deletion step
                     default False                                                

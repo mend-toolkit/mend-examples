@@ -21,7 +21,7 @@ parser.add_argument('-o', '--outputDir', help="Output directory", dest='output_d
 parser.add_argument('-r', '--daysToKeep', help="Number of days to keep (overridden by --dateToKeep)", dest='days_to_keep', type=int, default=21)
 parser.add_argument('-d', '--dateToKeep', help="Date of latest scan to keep in YYYY-MM-DD format ", dest='date_to_keep', type=valid_date)
 parser.add_argument('-y', '--dryRun', help="Whether to run the tool without performing anything", dest='dry_run', type=strtobool, default=False)
-parser.add_argument('-s', '--skipReportGeneration', help="Skip Report Generation", dest='skip_report_generation', type=strtobool, default=True)
+parser.add_argument('-s', '--skipReportGeneration', help="Skip Report Generation", dest='skip_report_generation', type=strtobool, default=False)
 parser.add_argument('-j', '--skipScanDeletion', help="Skip Scan Deletion", dest='skip_scan_deletion', type=strtobool, default=False)
 conf = parser.parse_args()
 
@@ -120,7 +120,12 @@ if not conf.dry_run:
     for id in ids_to_remove:
         if not conf.skip_report_generation:
             generate_report(id)
+        else:
+            print("skipReportGeneration set to true, skipping reports")
 
         if not conf.skip_scan_deletion:
             delete_scan(id)
-
+        else:
+            print("skipScanDeletion set to true, skipping deletion")
+            
+print("SAST clean up has been finished")
