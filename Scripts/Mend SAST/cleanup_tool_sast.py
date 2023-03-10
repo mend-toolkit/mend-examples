@@ -1,6 +1,5 @@
 import http.client
 import json
-import sys
 import argparse
 import re
 import os
