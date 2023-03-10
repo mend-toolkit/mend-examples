@@ -6,10 +6,6 @@ import os
 from datetime import timedelta, datetime
 from distutils.util import strtobool
 
-main_api_connection = http.client.HTTPSConnection("saas.mend.io")
-sast_api_connection = http.client.HTTPSConnection("sast.mend.io")
-
-
 def valid_date(s):
     try:
         return datetime.strptime(s, "%Y-%m-%d")
@@ -19,6 +15,7 @@ def valid_date(s):
     
 parser = argparse.ArgumentParser(description="Mend Sast Clean up tool")
 parser.add_argument('-k', '--apiToken', help="Mend API token", dest='mend_api_token', required=True) 
+parser.add_argument('-a', '--mendUrl', help="Mend URL", dest='mend_url', required=True)
 parser.add_argument('-t', '--reportFormat', help="Report format to generate. Supported formats (csv, pdf, html, xml, json, sarif)", dest='report_format', default="csv")
 parser.add_argument('-o', '--outputDir', help="Output directory", dest='output_dir', default=os.getcwd() + "\\Mend\\Reports\\")
 parser.add_argument('-r', '--daysToKeep', help="Number of days to keep (overridden by --dateToKeep)", dest='days_to_keep', type=int, default=21)
@@ -32,6 +29,8 @@ headers = {
   'X-Auth-Token': conf.mend_api_token
 }
 
+api_connection = http.client.HTTPSConnection(conf.mend_url)
+
 def generate_report(id):
     print("Generating reports for scan {}".format(id))
     reportBuilt = False
@@ -43,24 +42,24 @@ def generate_report(id):
         "reportType": "Default",
         "scanId": id
     })
-    sast_api_connection.request("POST", "/sast/api/reports", payload, headers)
-    createResponseObj = json.loads(sast_api_connection.getresponse().read().decode("utf-8"))
+    api_connection.request("POST", "/sast/api/reports", payload, headers)
+    createResponseObj = json.loads(api_connection.getresponse().read().decode("utf-8"))
     if createResponseObj["success"] == False:
         print("There was an generating a report for scan id {}: {} ".format(id, createResponseObj["message"]))
         return
     
     print("Searching for Report")
     while not reportBuilt:
-        sast_api_connection.request("GET", "/sast/api/reports?page=1&limit=10&sort=createdTime&order=descend", '', headers)
-        reportListRes = sast_api_connection.getresponse()
+        api_connection.request("GET", "/sast/api/reports?page=1&limit=10&sort=createdTime&order=descend", '', headers)
+        reportListRes = api_connection.getresponse()
         reportListResdata = reportListRes.read()
         reports_list_obj = json.loads(reportListResdata.decode("utf-8"))
         reportBuilt = reports_list_obj[0]["storagePath"] != "" and id in reports_list_obj[0]["storagePath"]
         if reportBuilt:
             print("Report Found")
             print("Retrieving Report")
-            sast_api_connection.request("GET", "/sast/api/reports/{}".format(reports_list_obj[0]["id"]), '', headers)
-            reportRes = sast_api_connection.getresponse()
+            api_connection.request("GET", "/sast/api/reports/{}".format(reports_list_obj[0]["id"]), '', headers)
+            reportRes = api_connection.getresponse()
             reportResdata = reportRes.read()
             print("Writing File")
             if not os.path.exists(conf.output_dir):
@@ -73,15 +72,15 @@ def generate_report(id):
             print("File written")
 
 def delete_scan(id):
-    main_api_connection.request("DELETE", "/sast/api/scans/{}".format(id), '', headers)
-    delete_response_obj = json.loads(main_api_connection.getresponse().read().decode("utf-8"))
+    api_connection.request("DELETE", "/sast/api/scans/{}".format(id), '', headers)
+    delete_response_obj = json.loads(api_connection.getresponse().read().decode("utf-8"))
     if delete_response_obj["success"] == False:
         print("There was an issue with the request: " + delete_response_obj["message"])
         return
 
 def get_scans(page_size, page_num):
-    main_api_connection.request("GET", "/sast/api/scans?order=ascend&limit={}&page={}&summary=true".format(page_size, page_num), '', headers)
-    get_response_obj = json.loads(main_api_connection.getresponse().read().decode("utf-8"))
+    api_connection.request("GET", "/sast/api/scans?order=ascend&limit={}&page={}&summary=true".format(page_size, page_num), '', headers)
+    get_response_obj = json.loads(api_connection.getresponse().read().decode("utf-8"))
     if "success" in get_response_obj:
         print("There was an issue with the request: " + get_response_obj["message"])
     else:
@@ -108,7 +107,6 @@ else:
 
 print("Deleting scans older than: {}".format(archive_date))
 print("Getting scans to remove...")
-
 
 ids_to_remove = get_ids_to_remove()
 if not ids_to_remove or len(ids_to_remove) == 0:

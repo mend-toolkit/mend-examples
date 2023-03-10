@@ -19,18 +19,20 @@ Python 3.8+
 **Execution**
 
 ```
-python3 cleanup_tool_sast.py -k <yourSASTapiToken> -r <numberofdaystokeep>
+python3 cleanup_tool_sast.py -k <yourSASTapiToken> -a <yourMendUrl> -r <numberofdaystokeep>
 ```
 
 ** Full Usage flags: **
 ```shell
-usage: python3 cleanup_tool_sast.py -k API_TOKEN [-t REPORT_FORMAT] [-o OUTPUT_DIR] [-r DAYS_TO_KEEP] [-y DRY_RUN] [-s SKIP_REPORT_GENERATION] [-j SKIP_PROJECT_DELETION]
+usage: python3 cleanup_tool_sast.py -k API_TOKEN -a MEND_URL [-t REPORT_FORMAT] [-o OUTPUT_DIR] [-r DAYS_TO_KEEP] [-y DRY_RUN] [-s SKIP_REPORT_GENERATION] [-j SKIP_PROJECT_DELETION]
 
 cleanup_tool_sast.py -k apiToken
 
 required arguments:
 	-k MEND_API_TOKEN, --apiToken
                     Mend SAST Api Token
+	-a MEND_URL, --mendUrl
+                    Mend URL				
 					
 optional arguments:
   -t REPORT_FORMAT, --reportFormat
