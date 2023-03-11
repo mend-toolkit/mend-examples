@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser(description="Mend Sast Clean up tool")
 parser.add_argument('-k', '--apiToken', help="Mend API token", dest='mend_api_token', required=True) 
 parser.add_argument('-a', '--mendUrl', help="Mend URL", dest='mend_url', required=True)
 parser.add_argument('-t', '--reportFormat', help="Report format to generate. Supported formats (csv, pdf, html, xml, json, sarif)", dest='report_format', default="csv")
-parser.add_argument('-o', '--outputDir', help="Output directory", dest='output_dir', default=os.getcwd() + "\Mend\Reports\\")
+parser.add_argument('-o', '--outputDir', help="Output directory", dest='output_dir', default=os.getcwd() + "/Mend/Reports/")
 parser.add_argument('-r', '--daysToKeep', help="Number of days to keep (overridden by --dateToKeep)", dest='days_to_keep', type=int, default=21)
 parser.add_argument('-d', '--dateToKeep', help="Date of latest scan to keep in YYYY-MM-DD format ", dest='date_to_keep', type=valid_date)
 parser.add_argument('-y', '--dryRun', help="Whether to run the tool without performing anything", dest='dry_run', type=strtobool, default=False)
@@ -107,7 +107,7 @@ else:
 
 print("Deleting scans older than: {}".format(archive_date))
 print("Getting scans to remove...")
-print(os.path.join(conf.output_dir))
+
 
 ids_to_remove = get_ids_to_remove()
 if not ids_to_remove or len(ids_to_remove) == 0:
@@ -117,6 +117,7 @@ if not ids_to_remove or len(ids_to_remove) == 0:
 print("Found {} scans to older than {}, generating reports and removing scans...".format(len(ids_to_remove), archive_date))
 
 
+ids_to_remove=["5612d099-be7a-451f-9525-0d24c069ecc6"]
 if not conf.dry_run:
     
     for id in ids_to_remove:
@@ -124,8 +125,10 @@ if not conf.dry_run:
             generate_report(id)
         else:
             print("skipReportGeneration set to true, skipping reports")
+        
         if not conf.skip_scan_deletion:
             delete_scan(id)
         else:
             print("skipScanDeletion set to true, skipping deletion")
+        
 print("SAST clean up has been finished")
