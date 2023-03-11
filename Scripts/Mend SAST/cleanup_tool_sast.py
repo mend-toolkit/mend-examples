@@ -116,8 +116,6 @@ if not ids_to_remove or len(ids_to_remove) == 0:
 
 print("Found {} scans to older than {}, generating reports and removing scans...".format(len(ids_to_remove), archive_date))
 
-
-ids_to_remove=["5612d099-be7a-451f-9525-0d24c069ecc6"]
 if not conf.dry_run:
     
     for id in ids_to_remove:
