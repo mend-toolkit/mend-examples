@@ -19,5 +19,5 @@ jobs:
         run: | 
           echo Downloading Mend CLI
           curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
-          echo Start Mend CLI scan
+          echo Start Mend Container scan
           mend image ubuntu:22.10
