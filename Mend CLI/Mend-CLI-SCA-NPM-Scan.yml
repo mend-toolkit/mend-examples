@@ -40,7 +40,7 @@ jobs:
         env:
           MEND_EMAIL: ${{secrets.EMAIL}}
           MEND_USER_KEY: ${{secrets.USERKEY}}
-          MEND_URL: https://saas-eu.mend.io
+          MEND_URL: https://saas.mend.io
         run: |
           echo Downloading Mend CLI
           curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
