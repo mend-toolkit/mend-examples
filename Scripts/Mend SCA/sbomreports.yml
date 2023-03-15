@@ -43,7 +43,7 @@ jobs:
           
       - name: Check Project State
         run: |
-          curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/check-project-state.sh
+          curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Mend%20SCA/check-project-state.sh
           chmod +x check-project-state.sh && ./check-project-state.sh
 
       - name: Mend SBOM Report Generation
