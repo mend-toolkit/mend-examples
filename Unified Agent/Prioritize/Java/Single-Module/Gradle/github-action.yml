@@ -54,8 +54,9 @@ jobs:
           echo "Integrity Check Failed"
         else
           echo "Integrity Check Passed"
-        WARFILE=$(find ./build/libs -type f -wholename "*.war")
-        echo $WARFILE will be added to appPath
-        echo Starting WhiteSource Scan
-        java -jar wss-unified-agent.jar -appPath $WARFILE -d ./
+          WARFILE=$(find ./build/libs -type f -wholename "*.war")
+          echo $WARFILE will be added to appPath
+          echo Starting WhiteSource Scan
+          java -jar wss-unified-agent.jar -appPath $WARFILE -d ./
+        fi
         
