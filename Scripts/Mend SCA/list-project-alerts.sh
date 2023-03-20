@@ -46,7 +46,7 @@ if $showColors ; then
     NC="\e[0m"
 fi
 
-declare -a projects=( $(cat $PROJECT_DETAILS | jq -r '.projects[] | (.projectToken + "," + .projectName)') )
+declare -a "projects=( $(cat $PROJECT_DETAILS | jq -r '.projects[] | (.projectToken + "," + .projectName) | @sh') )"
 
 for project in "${projects[@]}"; do
     IFS=, read projectToken projectName <<< "$project"
