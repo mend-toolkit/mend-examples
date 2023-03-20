@@ -13,6 +13,8 @@ jobs:
       MEND_URL: https://saas.mend.io
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
       # Downloading Mend CLI
       - name: Downloading Mend CLI
         run:  curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
