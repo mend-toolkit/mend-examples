@@ -12,7 +12,7 @@ mend_cli_scan:
     MEND_USER_KEY: $MEND_SCA_USERKEY
     MEND_URL: "https://saas.mend.io"
     #SAST
-    MEND_SAST_SERVER_URL: "https://saas-eu.mend.io/sast"
+    MEND_SAST_SERVER_URL: "https://saas.mend.io/sast"
     MEND_SAST_API_TOKEN: $MEND_SAST_API
     MEND_SAST_ORGANIZATION: $MEND_SAST_ORGANIZATION
 
