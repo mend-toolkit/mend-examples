@@ -19,9 +19,9 @@ jobs:
             #SCA
             MEND_EMAIL: ${{secrets.MEND_SCA_EMAIL}}
             MEND_USER_KEY: ${{secrets.MEND_SCA_USERKEY}}
-            MEND_URL: https://saas-eu.mend.io
+            MEND_URL: https://saas.mend.io
             #SAST
-            MEND_SAST_SERVER_URL: https://saas-eu.mend.io/sast
+            MEND_SAST_SERVER_URL: https://saas.mend.io/sast
             MEND_SAST_API_TOKEN: ${{secrets.MEND_SAST_API}}
             MEND_SAST_ORGANIZATION: ${{secrets.MEND_SAST_ORGANIZATION}}
           run: |
