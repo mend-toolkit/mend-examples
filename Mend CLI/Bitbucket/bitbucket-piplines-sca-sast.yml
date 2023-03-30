@@ -1,0 +1,34 @@
+# The user needs to set up enviroment variables in Bitbucket CI, see here for more inforamtion: https://support.atlassian.com/bitbucket-cloud/docs/variables-and-secrets/
+# The environment variables are:
+# SCA:
+# MEND_EMAIL: MEND_SCA_EMAIL
+# MEND_USER_KEY: MEND_SCA_USERKEY
+# MEND_URL: https://saas.mend.io
+# SAST:
+# MEND_SAST_SERVER_URL: https://saas.mend.io/sast
+# MEND_SAST_API_TOKEN: MEND_SAST_API
+# MEND_SAST_ORGANIZATION: MEND_SAST_ORGANIZATION
+
+
+image: atlassian/default-image:latest
+  
+pipelines:
+  default:
+  # Build steps
+    - step:
+        name: NPM Build
+        caches:
+          - node
+        script:
+          - npm install
+  # Mend CLI
+    - step:
+        name: Mend SCA Scan
+        script: 
+        - |
+          echo "Downloading Mend CLI"
+          curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+          echo "Mend SCA Scan"
+          mend sca -u
+          echo "Mend SAST Scan"
+          mend sast
