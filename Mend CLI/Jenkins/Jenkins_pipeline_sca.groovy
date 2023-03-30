@@ -4,7 +4,7 @@ pipeline {
   environment {
     MEND_EMAIL = "${MEND_SCA_EMAIL}"
     MEND_USER_KEY = "${MEND_SCA_USERKEY}"
-    MEND_URL = "https://saas-eu.mend.io"
+    MEND_URL = "https://saas.mend.io"
   }
 
   tools {
