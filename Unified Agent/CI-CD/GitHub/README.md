@@ -13,8 +13,6 @@ Yaml files should be customized with proper steps for specific builds
       run: ./gradlew build
 ```
 
-# Conan
-It is recommended to use [ws-conan-scanner](https://github.com/whitesource-ps/ws-conan-scanner) instead of the unified agent as shown in [mend-ghaction-conan.yml](./mend-ghaction-conan.yml)
 
 # DOTNET
 ```

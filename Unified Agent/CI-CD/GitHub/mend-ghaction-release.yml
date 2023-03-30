@@ -60,13 +60,13 @@ jobs:
     - name: 'Upload WhiteSource folder'
       uses: actions/upload-artifact@v2
       with:
-        name: WhiteSource
+        name: Mend
         path: whitesource
         retention-days: 1
-    - name: 'Upload WhiteSource folder if failure'
+    - name: 'Upload Mend folder if failure'
       uses: actions/upload-artifact@v2
       if: failure()
       with:
-        name: WhiteSource
+        name: Mend
         path: whitesource
         retention-days: 1
