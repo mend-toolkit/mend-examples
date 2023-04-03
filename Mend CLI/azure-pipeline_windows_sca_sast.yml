@@ -36,7 +36,7 @@ steps:
         (mkdir C:\mend\cli) -and (Invoke-WebRequest -Uri "https://downloads.mend.io/cli/windows_amd64/mend.exe" -OutFile "C:\mend\cli\mend.exe")
         echo "Mend CLI Downloaded Succesfully"
         C:\mend\cli\mend.exe sca
-        C:\mend\cli\mend.exe sast
+        C:\mend\cli\mend.exe sast --dir ./ --name="$(Build.Repository.Name)$(Build.SourceBranchName)" --app "AZ$(System.TeamProject)"
     env:
       #SCA
       MEND_EMAIL: $(MEND_SCA_EMAIL)
