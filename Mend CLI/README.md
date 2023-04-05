@@ -24,6 +24,7 @@ mend update
 * Publish the `.mend/logs` folder with logs & reports by adding the following commands depending on each pipeline
 
 ### Azure DevOps Pipelines
+## SCA
 
 * Windows:
 ```
@@ -35,9 +36,19 @@ mend update
 - publish: ../../../.mend/logs
   artifact: "Mend CLI logs"
 ```
-
+## SAST
+```
+- publish: c:\users\VssAdministrator\.mend\storage\sast\logs
+  artifact: "Mend CLI Logs"
+```
+* Linux:
+```
+- publish: ../../../.mend/storage/sast/logs
+  artifact: "Mend CLI logs"
+```
 ### GitHub Actions
 
+## SCA
 ```
 - name: 'Upload Mend CLI Logs if failure'
     uses: actions/upload-artifact@v2
@@ -51,5 +62,21 @@ mend update
     with:
         name: "Mend CLI Logs"
         path: ~/.mend/logs
+        retention-days: 1
+```
+## SAST
+```
+- name: 'Upload Mend CLI Logs if failure'
+    uses: actions/upload-artifact@v2
+    with:
+        name: "Mend CLI Logs"
+        path: ~/.mend/storage/sast/logs
+        retention-days: 1
+- name: 'Upload Mend CLI Logs if failure'
+    uses: actions/upload-artifact@v2
+    if: failure()
+    with:
+        name: "Mend CLI Logs"
+        path: ~/.mend/storage/sast/logs
         retention-days: 1
 ```
