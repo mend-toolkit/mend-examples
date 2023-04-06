@@ -35,7 +35,7 @@ steps:
         echo "Downloading Mend CLI"
         (mkdir C:\mend\cli) -and (Invoke-WebRequest -Uri "https://downloads.mend.io/cli/windows_amd64/mend.exe" -OutFile "C:\mend\cli\mend.exe")
         echo "Mend CLI Downloaded Succesfully"
-        C:\mend\cli\mend.exe sca
+        C:\mend\cli\mend.exe sca -u
         C:\mend\cli\mend.exe sast
     env:
       #SCA
