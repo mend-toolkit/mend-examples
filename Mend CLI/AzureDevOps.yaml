@@ -12,8 +12,8 @@
 #
 name: 'mend-cli-scan'
 
-# Define your own pipeline trigger here, however this example is for scanning on a push to the main or release branches.  
-# This is the ideal time to scan so that an SBOM can be created for software releases and is also managed for released software.
+# Define your own pipeline trigger here:
+# Below is defined a trigger for scanning on a push to the main branch and scanning on a push to release branches.  This is considered an ideal time to scan so that an SBOM can be created for software releases and inventory is managed for released software.
 trigger:
 - main
 - release*
