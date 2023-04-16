@@ -1,16 +1,6 @@
 # Examples by CI/CD Tool
 This repository contains tool specific examples of how to scan using the Mend [Unified CLI](https://docs.mend.io/bundle/cli/page/scan_with_mend_s_unified_cli.html) within a CI/CD pipeline.
 
-
-* [AzureDevOps](AzureDevOps)
-* [Bamboo](Bamboo)
-* [Bitbucket](Bitbucket)
-* [CircleCI](CircleCI)
-* [GitHub](GitHub)
-* [GitLab](GitLab)
-* [Jenkins](Jenkins)
-* [TeamCity](TeamCity)
-
 ## Caching the Unified CLI
 The CLI is a lightweight wrapper which can be cached if required.
 Before every execution of the CLI, the CLI auto-updates itself to the latest version.
