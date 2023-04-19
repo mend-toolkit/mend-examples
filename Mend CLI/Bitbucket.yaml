@@ -1,0 +1,54 @@
+# ******** Mend Unified CLI Template for Bitbucket CI ********
+#
+# You may wish to alter this file to override the build tool and the Mend scanning technologies used (SCA, SAST or Conatiner).
+#
+# For more configeration options, please check the technical documentation portal:
+# 📚 https://docs.mend.io/bundle/cli/page/scan_with_mend_s_unified_cli.html 
+#
+# ******** Description ********
+# Mend SCA will automatically use package managers and file system scanning to detect open source components. 
+# Mend SAST will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
+# Mend Containers will automatically pull the container defined and scan for open source components. 
+#
+# The user needs to set up enviroment variables in Bitbucket CI, see here for more inforamtion: https://support.atlassian.com/bitbucket-cloud/docs/variables-and-secrets/
+# The environment variables are:
+### SCA and Container Environment Variables ###
+# MEND_EMAIL: MEND_SCA_EMAIL
+# MEND_USER_KEY: MEND_SCA_USERKEY
+# MEND_URL: https://saas.mend.io
+### SAST Environment Variables ###
+# MEND_SAST_SERVER_URL: https://saas.mend.io/sast
+# MEND_SAST_API_TOKEN: MEND_SAST_API
+# MEND_SAST_ORGANIZATION: MEND_SAST_ORGANIZATION
+
+
+image: atlassian/default-image:latest
+  
+pipelines:
+  default:
+  # Build steps
+    # - step:
+    #     name: NPM Build
+    #     name: Maven Install
+    #     name: Dotnet Restore
+  # Mend CLI
+    - step:
+        name: Download Mend CLI
+        script: |
+          echo Downloading Mend CLI
+          curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+    - step: 
+        name: Mend SCA Scan
+        script: |
+          echo Start Mend SCA scan
+          mend sca -u
+    - step:
+        name: Mend SAST Scan
+        script: |
+          echo Start Mend SAST scan
+          mend sast
+    - step:
+        name: Mend Container Scan
+        script: |
+          echo Start Mend Container scan
+          mend image ubuntu:22.10

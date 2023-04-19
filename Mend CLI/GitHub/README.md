@@ -13,7 +13,6 @@ Yaml files should be customized with proper steps for specific builds
       run: ./gradlew build
 ```
 
-
 # DOTNET
 ```
     - name: Setup .NET

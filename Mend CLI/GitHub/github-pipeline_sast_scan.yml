@@ -1,0 +1,27 @@
+name: Mend CLI Scan
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v3
+        # Add your package manager build here
+        # name: Build with NPM
+        # run: npm install
+
+        - name: Mend CLI Scan
+          env:
+            #SAST
+            MEND_SAST_SERVER_URL: https://saas.mend.io/sast
+            MEND_SAST_API_TOKEN: ${{secrets.MEND_SAST_API}}
+            MEND_SAST_ORGANIZATION: ${{secrets.MEND_SAST_ORGANIZATION}}
+          run: |
+            echo Downloading Mend CLI
+            curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend
+            echo Start Mend CLI scan
+            ./mend sast
