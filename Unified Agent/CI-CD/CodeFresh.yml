@@ -1,0 +1,28 @@
+# More examples of Codefresh YAML can be found at
+# https://codefresh.io/docs/docs/yaml-examples/examples/
+# Before Running pipeline, make sure your add WS_APIKEY and WS_WSS_URL as pipeline variables
+
+version: "1.0"
+stages:
+  - "Mend"
+
+steps:
+  Freestyle:
+    title: Mend-E2E
+    type: freestyle
+    stage: "Mend"
+    working_directory: "${{CF_BRANCH}}"
+    arguments:
+      image: 'quay.io/codefreshplugins/alpine:3.8'
+      commands:
+        - apk update
+        - apk add openjdk8 curl npm git
+        - git clone https://github.com/some/repo
+        - cd repo
+        - npm install --only=prod
+        - curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+# The Unified Agent scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+        - export WS_PRODUCTNAME=CodeFresh
+        - export WS_PROJECTNAME=$CF_BRANCH
+        - export WS_FILESYSTEMSCAN=false
+        - java -jar wss-unified-agent.jar

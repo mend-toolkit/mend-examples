@@ -1,0 +1,38 @@
+---
+trigger:
+  - main
+pool:
+  vmImage: windows-latest
+
+steps:
+## Maven example - Replace with your build steps
+  - task: Maven@3
+    inputs:
+      mavenPomFile: pom.xml
+      goals: clean install
+      mavenOptions: -DskipTests=true
+      publishJUnitResults: false
+      javaHomeOption: JDKVersion
+      jdkVersionOption: "1.11"
+      mavenVersionOption: Default
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+## end maven example
+  
+  # The Unified Agent scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+  - task: PowerShell@2
+    inputs:
+      targetType: inline
+      script: |
+        echo Downloading Mend Unified Agent
+        Invoke-WebRequest -Uri "https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar" -OutFile ".\wss-unified-agent.jar"
+        echo Unified Agent downloaded successfully
+        java -jar wss-unified-agent.jar
+    env:
+      WS_APIKEY: $(APIKEY)
+      WS_USERKEY: $(USERKEY)
+      WS_FILESYSTEMSCAN: false
+      WS_WSS_URL: https://saas.mend.io/agent
+      WS_PRODUCTNAME: AZDO_$(System.TeamProject)
+      WS_PROJECTNAME: $(Build.Repository.Name)_$(Build.SourceBranchName)
+    displayName: Mend Unified Agent Scan

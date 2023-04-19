@@ -8,13 +8,11 @@
 # ******** Description ********
 # Mend SCA will automatically use package managers and file system scanning to detect open source components. 
 # Mend SAST will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
-# Mend Containers will automatically pull the container defined and scan for open source components. 
-#
 
 # # Define the parameters:
 # Go to the build settings and click on "Parameters".
 # Define the following variables:
-### SCA and Container Environment Variables ###
+### SCA Environment Variables ###
 # env.MEND_EMAIL="YOUR EMAIL"
 # env.MEND_USER_KEY="YOUR SCA USERKEY"
 # env.MEND_URL="https://saas.mend.io"
@@ -22,6 +20,8 @@
 # env.MEND_SAST_SERVER_URL="https://saas.mend.io/sast"
 # env.MEND_SAST_API_TOKEN="YOUR SAST API KEY"
 # env.MEND_SAST_ORGANIZATION="YOUR SAST ORG"
+
+# The Mend SCA CLI scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
 
 # Create the following build step:
 # Runner type: Commandline
@@ -35,5 +35,3 @@ echo "Mend SCA Scan"
 ./mend sca -u
 echo "Mend SAST Scan"
 ./mend sast
-echo "Mend Container Scan"
-./mend image ubuntu:22.10

@@ -1,5 +1,6 @@
 #!/bin/bash
-# Generic example for scanning for dependencies with the Mend Unified Agent 
+# Generic example for scanning for dependencies with the Mend Unified Agent
+# The Unified Agent scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
 
 export WS_APIKEY=<your-api-key>
 export WS_USERKEY=<your-user-key>

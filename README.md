@@ -21,8 +21,6 @@ If you can't find something, use search to [search in this repository](https://d
 
 ### [Prioritize Scans by Language](./Unified%20Agent/Prioritize/)
 
-## [SAST CLI](./SAST_CLI/)
-
 ## Scripts
 ### [Mend SCA](./Scripts/Mend%20SCA/)
 ### [Mend SAST](./Scripts/Mend%20SAST/)

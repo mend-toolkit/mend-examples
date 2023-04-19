@@ -1,0 +1,31 @@
+image: atlassian/default-image:latest
+  
+pipelines:
+  default:
+    - step:
+        name: NPM Build
+        caches:
+          - node
+        script:
+          - npm install --only=prod
+
+# The Unified Agent scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+    - step:
+        name: Run Mend Unified Agent Scan
+        script: 
+        - |
+          echo "Downloading Mend Unified Agent"
+          curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+          if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
+            echo "Integrity Check Failed"
+          else
+            echo "Integrity Check Passed"
+          fi
+          export WS_APIKEY=$APIKEY #add as a variable to the pipeline
+          export WS_USERKEY=$USERKEY #add as a variable to the pipeline
+          export WS_WSS_URL=https://saas.mend.io/agent
+          export WS_PRODUCTNAME=$BITBUCKET_REPO_SLUG
+          export WS_PROJECTNAME=$BITBUCKET_BRANCH
+          export WS_FILESYSTEMSCAN=false
+          echo "Starting Mend Unified Agent Scan"
+          java -jar wss-unified-agent.jar
