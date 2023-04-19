@@ -22,11 +22,11 @@ jobs:
 
         steps:
         - uses: actions/checkout@v3
-        ## Add your package manager build here
+        ## Add your package manager build here, for more information see: Github_buildsteps.md
         - uses: actions/setup-dotnet@v1
         - uses: actions/setup-java@v2
         - uses: actions/setup-node@v3
-        
+
         - name: Mend CLI Scan
           env:
             #SCA
