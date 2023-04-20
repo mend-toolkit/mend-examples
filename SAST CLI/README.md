@@ -1,10 +1,5 @@
 # SAST CLI Examples by CI/CD Tool
-This folder contains tool specific examples of how to scan using the [Mend SAST Command Line Client](https://docs.mend.io/bundle/mend_sast/page/command_line_client.html) within the CI/CD pipeline.
+It is recommended to use the Mend [Unified CLI](https://docs.mend.io/bundle/cli/page/scan_with_mend_s_unified_cli.html) as it will download the lastest SAST CLI is the preferred method for running Mend SAST scans.
 
-* [AzureDevOps](azure-pipelines-mend_sast.yml)
-* [Bitbucket](bitbucket-mend_sast.yml)
-* [CircleCI](circleci-mend_sast.yml)
-* [GitHub](github-mend_sast.yml)
-* [GitLab](gitlab-mend_sast.yml)
-* [Jenkins](jenkins-mend_sast.yml)
-* [TeamCity](teamcity-mend_sast.yml)
+All previous examples can be found in the commit history before April 19, 2023.
+

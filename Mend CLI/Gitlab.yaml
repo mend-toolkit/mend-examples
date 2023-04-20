@@ -8,19 +8,33 @@
 # ******** Description ********
 # Mend SCA will automatically use package managers and file system scanning to detect open source components. 
 # Mend SAST will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
-# Mend Containers will automatically pull the container defined and scan for open source components. 
-#
+
 
 default:
-  image: timbru31/java-node:latest
+  image: maven:3.8-openjdk-11
 
 stages:
+  - build
   - scan
+
+## Maven example - replace with your builds steps
+maven_build:
+  image: maven:3.8.4-eclipse-temurin-17-alpine
+  stage: build
+  script: "mvn clean install -DskipTests"
+  
+cache:
+  key: "cache-$MVN_PKG-$CI_PIPELINE_ID"
+  paths:
+  - ${CI_PROJECT_DIR}/
+## end maven build example
+
+# The Mend SCA CLI scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
 
 mend_cli_scan:
   stage: scan
   variables:
-    ### SCA and Container Environment Variables ###
+    ### SCA Environment Variables ###
     MEND_EMAIL: $MEND_SCA_EMAIL
     MEND_USER_KEY: $MEND_SCA_USERKEY
     MEND_URL: "https://saas.mend.io"
@@ -30,14 +44,10 @@ mend_cli_scan:
     MEND_SAST_ORGANIZATION: $MEND_SAST_ORGANIZATION
 
   script: |
-    ## Add your package manager build here
-    # mvn clean install -DskipTests
-    # npm install
+
     echo Downloading Mend CLI
     curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend
     echo Start Mend SCA Scan
     ./mend sca -u
     echo Start Mend SAST Scan
     ./mend sast
-    echo Start Mend Container Scan
-    ./mend image ubuntu:22.10

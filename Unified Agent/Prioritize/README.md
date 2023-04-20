@@ -1,9 +1,6 @@
 # Prioritize Examples by Language
 This folder contains language specific examples of different ways to scan using [Mend Prioritize](https://docs.mend.io/bundle/sca_user_guide/page/scanning_with_mend_prioritize.html)
 
-* [.NET](DotNet)
-  * [Multi-Module](DotNet/Multi-Module)
-  * [Single-Module](DotNet/Single-Module)
 * [Java](Java)
   * [Multi-Module](Java/Multi-Module)
   * [Single-Module](Java/Single-Module)
@@ -13,9 +10,6 @@ This folder contains language specific examples of different ways to scan using 
 
 For all examples above, make sure to change the branches defined within the .yml file according to your needs.  Refer to [Branching](#Branching) for best practices
 
-**Important .NET Note** 
-<br>
-[xModuleAnalyzer](https://github.com/mend-toolkit/mend-examples/Prioritize/DotNet/Multi-Module/xModuleAnalyzer-NET.sh) script may require some customization due to different build and exclusion types
 
 ##  [GitHub Actions](https://docs.github.com/en/actions)
 YAML files beginning with "github-action"
