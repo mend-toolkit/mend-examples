@@ -82,15 +82,15 @@ echo "${grn}Download Success!!!${end}"
 }
 
 function cert_add(){
-    SUPPORTEDVERSION=22.12.2
+    #SUPPORTEDVERSION=22.12.2
     if [ -z $CERTFILE ]
         then  echo "No .crt file supplied as 2nd argument. Integration will be prepared with no additional certs."
         else
-            if [[ $AGENT_LATEST != *$SUPPORTEDVERSION/ ]]
-                then
-                    echo "These changes to include certs are only tested to be valid against integration version $SUPPORTEDVERSION.  Leaving all files unchanged.";
-                    return;
-            fi
+            # if [[ $AGENT_LATEST != *$SUPPORTEDVERSION/ ]]
+            #     then
+            #         echo "These changes to include certs are only tested to be valid against integration version $SUPPORTEDVERSION.  Leaving all files unchanged.";
+            #         return;
+            # fi
             if [[ $CERTFILE != *.crt ]]
                 then
                     echo Argument 2 to this script must be a certificate file whose name ends in ".crt";
@@ -106,7 +106,7 @@ function cert_add(){
                             echo wss-$SCM-app Dockerfile not in expected format from version $SUPPORTEDVERSION.  Leaving all files unchanged.
                             return;
                     fi
-                    if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-scanner/docker/Dockerfile | grep -q '^359:');
+                    if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-scanner/docker/Dockerfile | grep -q '^355:');  #355 for BB and GLS and GHS 23.4.1 
                         then
                             echo wss-scanner Dockerfile not in expected format from version $SUPPORTEDVERSION.  Leaving all files unchanged.
                             return;
