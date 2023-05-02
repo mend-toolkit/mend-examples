@@ -1,8 +1,6 @@
-![Logo](https://resources.mend.io/mend-sig/logo/mend-dark-logo-horizontal.png)  
+![Logo](https://mend-toolkit-resources-public.s3.amazonaws.com/img/mend-io-logo-horizontal.svg)  
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
-[![GitHub release](https://img.shields.io/github/release/mend-examples/ws-template.svg)](https://github.com/mend-examples/ws-template/releases/latest)  
-# Repository Integration Automation Scripts
+# Self-Hosted Repository Integration Automation Scripts
 When used, these scripts will download the latest repository integration run via docker compose:
 - Remediate Server
 - Controller

@@ -1,22 +1,27 @@
+![Logo](https://mend-toolkit-resources-public.s3.amazonaws.com/img/mend-io-logo-horizontal.svg)  
+
 # Mend SCA Scripts
 This folder contains scripts for use with the Mend SCA platform and Unified agent scanning within a CI/CD pipeline.
 
 - [Reports Within a Pipeline](#reports-within-a-pipeline)
-- [Pipeline SBOM Generation](#pipeline-sbom-generation)
+- [SBOM Report Generation](#sbom-report-generation)
 - [Adding Red Shield Comment Links to GitHub Issues](#adding-red-shield-comment-links-to-github-issues)
-- [Adding Red Shield Comments Links to GitHub Issues and Closing Green Shield Issues](#adding-red-shield-comments-links-to-github-issues-and-closing-green-shield-issues)
+- [Ignoring Alerts Based on Prioritize](#ignoring-alerts-based-on-prioritize)
 - [Display Vulnerabilities Affecting a Project](#display-vulnerabilities-affecting-a-project)
 - [Display Policy Violations Following a Scan](#display-policy-violations-following-a-scan)
 - [Cache the Latest Version of the Unified Agent](#cache-the-latest-version-of-the-unified-agent)
----
-> **All scripts & snippets should call [check-project-state.sh](check-project-state.sh) before running to ensure that the scan has completed.**
-<br>
----
+
+<hr/>
+
+**All scripts & snippets should call [check-project-state.sh](check-project-state.sh) before running to ensure that the scan has completed.**
+<hr/>
+
 
 ## Reports Within a Pipeline
 
 Any report can also be published as a part of the pipeline.  
-Add the following snippet after calling the Unified Agent in any pipeline file to save reports from the scanned project to the `./whitesource` logs folder, then use your [pipeline publish](../CI-CD#Pipeline-Log-Publishing) feature to save the whitesource log folder as an artifact.  
+Add the following snippet after calling the Unified Agent in any pipeline file to save reports from the scanned project to the `./whitesource` logs folder.  
+Then use your pipeline's [publish feature](../../CI-CD/README.md#publishing-mends-logs-from-a-pipeline) to save the `whitesource` log folder as an artifact.  
 
 <br>
 
@@ -46,7 +51,7 @@ curl -o ./whitesource/duediligencereport.xlsx -X POST "${WS_URL}/api/v1.3" -H "C
 
 ## [SBOM Report Generation](./sbomreports.yml)
 
-In the above linked example, SPDX and CycloneDX async reports are called from the pipeline.  The reports can be downloaded from the User Interface or retrieved using [additional APIs](https://docs.mend.io/bundle/api_sca/page/reports_api_-_asynchronous.html)
+In the above linked example, SPDX and CycloneDX async reports are called from the pipeline.  The reports can be downloaded from the User Interface or retrieved using [additional API requests](https://docs.mend.io/bundle/api_sca/page/reports_api_-_asynchronous.html)
 
 
 <br>
