@@ -26,7 +26,7 @@ Options Defined:
 
 Supplying a self-signed or other unverifiable PK cert for GitHub, GitLab, or Bitbucket:
 
-`setup.sh` <option> <certificate_file.crt>  **Note:** Certificate file **must** have an extension of .crt and have a first line equal to `-----BEGIN CERTIFICATE-----`
+`setup.sh <option> <certificate_file.crt>`  **Note:** Certificate file **must** have an extension of .crt and have a first line equal to `-----BEGIN CERTIFICATE-----`
 
 ## Execution
 Execution instructions:  
