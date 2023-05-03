@@ -82,15 +82,9 @@ echo "${grn}Download Success!!!${end}"
 }
 
 function cert_add(){
-    #SUPPORTEDVERSION=22.12.2
     if [ -z $CERTFILE ]
         then  echo "No .crt file supplied as 2nd argument. Integration will be prepared with no additional certs."
         else
-            # if [[ $AGENT_LATEST != *$SUPPORTEDVERSION/ ]]
-            #     then
-            #         echo "These changes to include certs are only tested to be valid against integration version $SUPPORTEDVERSION.  Leaving all files unchanged.";
-            #         return;
-            # fi
             if [[ $CERTFILE != *.crt ]]
                 then
                     echo Argument 2 to this script must be a certificate file whose name ends in ".crt";
