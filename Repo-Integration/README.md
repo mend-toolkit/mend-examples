@@ -19,8 +19,14 @@ When used, these scripts will download the latest repository integration run via
 
 Options Defined:  
 **ghe** - GitHub Enterprise
+
 **gls** - GitLab (self-hosted)
+
 **bb** - Bitbucket Server
+
+Supplying a self-signed or other unverifiable PK cert for GitHub, GitLab, or Bitbucket:
+
+`setup.sh <option> <certificate_file.crt>`  **Note:** Certificate file **must** have an extension of .crt and have a first line equal to `-----BEGIN CERTIFICATE-----`
 
 ## Execution
 Execution instructions:  
@@ -33,7 +39,7 @@ Execution instructions:
 ```export ws_key='your activation key between single quotes'```
 - Run the setup.sh script for your appropriate source control management system as shown in options above
 
-```./setup.sh <option>```
+```./setup.sh <option>```, or ```./setup.sh <option> <certificate_file.crt>``` if supplying a self-signed or other cert.
 - Run docker compose depending on how it was installed
 
 ```docker-compose up``` 

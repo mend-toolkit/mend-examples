@@ -1,6 +1,10 @@
 #!/bin/bash
 
 SCM=$1
+if [ "$2" ]
+then
+    CERTFILE=`readlink -f $2`
+fi
 MEND_DIR=$HOME/mend
 BASE_DIR=$MEND_DIR/$SCM
 REPO_INTEGRATION_DIR=$(pwd)
@@ -77,6 +81,63 @@ echo "${grn}Download Success!!!${end}"
 
 }
 
+function cert_add(){
+    if [ -z $CERTFILE ]
+        then  echo "No .crt file supplied as 2nd argument. Integration will be prepared with no additional certs."
+        else
+            if [[ $CERTFILE != *.crt ]]
+                then
+                    echo Argument 2 to this script must be a certificate file whose name ends in ".crt";
+                    return;
+            fi
+            if !(grep -ne "-----BEGIN CERTIFICATE-----" $CERTFILE | grep -q '^1:');
+                then
+                    echo File supplied as 2nd argument must be a .crt file with first line equal to "-----BEGIN CERTIFICATE-----";
+                    return;
+                else
+                    if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-$SCM-app/docker/Dockerfile | grep -q '^27:');
+                        then
+                            echo wss-$SCM-app Dockerfile not in expected format from version $SUPPORTEDVERSION.  Leaving all files unchanged.
+                            return;
+                    fi
+                    if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-scanner/docker/Dockerfile | grep -q '^355:');  #355 for BB and GLS and GHS 23.4.1 
+                        then
+                            echo wss-scanner Dockerfile not in expected format from version $SUPPORTEDVERSION.  Leaving all files unchanged.
+                            return;
+                    fi
+                    if !(grep -nF 'COPY package.json yarn.lock ./' ${BASE_DIR}/latest/wss-remediate/docker/Dockerfile | grep -q '^129:');
+                        then
+                            echo wss-remediate Dockerfile not in expected format from version $SUPPORTEDVERSION.  Leaving all files unchanged.
+                            return;
+                    fi
+            fi
+            cp $CERTFILE ${BASE_DIR}/latest/wss-$SCM-app/docker/docker-image
+            cp $CERTFILE ${BASE_DIR}/latest/wss-scanner/docker/docker-image
+            cp $CERTFILE ${BASE_DIR}/latest/wss-remediate/docker
+            CERTFILE_BASE=`basename $CERTFILE`
+            sed -i '27a\
+COPY docker-image/'"$CERTFILE_BASE"' /usr/local/share/ca-certificates\
+\
+RUN /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/keytool -import -keystore /etc/ssl/certs/java/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
+RUN update-ca-certificates' ${BASE_DIR}/latest/wss-$SCM-app/docker/Dockerfile
+            sed -i '359a\
+COPY docker-image/'"$CERTFILE_BASE"' /usr/local/share/ca-certificates\
+\
+RUN /usr/local/java/17.0.3+7/bin/keytool -import -keystore /usr/local/java/17.0.3+7/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
+RUN /usr/local/java/11.0.13+8/bin/keytool -import -keystore /usr/local/java/11.0.13+8/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
+RUN update-ca-certificates' ${BASE_DIR}/latest/wss-scanner/docker/Dockerfile
+            sed -i '129a\
+COPY '"$CERTFILE_BASE"' ./\
+COPY '"$CERTFILE_BASE"' /usr/local/share/ca-certificates\
+\
+ENV NODE_EXTRA_CA_CERTS='"$CERTFILE_BASE"'\
+RUN /opt/buildpack/tools/java/11.0.12+7/bin/keytool -import -keystore /opt/buildpack/ssl/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
+RUN update-ca-certificates\
+' ${BASE_DIR}/latest/wss-remediate/docker/Dockerfile
+            echo Supplied certfile $CERTFILE has been copied to the appropriate places and Dockerfiles have been modified, so that TLS operations in the containers will trust this certificate.
+    fi
+}
+
 function key_check(){
 ## Look for Activation Key
 if [ -z "${ws_key}" ]
@@ -85,7 +146,8 @@ then
     echo "${cyn}export ws_key='replace-with-your-activation-key-inside-single-quotes'${end}"
     exit
 else
-    scm
+    scm;
+    cert_add;
 fi
 
 }
