@@ -6,19 +6,34 @@
     "baseBranches": [],
     "enableLicenseViolations": "true"
   },
+    "scanSettingsSAST": {
+    "enableScan": false,
+    "scanPullRequests": false,
+    "incrementalScan": true,
+    "baseBranches": [],
+    "snippetSize": 10
+  },
   "checkRunSettings": {
     "vulnerableCheckRunConclusionLevel": "failure",
     "displayMode": "diff",
     "useMendCheckNames": true
   },
+    "checkRunSettingsSAST": {
+    "checkRunConclusionLevel": "failure",
+    "severityThreshold": "high"
+  },
   "issueSettings": {
-    "minSeverityLevel": "HIGH",
+    "minSeverityLevel": "high",
     "issueType": "DEPENDENCY"
   },
   "remediateSettings": {
     "workflowRules": {
       "enabled": true,
-      "minVulnerabilitySeverity": "HIGH"
-    }
+      "minVulnerabilitySeverity": "high"
+    },
+    "extends": [
+      "config:base",
+      "github>whitesource/merge-confidence:beta"
+    ]
   }
 }
