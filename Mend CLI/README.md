@@ -46,6 +46,9 @@ echo "Start Mend SAST Scan"
 ./mend sast
 ```
 
+## Policy Check for SCA and SAST
+Policy Check and its configuration is detailed in seperate [README](./PolicyCheck.md)
+
 ## Container Scanning 
 Container/Image scanning is detailed in seperate [README](./ContainerScanning.md)
 
