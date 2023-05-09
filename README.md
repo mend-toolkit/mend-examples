@@ -1,28 +1,22 @@
-![Logo](https://resources.mend.io/mend-sig/logo/mend-dark-logo-horizontal.png)  
+![Logo](https://mend-toolkit-resources-public.s3.amazonaws.com/img/mend-io-logo-horizontal.svg)  
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)  
+
 # Mend Examples
 This repository contains examples of different ways to scan and retrieve results within the [Mend platform](https://docs.mend.io/).
 
-<br>
+If you can't find something, use [GitHub's search]((https://docs.github.com/en/search-github/getting-started-with-searching-on-github/about-searching-on-github)) to search in this repository.
 
-If you can't find something, use search to [search in this repository](https://docs.github.com/en/search-github/getting-started-with-searching-on-github/about-searching-on-github)
 
-<br>
+## SCM Integration
+#### [Self Hosted Repo Integration Setup](Repo-Integration)
 
-## [Mend CLI](./Mend%20CLI/)
-
-## [Self Hosted Repo Integration Setup](Repo-Integration)
-
-## Unified Agent 
-### [CI-CD by Pipeline](./Unified%20Agent/CI-CD/)
-
-### [Policy Check Examples](./Unified%20Agent/Policy-Check/)
-
-### [Prioritize Scans by Language](./Unified%20Agent/Prioritize/)
+## CI-CD
+#### [CI-CD by Platform](./CI-CD/)
+#### [Policy Check Examples (Unified Agent)](CI-CD/%5BGeneric%5D/Unified%20Agent/Policy-Check)
+#### [Mend Prioritize Scans by Language](CI-CD/%5BGeneric%5D/Unified%20Agent/Prioritize)
 
 ## Scripts
-### [Mend SCA](./Scripts/Mend%20SCA/)
-### [Mend SAST](./Scripts/Mend%20SAST/)
-
+#### [Mend SAST](./Scripts/Mend%20SAST/)
+#### [Mend SCA](./Scripts/Mend%20SCA/)
 

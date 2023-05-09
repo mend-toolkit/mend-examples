@@ -1,3 +1,5 @@
+![Logo](https://mend-toolkit-resources-public.s3.amazonaws.com/img/mend-io-logo-horizontal.svg)  
+
 # Mend SAST Scripts
 This folder contains scripts for use with the Mend SAST platform.
 
@@ -18,14 +20,14 @@ Python 3.8+
 
 **Execution**
 
-```
+```shell
 python3 cleanup_tool_sast.py -k <yourSASTapiToken> -a <yourMendUrl> -r <numberofdaystokeep>
 ```
 **note:** The scripts runs all calls in HTTPS. This does not need to be added to your URL
 
 **Example**
 
-```
+```shell
 python3 cleanup_tool_sast.py -k XXX -a saas.mend.io -r 30
 ```
 
