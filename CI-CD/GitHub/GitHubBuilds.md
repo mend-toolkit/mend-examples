@@ -101,3 +101,45 @@ jobs:
     - name: Build
       run: swift build -v
 ```
+
+## Publishing Mend Unified Agent Logs From a Pipeline
+
+Publish the `whitesource` folder with logs & reports by adding one the following commands, depending on your platform
+
+
+```yaml
+- name: 'Upload WhiteSource folder'
+  uses: actions/upload-artifact@v2
+  with:
+    name: WhiteSource
+    path: whitesource
+    retention-days: 1
+- name: 'Upload WhiteSource folder if failure'
+  uses: actions/upload-artifact@v2
+  if: failure()
+  with:
+    name: WhiteSource
+    path: whitesource
+    retention-days: 1
+```
+
+## Publishing Mend CLI Logs From a Pipeline
+
+* Publish the `.mend/logs` folder with logs & reports by adding the following commands depending on each pipeline
+  * SAST logs are currently located in ```.mend/storage/sast/logs```
+
+```yaml
+- name: 'Upload Mend CLI Logs if failure'
+    uses: actions/upload-artifact@v2
+    with:
+        name: "Mend CLI Logs"
+        path: ~/.mend/logs
+        retention-days: 1
+- name: 'Upload Mend CLI Logs if failure'
+    uses: actions/upload-artifact@v2
+    if: failure()
+    with:
+        name: "Mend CLI Logs"
+        path: ~/.mend/logs
+        retention-days: 1
+```
