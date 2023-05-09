@@ -50,32 +50,3 @@ In the following examples, the `wss-unified-agent.jar` artifact is stored in the
 
 * [Generic Example](../../Scripts/Mend%20SCA/README.md#cache-the-latest-version-of-the-unified-agent)
 * [GitLab Pipelines](./GitLab/Unified%20Agent/GitLab-cached-ua.yml)
-
-### Publishing Mend's Logs From a Pipeline
-
-Publish the `whitesource` folder with logs & reports by adding one the following commands, depending on your platform
-
-#### Azure DevOps Pipelines
-
-```yaml
-- publish: $(System.DefaultWorkingDirectory)/whitesource
-  artifact: Whitesource
-```
-
-#### GitHub Actions
-
-```yaml
-- name: 'Upload WhiteSource folder'
-  uses: actions/upload-artifact@v2
-  with:
-    name: WhiteSource
-    path: whitesource
-    retention-days: 1
-- name: 'Upload WhiteSource folder if failure'
-  uses: actions/upload-artifact@v2
-  if: failure()
-  with:
-    name: WhiteSource
-    path: whitesource
-    retention-days: 1
-```

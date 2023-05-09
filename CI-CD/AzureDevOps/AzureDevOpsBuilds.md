@@ -43,3 +43,32 @@ Yaml files should be customized with proper steps for specific builds.  Below ar
   inputs:
     customCommand: install --package-lock
 ```
+
+
+# Publishing Mend Unified Agent Logs From a Pipeline
+
+Publish the `whitesource` folder with logs & reports by adding one the following commands, depending on your platform
+
+
+```yaml
+- publish: $(System.DefaultWorkingDirectory)/whitesource
+  artifact: Whitesource
+```
+
+# Publishing Mend CLI Logs From a Pipeline
+
+* Publish the `.mend/logs` folder with logs & reports by adding the following commands depending on each pipeline
+  * SAST logs are currently located in ```.mend/storage/sast/logs```
+
+* Windows:
+```yaml
+- publish: c:\users\VssAdministrator\.mend\logs
+  artifact: "Mend CLI Logs"
+```
+* Linux:
+```yaml
+- publish: ../../../.mend/logs
+  artifact: "Mend CLI logs"
+```
+
+
