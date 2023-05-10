@@ -5,7 +5,7 @@
 # and downloads it when ready.
 
 # Prerequisites:
-# apt install curl jq
+# apt install curl jq unzip
 
 # Required Environment Variables:
 # WS_APIKEY or WS_PRODUCTTOKEN or WS_PROJECTTOKEN
@@ -83,9 +83,16 @@ reportFilter='{}'
 # reportFormat=pdf
 
 # Example 4
-# reportType=ProjectSPDXReport
+# reportType=ProjectSBOMReport
 # reportScope=Project
 # reportFormat=json
+# standard=CycloneDx
+
+# Example 5
+# reportType=ProjectSBOMReport
+# reportScope=Project
+# reportFormat=json
+# standard=spdx
 
 #------------------------------------------------
 
@@ -93,8 +100,7 @@ reportFilter='{}'
 reportFilter="$(echo "$reportFilter" | tr -d '\t' | tr -d '\n')"
 [[ -z $WS_USERKEY ]] && echo "No WS_USERKEY specified" && exit
 [[ -z $WS_WSS_URL ]] && echo "No WS_WSS_URL specified" && exit
-
-
+export WS_API_URL="$(echo "$WS_WSS_URL" | sed 's|agent|api/v1.3|')"
 
 if [[ "$reportScope" = "Organization" ]] ; then
 	tokenScope=org
@@ -108,37 +114,37 @@ elif [[ "$reportScope" = "Project" ]] ; then
 fi
 
 # Generate Report
-reqBody='"requestType":"generate'$reportScope'ReportAsync","'$tokenScope'Token":"'$token'","userKey": "'$WS_USERKEY'","reportType":"'$reportType'"'
+reqBody='"requestType":"generate'$reportScope'ReportAsync","'$tokenScope'Token":"'$token'","userKey":"'$WS_USERKEY'","reportType":"'$reportType'", "standard":"'$standard'"'
 [[ -n $reportFormat ]] && reqBody="$reqBody"',"format":"'$reportFormat'"'
 [[ -n $reportFilter ]] && reqBody="$reqBody"',"filter":'"$reportFilter"
 reqBody='{'"$reqBody"'}'
-
+resGenerate=$(curl -s -X POST -H 'Content-Type:application/json' --data-raw "$reqBody" $WS_API_URL)
 procId="$(echo "$resGenerate" | jq -r '.asyncProcessStatus.uuid')"
 contextType="$(echo "$resGenerate" | jq -r '.asyncProcessStatus.contextType')"
 processType="$(echo "$resGenerate" | jq -r '.asyncProcessStatus.processType')"
 
 # Check Status
-reqBody='{"requestType":"getAsyncProcessStatus","'$tokenScope'Token":"'$token'","userKey":"'$WS_USERKEY'","uuid":"'$procId'"}'
-
+reqBody='{"requestType":"getAsyncProcessStatus","orgToken":"'$WS_APIKEY'","userKey":"'$WS_USERKEY'","uuid":"'$procId'"}'
 ready=false
 while [[ $ready = "false" ]] ; do
-	resProcess="$(curl -s -X POST -H 'Content-Type: application/json' --data-raw "$reqBody" $WS_WSS_URL/api/v1.3)"
+	resProcess="$(curl -s -X POST -H 'Content-Type:application/json' --data-raw "$reqBody" $WS_API_URL)"
 	repStatus="$(echo "$resProcess" | jq -r '.asyncProcessStatus.status')"
-
 	if [[ $repStatus = "FAILED" ]] ; then
-		echo "Report FAILED"
-		echo "$resProcess" | jq .
+	echo "Report FAILED"
+	echo "$resProcess" | jq .
 	elif [[ $repStatus = "SUCCESS" ]] ; then
-		ready=true
-		repType="$(echo "$resProcess" | jq -r '.asyncProcessStatus.processType')"
-		reportFile="~/Temp/$repType.zip"
+	ready=true
+	repType="$(echo "$resProcess" | jq -r '.asyncProcessStatus.processType')"
+	reportFile="$(pwd)/$repType.zip"
 
-		# Download the Report
-		echo "Downloading report..."
-		reqBody='{"requestType":"downloadAsyncReport","'$tokenScope'Token":"'$token'","userKey":"'$WS_USERKEY'","reportStatusUUID":"'$procId'"}'
-		# resProcess="$(curl -s -X POST -H 'Content-Type: application/json' --data-raw "$reqBody" --output "reportFile" $WS_WSS_URL/api/v1.3)"
-		curl -s -X POST -H 'Content-Type: application/json' --data-raw "$reqBody" --output "reportFile" "$WS_WSS_URL/api/v1.3"
+	# Download the Report
+	echo "Downloading report..."
+	reqBody='{"requestType":"downloadAsyncReport","orgToken":"'$WS_APIKEY'","userKey":"'$WS_USERKEY'","reportStatusUUID":"'$procId'"}'
+	# resProcess="$(curl -s -X POST -H 'Content-Type: application/json' --data-raw "$reqBody" --output "reportFile" $WS_API_URL)"
+	curl -s -X POST -H 'Content-Type:application/json' --data-raw "$reqBody" --output "$reportFile" "$WS_API_URL"
 	else
-		sleep $checkFreq
+	sleep $checkFreq
 	fi
 done
+unzip *.zip
+echo "Report structure: PROJECTNAME-project-CycloneDx-report.json"
