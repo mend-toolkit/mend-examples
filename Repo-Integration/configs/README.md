@@ -15,9 +15,9 @@ In order to disable Remediate and turn on Renovate, update a repository's .white
     "enableRenovate": true,
     "dependencyDashboard": true,
     "extends": [
-       "config:base"
+       "config:base",
        "github>whitesource/merge-confidence:beta",
-       "github>mend-toolkit/mend-examples//Repo-Integration/Renovate/smart-merge",
+       "github>mend-toolkit/mend-examples//Repo-Integration/Renovate/smart-merge"
       ]
   }
 }
