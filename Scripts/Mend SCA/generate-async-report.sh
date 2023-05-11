@@ -132,6 +132,7 @@ while [[ $ready = "false" ]] ; do
 	if [[ $repStatus = "FAILED" ]] ; then
 	echo "Report FAILED"
 	echo "$resProcess" | jq .
+	exit 1
 	elif [[ $repStatus = "SUCCESS" ]] ; then
 	ready=true
 	repType="$(echo "$resProcess" | jq -r '.asyncProcessStatus.processType')"
