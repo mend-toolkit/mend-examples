@@ -130,20 +130,21 @@ while [[ $ready = "false" ]] ; do
 	resProcess="$(curl -s -X POST -H 'Content-Type:application/json' --data-raw "$reqBody" $WS_API_URL)"
 	repStatus="$(echo "$resProcess" | jq -r '.asyncProcessStatus.status')"
 	if [[ $repStatus = "FAILED" ]] ; then
-	echo "Report FAILED"
-	echo "$resProcess" | jq .
+		echo "Report FAILED"
+		echo "$resProcess" | jq .
+		exit 1
 	elif [[ $repStatus = "SUCCESS" ]] ; then
-	ready=true
-	repType="$(echo "$resProcess" | jq -r '.asyncProcessStatus.processType')"
-	reportFile="$(pwd)/$repType.zip"
+		ready=true
+		repType="$(echo "$resProcess" | jq -r '.asyncProcessStatus.processType')"
+		reportFile="$(pwd)/$repType.zip"
 
-	# Download the Report
-	echo "Downloading report..."
-	reqBody='{"requestType":"downloadAsyncReport","orgToken":"'$WS_APIKEY'","userKey":"'$WS_USERKEY'","reportStatusUUID":"'$procId'"}'
-	# resProcess="$(curl -s -X POST -H 'Content-Type: application/json' --data-raw "$reqBody" --output "reportFile" $WS_API_URL)"
-	curl -s -X POST -H 'Content-Type:application/json' --data-raw "$reqBody" --output "$reportFile" "$WS_API_URL"
+		# Download the Report
+		echo "Downloading report..."
+		reqBody='{"requestType":"downloadAsyncReport","orgToken":"'$WS_APIKEY'","userKey":"'$WS_USERKEY'","reportStatusUUID":"'$procId'"}'
+		# resProcess="$(curl -s -X POST -H 'Content-Type: application/json' --data-raw "$reqBody" --output "reportFile" $WS_API_URL)"
+		curl -s -X POST -H 'Content-Type:application/json' --data-raw "$reqBody" --output "$reportFile" "$WS_API_URL"
 	else
-	sleep $checkFreq
+		sleep $checkFreq
 	fi
 done
 unzip *.zip
