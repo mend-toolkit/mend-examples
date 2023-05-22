@@ -30,7 +30,7 @@ export MEND_USER_KEY=${bamboo_MEND_SCA_USERKEY}
 export MEND_URL=${bamboo_MEND_URL}
 ### SAST Environment Variables ###
 export MEND_SAST_SERVER_URL=${bamboo_MEND_SAST_SERVER_URL}
-export MEND_SAST_API_TOKEN=${bamboo_MEND_SAST_API}
+export MEND_SAST_API_TOKEN=${bamboo_MEND_SAST_API_TOKEN}
 export MEND_SAST_ORGANIZATION=${bamboo_MEND_SAST_ORGANIZATION}
 ### Download the Mend Unified CLI ###
 echo "Download Mend CLI"
