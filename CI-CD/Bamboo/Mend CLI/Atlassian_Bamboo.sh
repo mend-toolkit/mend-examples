@@ -17,7 +17,7 @@
 # MEND_URL: https://saas.mend.io
 # SAST:
 # MEND_SAST_SERVER_URL: https://saas.mend.io/sast
-# MEND_SAST_API_TOKEN: ${MEND_SAST_API}
+# MEND_SAST_API_TOKEN: ${MEND_SAST_API_TOKEN}
 # MEND_SAST_ORGANIZATION: ${MEND_SAST_ORGANIZATION}
 
 # The Mend SCA CLI scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
