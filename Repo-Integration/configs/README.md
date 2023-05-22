@@ -3,8 +3,31 @@
 In all .whitesource file update examples, you should replace the inherited organization from "myorganization" to the organization/project where the whitesource-config repository is located.
 
 # SCA
-## Renovate
-In order to disable Remediate and turn on Renovate, update a repository's .whitesource file with the following information
+## [Remediate & Renovate](https://docs.mend.io/bundle/integrations/page/mend_remediate_and_renovate.html)
+
+### [Least Vulnerable Package](https://docs.mend.io/bundle/integrations/page/least_vulnerable_packages_feature.html) and Renovate + Smart Merge Control
+```
+{
+  "settingsInheritedFrom": "myorganization/whitesource-config@main",
+  "remediateSettings": {
+    "workflowRules": {
+      "enabled": true,
+      "minVulnerabilitySeverity": "LOW"
+    },
+    "enableRenovate": true,
+    "extends": [
+       "config:base",
+       "github>whitesource/merge-confidence:beta",
+       "github>mend-toolkit/mend-examples//Repo-Integration/Renovate/smart-merge-lvp"
+      ]
+  },
+  "leastVulnerablePackageSettings": {
+    "enabled": true
+    }
+}
+```
+
+### Renovate + Smart Merge Control
 ```
 {
   "settingsInheritedFrom": "myorganization/whitesource-config@main",
@@ -13,7 +36,6 @@ In order to disable Remediate and turn on Renovate, update a repository's .white
       "enabled": false
     },
     "enableRenovate": true,
-    "dependencyDashboard": true,
     "extends": [
        "config:base",
        "github>whitesource/merge-confidence:beta",
@@ -25,13 +47,20 @@ In order to disable Remediate and turn on Renovate, update a repository's .white
 
 # SAST
 ## Java 2x Engine
-In order to use the Java 2x engine, update a repository's .whitesource file with the following information
-
 ```
 {
   "settingsInheritedFrom": "myorganization/whitesource-config@main",
   "scanSettingsSAST": {
     "configExternalURL": "https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Repo-Integration/configs/SAST/Java2x/mendsastcli-config.json"
+  }
+}
+```
+## Increase Timeout
+```
+{
+  "settingsInheritedFrom": "myorganization/whitesource-config@main",
+  "scanSettingsSAST": {
+    "configExternalURL": "https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Repo-Integration/configs/SAST/IncreaseTimeout/mendsastcli-config.json"
   }
 }
 ```

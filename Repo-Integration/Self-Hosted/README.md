@@ -31,7 +31,7 @@ Execution instructions:
 
 - Clone the repository & give setup.sh permissions to run
 
-```git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration && chmod +x setup.sh```
+```git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration/Self-Hosted && chmod +x setup.sh```
 - Add your activation key as an environment variable which will be copied to the .env file which is created by setup.sh
 
 ```export ws_key='your activation key between single quotes'```

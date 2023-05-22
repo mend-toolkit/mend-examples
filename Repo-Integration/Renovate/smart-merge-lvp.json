@@ -1,0 +1,20 @@
+{ 
+   "packageRules": [
+     {
+      	 "groupName": "minor and patch",
+      	 "matchUpdateTypes": ["minor", "patch"],
+      	 "matchConfidence": ["very high", "high"],
+      	 "automerge": true
+     },
+     {
+      	 "matchUpdateTypes": ["major"],
+      	 "matchConfidence": ["very high"],
+      	 "addLabels": ["Major: very high confidence"]
+      },
+      {
+      	 "matchUpdateTypes": ["major"],
+      	 "matchConfidence": ["high"],
+      	 "addLabels": ["Major: high confidence"]
+      }
+   ]
+}
