@@ -41,7 +41,7 @@ steps:
     
     ### Run SAST scan ###
     echo Start Mend SAST scan
-    mend sast
+    mend sast --name=$(Build.Repository.Name)_$(Build.SourceBranchName) --app AZ$(System.TeamProject)_$(Build.Repository.Name)
 
   env:
     ### SCA and Container Environment Variables ###
