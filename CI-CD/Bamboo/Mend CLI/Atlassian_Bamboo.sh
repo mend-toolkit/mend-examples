@@ -17,7 +17,7 @@
 # MEND_URL: https://saas.mend.io
 # SAST:
 # MEND_SAST_SERVER_URL: https://saas.mend.io/sast
-# MEND_SAST_API_TOKEN: ${MEND_SAST_API}
+# MEND_SAST_API_TOKEN: ${MEND_SAST_API_TOKEN}
 # MEND_SAST_ORGANIZATION: ${MEND_SAST_ORGANIZATION}
 
 # The Mend SCA CLI scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
@@ -30,7 +30,7 @@ export MEND_USER_KEY=${bamboo_MEND_SCA_USERKEY}
 export MEND_URL=${bamboo_MEND_URL}
 ### SAST Environment Variables ###
 export MEND_SAST_SERVER_URL=${bamboo_MEND_SAST_SERVER_URL}
-export MEND_SAST_API_TOKEN=${bamboo_MEND_SAST_ORGANIZATION}
+export MEND_SAST_API_TOKEN=${bamboo_MEND_SAST_API_TOKEN}
 export MEND_SAST_ORGANIZATION=${bamboo_MEND_SAST_ORGANIZATION}
 ### Download the Mend Unified CLI ###
 echo "Download Mend CLI"
