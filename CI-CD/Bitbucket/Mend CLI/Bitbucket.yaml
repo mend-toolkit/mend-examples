@@ -33,17 +33,14 @@ pipelines:
 # The Mend SCA CLI scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
 # Mend CLI
     - step:
-        name: Download Mend CLI
-        script: |
+        name: Mend CLI Scan
+        script:
+        - |
           echo Downloading Mend CLI
-          curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
-    - step: 
-        name: Mend SCA Scan
-        script: |
+          curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend
+          ### SCA Scan ###
           echo Start Mend SCA scan
-          mend sca -u
-    - step:
-        name: Mend SAST Scan
-        script: |
+          ./mend sca -u
+          ### SAST Scan ###
           echo Start Mend SAST scan
-          mend sast
+          ./mend sast
