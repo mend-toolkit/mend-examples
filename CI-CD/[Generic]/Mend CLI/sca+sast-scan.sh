@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Download the Mend CLI and give write access
+# Download the Mend CLI and give execute permissions
 echo "Downloading Mend CLI"
 curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend
 

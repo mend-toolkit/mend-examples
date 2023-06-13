@@ -9,7 +9,7 @@ Bash example of scanning an image after building using ```docker build```
 ```shell
 # Mend Containers will automatically pull the container defined and scan for open source components and secrets 
 #
-# Download the Mend CLI and give write access
+# Download the Mend CLI and give execute permissions
 echo "Downloading Mend CLI"
 curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend
 
