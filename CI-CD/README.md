@@ -50,3 +50,41 @@ In the following examples, the `wss-unified-agent.jar` artifact is stored in the
 
 * [Generic Example](../../Scripts/Mend%20SCA/README.md#cache-the-latest-version-of-the-unified-agent)
 * [GitLab Pipelines](./GitLab/Unified%20Agent/GitLab-cached-ua.yml)
+
+## Publishing Mend's Logs From a Pipeline
+
+The below snippets are used to upload Mend CLI logs as pipeline artifacts in order to share them with Mend Support/Field Team.
+### Azure DevOps Pipelines
+
+* Windows
+```
+- publish: c:\users\VssAdministrator\.mend\logs
+  artifact: "Mend CLI Logs"
+```
+
+* Linux
+```
+- publish: ../../../.mend/logs
+  artifact: "Mend CLI logs"
+```
+
+### GitHub Actions
+Upload logs:
+```
+- name: 'Upload Mend CLI Logs'
+    uses: actions/upload-artifact@v2
+    with:
+        name: "Mend CLI Logs"
+        path: ~/.mend/logs
+        retention-days: 1
+```
+Upload logs in case of failure:
+```
+- name: 'Upload Mend CLI Logs if failure'
+    uses: actions/upload-artifact@v2
+    if: failure()
+    with:
+        name: "Mend CLI Logs"
+        path: ~/.mend/logs
+        retention-days: 1
+```
