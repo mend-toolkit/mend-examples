@@ -8,9 +8,11 @@
 # apt install curl jq unzip
 
 # Required Environment Variables:
-# WS_APIKEY or WS_PRODUCTTOKEN or WS_PROJECTTOKEN
+# WS_APIKEY
 # WS_USERKEY
+# WS_PRODUCTTOKEN or WS_PROJECTTOKEN depending on reportScope
 # WS_WSS_URL
+#   The url should end with /agent, for example https://saas.mend.io/agent
 
 # Parameters:
 #================================================
@@ -19,9 +21,9 @@
 # Value:    
 # Example:  reportType=ProductAttributionReport
 # Comments: Lists of accepted values for 'reportType' are avialable here:
-#           - Organization: https://docs.mend.io/bundle/api/page/reports_api_-_asynchronous.html#generateOrganizationReportAsync
-#           - Product:      https://docs.mend.io/bundle/api/page/reports_api_-_asynchronous.html#generateProductReportAsync
-#           - Project:      https://docs.mend.io/bundle/api/page/reports_api_-_asynchronous.html#generateProjectReportAsync
+#			- Organization: https://docs.mend.io/bundle/api_sca/page/reports_api_-_asynchronous.html#generateOrganizationReportAsync
+#           - Product:      https://docs.mend.io/bundle/api_sca/page/reports_api_-_asynchronous.html#generateProductReportAsync
+#           - Project:      https://docs.mend.io/bundle/api_sca/page/reports_api_-_asynchronous.html#generateProjectReportAsync%C2%A0
 #------------------------------------------------
 # Name:     reportScope
 # Type:     enum
@@ -35,8 +37,8 @@
 # Example:  reportFormat=xlsx
 # Comments: Not all reports support all formats.
 #           reportFormat=pdf is only supported for reportType=RiskReport.
-#           Refer to the 'Reports API - Synchronous' documentation for full reference on available report formats:
-#           https://docs.mend.io/bundle/api/page/reports_api_-_synchronous.html
+#           Refer to the 'Reports API - Asynchronous' documentation for full reference on available report formats:
+#           https://docs.mend.io/bundle/api_sca/page/reports_api_-_asynchronous.html
 #------------------------------------------------
 # Name:     reportFilter
 # Type:     json (string)
@@ -45,8 +47,8 @@
 #                           "reportingScope": "SUMMARY, LICENSES, COPYRIGHTS",
 #                           "reportingAggregationMode": "BY_PROJECT"
 #                         }'
-# Comments: Refer to the 'Reports API - Synchronous' documentation for full reference on available report filters:
-#           https://docs.mend.io/bundle/api/page/reports_api_-_synchronous.html
+# Comments: Refer to the 'Reports API - Asynchronous' documentation for full reference on available report filters:
+#           https://docs.mend.io/bundle/api_sca/page/reports_api_-_asynchronous.html
 #------------------------------------------------
 # Name:     checkFreq
 # Type:     int
@@ -99,16 +101,25 @@ reportFilter='{}'
 [[ -z $checkFreq ]] && checkFreq=5
 reportFilter="$(echo "$reportFilter" | tr -d '\t' | tr -d '\n')"
 [[ -z $WS_USERKEY ]] && echo "No WS_USERKEY specified" && exit
+[[ -z $WS_APIKEY ]] && echo "No WS_APIKEY specified" && exit
 [[ -z $WS_WSS_URL ]] && echo "No WS_WSS_URL specified" && exit
-export WS_API_URL="$(echo "$WS_WSS_URL" | sed 's|agent|api/v1.3|')"
+if [[ $WS_WSS_URL == */agent ]]; then
+	export WS_API_URL="$(echo "$WS_WSS_URL" | sed 's|agent|api/v1.3|')"
+else
+    echo "WS_WSS_URL variable does not end with '/agent'" && exit
+fi
+
 
 if [[ "$reportScope" = "Organization" ]] ; then
+	[[ -z $WS_APIKEY ]] && echo "No WS_APIKEY specified and reportScope=Organization" && exit
 	tokenScope=org
 	token=$WS_APIKEY
 elif [[ "$reportScope" = "Product" ]] ; then
+	[[ -z $WS_PRODUCTTOKEN ]] && echo "No WS_PRODUCTTOKEN specified and reportScope=Product" && exit
 	tokenScope=product
 	token=$WS_PRODUCTTOKEN
 elif [[ "$reportScope" = "Project" ]] ; then
+	[[ -z $WS_PROJECTTOKEN ]] && echo "No WS_PROJECTTOKEN specified and reportScope=Project" && exit
 	tokenScope=project
 	token=$WS_PROJECTTOKEN
 fi
@@ -119,6 +130,8 @@ reqBody='"requestType":"generate'$reportScope'ReportAsync","'$tokenScope'Token":
 [[ -n $reportFilter ]] && reqBody="$reqBody"',"filter":'"$reportFilter"
 reqBody='{'"$reqBody"'}'
 resGenerate=$(curl -s -X POST -H 'Content-Type:application/json' --data-raw "$reqBody" $WS_API_URL)
+#TODO: Add error handling
+echo "Report generation call sent for reportType=$reportType and reportScope=$reportScope"
 procId="$(echo "$resGenerate" | jq -r '.asyncProcessStatus.uuid')"
 contextType="$(echo "$resGenerate" | jq -r '.asyncProcessStatus.contextType')"
 processType="$(echo "$resGenerate" | jq -r '.asyncProcessStatus.processType')"
@@ -147,5 +160,7 @@ while [[ $ready = "false" ]] ; do
 		sleep $checkFreq
 	fi
 done
-unzip *.zip
-echo "Report structure: PROJECTNAME-project-CycloneDx-report.json"
+reportDir="$(pwd)/mendreports"
+unzip $reportFile -d $reportDir && rm $reportFile
+
+# Publish the mendreports folder according to your pipeline instructions
