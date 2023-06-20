@@ -1,6 +1,14 @@
+# Table of Contents
+- [.NET](#.net)
+- [Gradle](#gradle)
+- [Maven](#maven)
+- [Npm](#npm)
+- [Publishing Mend Unified Agent Logs From a Pipeline](#publishing-mend-unified-agent-logs-from-a-pipeline)
+- [Publishing Mend CLI Logs From a Pipeline](#publishing-mend-cli-logs-from-a-pipeline)
+
 Yaml files should be customized with proper steps for specific builds.  Below are a few examples for common Azure DevOps build types.
 
-# DOTNET
+# .NET
 ```yml
 - script: dotnet build --configuration Release
   displayName: 'dotnet build Release'
@@ -32,7 +40,7 @@ Yaml files should be customized with proper steps for specific builds.  Below ar
     sonarQubeRunAnalysis: false
 ```
 
-# NPM
+# Npm
 ```yml
 - task: NodeTool@0
   inputs:

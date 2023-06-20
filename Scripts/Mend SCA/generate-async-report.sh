@@ -160,4 +160,7 @@ while [[ $ready = "false" ]] ; do
 		sleep $checkFreq
 	fi
 done
-unzip $repType.zip && rm $repType.zip
+reportDir="$(pwd)/mendreports"
+unzip $reportFile -d $reportDir && rm $reportFile
+
+# Publish the mendreports folder according to your pipeline instructions

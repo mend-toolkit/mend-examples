@@ -1,5 +1,18 @@
-Yaml files should be customized with proper steps for specific builds.  Below are a few examples for common GitHub Action build types.
 
+# Table of Contents
+- [Android](#android)
+- [.NET/Nuget](#netnuget)
+- [Go](#go)
+- [LUA](#lua)
+- [Maven](#maven)
+- [Npm](#npm)
+- [Python](#python)
+- [Swift](#swift)
+- [Publishing Mend Unified Agent Logs From a Pipeline](#publishing-mend-unified-agent-logs-from-a-pipeline)
+- [Publishing Mend CLI Logs From a Pipeline](#publishing-mend-cli-logs-from-a-pipeline)
+
+
+Yaml files should be customized with proper steps for specific builds.  Below are a few examples for common GitHub Action build types.
 
 # Android
 ```yml
@@ -14,7 +27,7 @@ Yaml files should be customized with proper steps for specific builds.  Below ar
 ```
 
 
-# DOTNET/NUGET
+# .NET/Nuget
 ```yml
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
@@ -69,7 +82,7 @@ jobs:
       run: mvn clean install -DskipTests=true
 ```
 
-# NPM
+# Npm
 Only required if a package-lock.json does not exist
 ```yml
     - name: Setup Nodejs
