@@ -52,9 +52,9 @@ pipeline {
         stage('Run Mend CLI') {
             steps {
                 echo 'Start Mend SCA Scan'
-                sh './mend sca -u'
+                sh './mend sca -u --no-color'
                 echo 'Start Mend SAST Scan'
-                sh './mend sast'
+                sh './mend sast --no-color'
             }
         }
     }
