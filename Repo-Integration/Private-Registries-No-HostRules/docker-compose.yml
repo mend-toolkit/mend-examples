@@ -7,10 +7,6 @@ services:
     container_name: remediate-server
     environment:
       LOG_LEVEL: DEBUG
-      MVN_USER: <username>
-      MVN_PASS: <password>
-      MVN_RELEASE: <release_repository_url>
-      MVN_SNAPSHOT: <snapshots_repository_url>
     ports:
       - "8080:8080"
     volumes:
