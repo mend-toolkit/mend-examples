@@ -47,6 +47,7 @@ In all .whitesource file update examples, you should replace the inherited organ
 
 # SAST
 ## [Java Engine Generation 2](https://docs.mend.io/bundle/integrations/page/configure_the_mend_cli_for_sast.html#Mend-CLI-SAST---General-scan-parameters)
+The below configuration is the same as running ```mend sast -j 2``` with the CLI
 ```
 {
   "settingsInheritedFrom": "myorganization/whitesource-config@main",
