@@ -1,10 +1,9 @@
 { 
    "packageRules": [
      {
-      	 "groupName": "minor and patch",
+      	 "groupName": "Mend: high confidence minor and patch dependency updates",
       	 "matchUpdateTypes": ["minor", "patch"],
-      	 "matchConfidence": ["very high", "high"],
-      	 "addLabels": ["Mend: high confidence minor and patch dependency updates"]
+      	 "matchConfidence": ["very high", "high"]
      },
       {
       	 "matchConfidence": ["low"],
