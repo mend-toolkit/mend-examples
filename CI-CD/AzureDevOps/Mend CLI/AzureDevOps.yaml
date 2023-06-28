@@ -48,7 +48,6 @@ steps:
     MEND_URL: $(MEND_SCA_URL)
     MEND_EMAIL: $(MEND_SCA_EMAIL)
     MEND_USER_KEY: $(MEND_SCA_USERKEY)
-    MEND_ORG_UUID: $(MEND_SCA_ORG_UUID)
 
     ### SAST Environment Variables ###
     MEND_SAST_SERVER_URL: $(MEND_SAST_URL)
