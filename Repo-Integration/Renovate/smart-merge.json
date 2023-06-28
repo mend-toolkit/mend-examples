@@ -4,18 +4,8 @@
       	 "groupName": "minor and patch",
       	 "matchUpdateTypes": ["minor", "patch"],
       	 "matchConfidence": ["very high", "high"],
-      	 "automerge": true
+      	 "addLabels": ["Mend: high confidence minor and patch dependency updates"]
      },
-     {
-      	 "matchUpdateTypes": ["major"],
-      	 "matchConfidence": ["very high"],
-      	 "addLabels": ["Major: very high confidence"]
-      },
-      {
-      	 "matchUpdateTypes": ["major"],
-      	 "matchConfidence": ["high"],
-      	 "addLabels": ["Major: high confidence"]
-      },
       {
       	 "matchConfidence": ["low"],
       	 "dependencyDashboardApproval": true,
