@@ -15,6 +15,9 @@ services:
       NPM_EMAIL: <user_email>
       NPM_PASS: <artifactory provided password>
       NPM_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/api/npm/default-npm/
+      PIP_USER: <user_email>
+      PIP_PASS: <artifactory provided password>
+      PIP_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
     ports:
       - "8080:8080"
     volumes:
@@ -66,6 +69,7 @@ services:
       NPM_AUTH: <npm auth token> # NOT THE PASSWORD
       NPM_EMAIL: <artifactory email>
       NPM_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/api/npm/default-npm/
+      PIP_INDEX_URL: https://<artifactory_email>:<artifactory_provided_password>@<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
     ports:
       - "9393:9393"
     volumes:
