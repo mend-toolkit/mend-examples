@@ -10,3 +10,13 @@ For Self-hosted Repository Integrations, there is another way of specifying host
 3. For Remediate/Renovate specifically, you can create a [config.js](./config.js) to direct Remediate/Renovate to your desired registry. In this file, we can use `module.exports` to specify the remediate configuration just as if it were in a global configuration. The great thing about this configuration is that the password does not need to be encrypted. You can keep it as plaintext as it remains on the container and never leaves.
 4. Map the appropriate files and variables to the scanner and remediate container. This is demonstrated in the [docker-compose.yml](./docker-compose.yml).
 5. In both the scanner and the remediate container, specify extra_hosts with the default public registry pointing to 127.0.0.1. This will effectively block the public registry from being used by the container.
+
+
+### Explanations:
+#### Maven
+With Maven, adding environment variables to the settings.xml is as easy as ${env.<environment_variable_name>}. Therefore, if you take any generic settings.xml, and set the servers and credentials to environment variables. Then this can be handled when starting up the container by adding the environment variables either to the docker command with `-e` or by using the `environment:` option when specifying the container in a docker-compose.yml file. For the scanner, all you need to do is map the settings.xml into the .m2 directory. For the remediate container, you need to map the config.js file into the `/usr/src/app` directory and set the environment variables accordingly. For the config.js, you can access environment variables by using the directive `process.env.<variable_name>`
+
+#### NPM
+NPM is not too different than maven. The major difference is that, you need different credentials for the scanner and for the Remediate container. For the scanner, you need the NPM Auth Token that is provided by Artifactory. For the Remediate container, you need the username and password provided by Artifactory. The only other difference is that for environment variables in the .npmrc file, you can just specify ${<variable_name>}. Below is an image showing the NPM Password and the NPM Auth Token.
+
+![Artifactory Credentials Example](./JFrog-Artifactory-Credentials.png)

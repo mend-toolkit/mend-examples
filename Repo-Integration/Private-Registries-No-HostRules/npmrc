@@ -1,0 +1,4 @@
+_auth = ${NPM_AUTH}
+email = ${NPM_EMAIL}
+always-auth = true
+registry = ${NPM_REGISTRY}
