@@ -27,6 +27,7 @@ services:
     extra_hosts:
       - "repo.maven.apache.org:127.0.0.1"
       - "registry.npmjs.org:127.0.0.1"
+      - "files.pythonhosted.org:127.0.0.1"
     logging:
       driver: local
       options:
@@ -59,6 +60,7 @@ services:
     extra_hosts:
       - "repo.maven.apache.org:127.0.0.1"
       - "registry.npmjs.org:127.0.0.1"
+      - "files.pythonhosted.org:127.0.0.1"
     environment:
       WS_UA_LOG_IN_CONSOLE: true
       LOG_LEVEL: DEBUG
