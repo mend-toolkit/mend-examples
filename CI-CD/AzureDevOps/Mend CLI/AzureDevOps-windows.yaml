@@ -30,7 +30,7 @@ steps:
     # - task: PythonScript@0
     ### Download the Mend Unified CLI ###
     echo Downloading Mend CLI
-        Invoke-WebRequest -Uri "https://downloads.mend.io/production/unified/latest/linux_amd64/mend" -OutFile "C:\mend\cli\mend.exe"
+        Invoke-WebRequest -Uri "https://downloads.mend.io/cli/windows_amd64/mend.exe" -OutFile "C:\mend\cli\mend.exe"
 		
     ### Run SCA scan ###
     echo Start Mend SCA scan
