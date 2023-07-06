@@ -12,12 +12,6 @@ services:
       MVN_BASE_URL: https://<artifactory_instance>.jfrog.io/artifactory
       MVN_RELEASE: https://<artifactory_instance>.jfrog.io/artifactory/libs-release
       MVN_SNAPSHOT: https://<artifactory_instance>.jfrog.io/artifactory/libs-snapshot
-      NPM_EMAIL: <user_email>
-      NPM_PASS: <artifactory provided password>
-      NPM_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/api/npm/default-npm/
-      PIP_USER: <user_email>
-      PIP_PASS: <artifactory provided password>
-      PIP_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
     ports:
       - "8080:8080"
     volumes:
@@ -26,8 +20,6 @@ services:
     restart: always
     extra_hosts:
       - "repo.maven.apache.org:127.0.0.1"
-      - "registry.npmjs.org:127.0.0.1"
-      - "files.pythonhosted.org:127.0.0.1"
     logging:
       driver: local
       options:
@@ -59,8 +51,6 @@ services:
     container_name: wss-scanner-ghe
     extra_hosts:
       - "repo.maven.apache.org:127.0.0.1"
-      - "registry.npmjs.org:127.0.0.1"
-      - "files.pythonhosted.org:127.0.0.1"
     environment:
       WS_UA_LOG_IN_CONSOLE: true
       LOG_LEVEL: DEBUG
@@ -68,17 +58,12 @@ services:
       MVN_PASS: <password>
       MVN_RELEASE: https://<artifactory_instance>.jfrog.io/artifactory/libs-release
       MVN_SNAPSHOT: https://<artifactory_instance>.jfrog.io/artifactory/libs-snapshot
-      NPM_AUTH: <npm auth token> # NOT THE PASSWORD
-      NPM_EMAIL: <artifactory email>
-      NPM_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/api/npm/default-npm/
-      PIP_INDEX_URL: https://<artifactory_email>:<artifactory_provided_password>@<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
     ports:
       - "9393:9393"
     volumes:
       - "C:\\path\\to\\prop.json:/etc/usr/local/whitesource/conf/prop.json"
       - "C:\\path\\to\\ualog\\:/tmp/"
       - "C:\\path\\to\\settings.xml:/home/wss-scanner/.m2/settings.xml"
-      - "C:\\path\\to\\.npmrc:/home/wss-scanner/.npmrc"
     restart: always
     depends_on:
       - app
