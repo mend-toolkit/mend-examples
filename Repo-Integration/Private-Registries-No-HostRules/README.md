@@ -33,4 +33,16 @@ Pip is probably the most simple method of connecting to private registries. For 
 PIP_INDEX_URL: https://<user_email>:<user_password>@<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
 ```
 
-NOTE: As you can probably tell, you do not need a pip.conf file for configuration as you do with the other package managers. Pip will automatically pick up the environment variable and use that, even as priority over any workspace files. There is documentation [here](https://pip.pypa.io/en/stable/topics/configuration/#precedence-override-order) showing how this works.
+> **_NOTE_**: As you can probably tell, you do not need a pip.conf file for configuration as you do with the other package managers. Pip will automatically pick up the environment variable and use that, even as priority over any workspace files. There is documentation [here](https://pip.pypa.io/en/stable/topics/configuration/#precedence-override-order) showing how this works.
+
+For the remediate container, you need to match the registry to these 5 managers: ``pip-compile``, ``pip-requirements``, ``pip_setup``, ``pipenv``, ``setup-cfg``
+
+#### Poetry
+As of the current writing, the Poetry package manager that is used in the scanner container is version 1.1.12. Due to this, there does not seem to be a good way to manage a private registry with Go without using host rules.
+
+#### Go
+Go has a very simple method for connecting to private registries as well. For the scanner, all you need is an environment variable that looks like:
+```
+GOPROXY: https://<user_email>:<user_password>@<artifactory_instance>.jfrog.io/artifactory/api/go/default-go
+```
+For the remediate container, you only need to match the registry to the ``go`` manager.
