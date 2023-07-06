@@ -16,6 +16,8 @@ For Self-hosted Repository Integrations, there is another way of specifying host
 1. [Maven](./README.md#Maven)
 2. [NPM](./README.md#NPM)
 3. [Pip](./README.md#Pip)
+4. [Poetry](./README.md#Poetry)
+5. [GO](./README.md#Go)
 
 #### Maven
 With Maven, adding environment variables to the settings.xml is as easy as ${env.<environment_variable_name>}. Therefore, if you take any generic settings.xml, and set the servers and credentials to environment variables. Then this can be handled when starting up the container by adding the environment variables either to the docker command with `-e` or by using the `environment:` option when specifying the container in a docker-compose.yml file. For the scanner, all you need to do is map the settings.xml into the .m2 directory. For the remediate container, you need to map the config.js file into the `/usr/src/app` directory and set the environment variables accordingly. For the config.js, you can access environment variables by using the directive `process.env.<variable_name>`
