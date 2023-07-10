@@ -1,0 +1,54 @@
+# ******** Mend Unified CLI Template for Azure DevOps ********
+#
+# You may wish to alter this file to override the build tool and the Mend scanning technologies used (SCA, SAST or Conatiner).
+#
+# For more configeration options, please check the technical documentation portal:
+# 📚 https://docs.mend.io/bundle/cli/page/scan_with_mend_s_unified_cli.html 
+#
+# ******** Description ********
+# Mend SCA will automatically use package managers and file system scanning to detect open source components. 
+# Mend SAST will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
+
+name: 'mend-cli-scan'
+
+# Define your own pipeline trigger here:
+# Below is defined a trigger for scanning on a push to the main branch and scanning on a push to release branches.  This is considered an ideal time to scan so that an SBOM can be created for software releases and inventory is managed for released software.
+trigger:
+- main
+- release*
+
+steps:
+  - task: PowerShell@2
+    inputs:
+      targetType: inline
+      script: |
+	### Build the application with your required package manager, e.g: ###
+    # - task: NodeTool@0
+    # - task: Maven@0
+    # - task: NuGetCommand@0
+    # - task: Gradle@0
+    # - task: PythonScript@0
+    ### Download the Mend Unified CLI ###
+    echo Downloading Mend CLI
+        Invoke-WebRequest -Uri "https://downloads.mend.io/cli/windows_amd64/mend.exe" -OutFile ".\mend.exe"
+		
+    ### Run SCA scan ###
+    echo Start Mend SCA scan
+    .\mend sca -u
+    
+    ### Run SAST scan ###
+    echo Start Mend SAST scan
+    .\mend sast --name=$(Build.Repository.Name)_$(Build.SourceBranchName) --app AZ$(System.TeamProject)_$(Build.Repository.Name)
+	
+  env:
+    ### SCA and Container Environment Variables ###
+    MEND_URL: $(MEND_SCA_URL)
+    MEND_EMAIL: $(MEND_SCA_EMAIL)
+    MEND_USER_KEY: $(MEND_SCA_USERKEY)
+
+    ### SAST Environment Variables ###
+    MEND_SAST_SERVER_URL: $(MEND_SAST_URL)
+    MEND_SAST_API_TOKEN: $(MEND_SAST_API)
+    MEND_SAST_ORGANIZATION: $(MEND_SAST_ORGANIZATION)
+
+  displayName: 'Mend Unified CLI Scan'
