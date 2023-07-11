@@ -20,17 +20,24 @@ trigger:
 pool:
   vmImage: windows-latest
 
+
 steps:
-- task: NodeTaskRunnerInstaller@0
-  inputs:
-    nodeVersion: '6'
+# Uncomment the appropriate task needed for this.
+#- task: NodeTool@0
+#- task: Maven@0
+#- task: NuGetCommand@0
+#- task: Gradle@0
+#- task: PythonScript@0
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
-      ### Build the tool
+      ### Build the tool - Uncomment the appropriate package manager or add your own
       echo "Building the application"
-      npm install --ignore-scripts
+      # npm install --ignore-scripts
+      # mvn install
+      # dotnet build
+      # gradle build
       ### Download the Mend Unified CLI ###
       echo "Downloading Mend CLI"
       Invoke-WebRequest -Uri "https://downloads.mend.io/cli/windows_amd64/mend.exe" -OutFile "mend.exe"
