@@ -1,6 +1,6 @@
 module.exports = {
 	"packageRules": [{
-		"matchManagers": [ "go" ],
+		"matchManagers": [ "gomod" ],
 		"registryUrls": [ process.env.GO_REGISTRY ]
 	}],
 	"hostRules": [
