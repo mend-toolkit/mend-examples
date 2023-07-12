@@ -1,0 +1,75 @@
+version: "2"
+services:
+
+
+  remediate:
+    image: wss-remediate:latest
+    container_name: remediate-server
+    environment:
+      LOG_LEVEL: DEBUG
+      GRADLE_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/libs-release
+      GRADLE_USER: <artifactory_user>
+      GRADLE_PASS: <artifactory_password>
+    ports:
+      - "8080:8080"
+    volumes:
+      - "C:\\path\\to\\prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "C:\\path\\to\\config.js:/usr/src/app/config.js"
+    restart: always
+    extra_hosts:
+      - "repo.maven.apache.org:127.0.0.1"
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+
+
+  app:
+    image: wss-ghe-app:latest
+    container_name: wss-ghe-app
+    environment:
+      LOG_LEVEL: DEBUG
+    ports:
+      - "9494:9494"
+      - "5678:5678"
+    volumes:
+      - "C:\\path\\to\\prop.json\\:/etc/usr/local/whitesource/conf/prop.json"
+    depends_on:
+      - remediate
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+
+
+  scanner:
+    image: wss-scanner:latest
+    container_name: wss-scanner-ghe
+    extra_hosts:
+      - "repo.maven.apache.org:127.0.0.1"
+    environment:
+      WS_UA_LOG_IN_CONSOLE: true
+      LOG_LEVEL: DEBUG
+      GRADLE_HOME: /home/wss-scanner/.gradle
+    ports:
+      - "9393:9393"
+    volumes:
+      - "C:\\path\\to\\prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "C:\\path\\to\\ualog\\:/tmp/"
+      - "C:\\path\\to\\gradle.properties:/home/wss-scanner/.gradle/gradle.properties"
+    restart: always
+    depends_on:
+      - app
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+
+
+networks:
+  default:
+    name: my_bridge
+    external: false
