@@ -48,3 +48,24 @@ Go has a very simple method for connecting to private registries as well. For th
 GOPROXY: https://<user_email>:<user_password>@<artifactory_instance>.jfrog.io/artifactory/api/go/default-go
 ```
 For the remediate container, you only need to match the registry to the ``go`` manager.
+
+#### Gradle
+For Gradle, there are two different things that need to be done for the scanner:
+1. Add an environment variable: GRADLE_HOME and set it to ``/home/wss-scanner/.gradle``
+2. Map in a ``gradle.properties`` file into ``/home/wss-scanner/.gradle/gradle.properties``
+3. In each repo, you need to specify those variables in the repositories section like:
+```
+repositories {
+  maven {
+    url <your repository url>
+    credentials {
+      username = "${username_variable_specified_in_gradle_properties}"
+      password = "${password_variable_specified_in_gradle_properties}"
+    }
+  }
+}
+```
+
+Unfortunately, the gradle.properties file has no way to inject environment variables into the file, and therefore it must be hard-coded into the file. However, this still will not be public facing. If need be, this file can also be hard-baked into the image at build time to avoid credentials sitting on a machine.
+
+For the remediate container, you need to match the ``gradle`` and ``gradle-wrapper`` managers.
