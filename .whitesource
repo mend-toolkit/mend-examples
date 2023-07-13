@@ -1,11 +1,7 @@
 {
-    "settingsInheritedFrom": "mend-toolkit/mend-examples@main",
-    "scanSettings": {
-        "enableIaC": false,
-        "enableSAST": false
-    },
-    "issueSettings": {
-        "issueType": "VULNERABILITY"
+    "settingsInheritedFrom": "mend-toolkit/whitesource-config@main",
+    "scanSettingsSAST": {
+        "enableScan": false,
     },
     "remediateSettings": {
         "enableRenovate": false
