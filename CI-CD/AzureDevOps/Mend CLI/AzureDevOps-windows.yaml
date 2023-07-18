@@ -41,11 +41,11 @@ steps:
       ### Download the Mend Unified CLI ###
       echo "Downloading Mend CLI"
       Invoke-WebRequest -Uri "https://downloads.mend.io/cli/windows_amd64/mend.exe" -OutFile "mend.exe"
-      ### Run SCA scan ###
-      echo "Start Mend SCA scan"
-      ./mend.exe sca -u
-      ### Run SAST scan ###
-      echo "Start Mend SAST scan"
+      ### Run Mend dependencies (SCA) scan ###
+      echo "Start Mend dependencies (SCA) scan"
+      ./mend.exe deps -u
+      ### Run Mend code (SAST) scan ###
+      echo "Start Mend code (SAST) scan"
       ./mend.exe sast --name=$(Build.Repository.Name)_$(Build.SourceBranchName) --app AZ$(System.TeamProject)_$(Build.Repository.Name)
 
   env:

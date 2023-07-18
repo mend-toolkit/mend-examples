@@ -45,6 +45,7 @@ jobs:
       run: |
         echo Downloading Mend CLI
         curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend
-        echo Start Mend CLI scan
-        ./mend sca -u
-        ./mend sast
+        echo Start Mend dependencies (SCA) scan
+        ./mend deps -u
+        echo Start Mend code (SAST) scan
+        ./mend code
