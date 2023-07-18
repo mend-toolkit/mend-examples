@@ -51,10 +51,10 @@ pipeline {
 
         stage('Run Mend CLI') {
             steps {
-                echo 'Start Mend SCA Scan'
-                sh './mend sca -u --no-color'
-                echo 'Start Mend SAST Scan'
-                sh './mend sast --no-color'
+                echo 'Start Mend Dependency (SCA) Scan'
+                sh './mend deps -u --no-color'
+                echo 'Start Mend code (SAST) Scan'
+                sh './mend code --no-color'
             }
         }
     }
