@@ -1,7 +1,7 @@
 {
     "settingsInheritedFrom": "mend-toolkit/whitesource-config@main",
     "scanSettingsSAST": {
-        "enableScan": false,
+        "enableScan": false
     },
     "remediateSettings": {
         "enableRenovate": false

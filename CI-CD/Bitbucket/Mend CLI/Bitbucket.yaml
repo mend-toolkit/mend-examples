@@ -38,7 +38,7 @@ pipelines:
         - |
           echo Downloading Mend CLI
           curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend
-          ### dependeincies (SCA) Scan ###
+          ### dependencies (SCA) Scan ###
           echo Start Mend dependencies (SCA) scan
           ./mend deps -u
           ### code (SAST) Scan ###
