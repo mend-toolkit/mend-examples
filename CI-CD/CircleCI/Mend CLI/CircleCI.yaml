@@ -42,11 +42,11 @@ jobs:
           name: Download Mend CLI
           command: bash <(curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend)
       - run: 
-          name: Run Mend SCA Scan
-          command: mend sca -u
+          name: Run Mend dependencies (SCA) scan
+          command: mend deps -u
       - run: 
-          name: Run Mend SAST Scan
-          command: mend sast
+          name: Run Mend code (SAST) scan
+          command: mend code
 workflows:
   example-workflow:
     jobs:

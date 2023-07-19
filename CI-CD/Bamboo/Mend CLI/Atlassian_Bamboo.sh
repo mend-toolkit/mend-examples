@@ -37,8 +37,8 @@ echo "Download Mend CLI"
 curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
 curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
 ### Run SCA scan ###
-echo "Start Mend SCA Scan"
-mend sca -u
+echo "Start Mend dependencies (SCA) Scan"
+mend deps -u
 ### Run SAST scan ###
-echo "Start Mend SAST Scan"
-mend sast
+echo "Start Mend code (SAST) scan"
+mend code
