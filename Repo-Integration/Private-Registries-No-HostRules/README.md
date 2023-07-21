@@ -51,22 +51,38 @@ GOPROXY: https://<user_email>:<user_password>@<artifactory_instance>.jfrog.io/ar
 For the remediate container, you only need to match the registry to the ``go`` manager.
 
 #### Gradle
-For Gradle, there are two different things that need to be done for the scanner:
-1. Add an environment variable: GRADLE_HOME and set it to ``/home/wss-scanner/.gradle``
-2. Map in a ``gradle.properties`` file into ``/home/wss-scanner/.gradle/gradle.properties``
-3. In each repo, you need to specify those variables in the repositories section like:
-```
-repositories {
-  maven {
-    url <your repository url>
-    credentials {
-      username = "${username_variable_specified_in_gradle_properties}"
-      password = "${password_variable_specified_in_gradle_properties}"
-    }
-  }
-}
-```
+For Gradle, we created two different methods of resolving Private Registries. With Groovy, and Kotlin.  
 
-Unfortunately, the gradle.properties file has no way to inject environment variables into the file, and therefore it must be hard-coded into the file. However, this still will not be public facing. If need be, this file can also be hard-baked into the image at build time to avoid credentials sitting on a machine.
+**Groovy**  
+With groovy, we created an init.gradle file that gets executed before resolving any projects. Here is the flow of the script:
+1. If it exists, get the `gradle.properties` file in the project root directory.
+2. If it exists, get the `gradle.properties` file in the `~/.gradle` directory.
+3. Load the properties from these two files, the root project gradle.properties file takes precedence.
+4. Get the "repositoryUrl", "repositoryUsername", "repositoryPassword" properties from the file and store it in variables.
+5. Get the 'pluginRepositoryUrl", "pluginRepositoryUsername", "pluginRepositoryPassword" properties from the file and store those in variables.
+6. Set all of these in a SettingsEvaluated section in the init.gradle
 
-For the remediate container, you need to match the ``gradle`` and ``gradle-wrapper`` managers.
+Using this, you can map in a gradle.properties file into the `/home/wss-scanner/.gradle` directory, or use one directly in the project, and specify the repository credentials. These will get loaded before resolving the project dependencies.
+
+**Kotlin**  
+With kotlin, we have the same resolution as groovy, but we have a init.gradle.kts file that loads the repositories before resolving projects. Here is the flow of the script:
+1. If it exists, get the `gradle.properties` file in the project root directory.
+2. If it exists, get the `gradle.properties` file in the `~/.gradle` directory.
+3. Load the properties from these two files, the root project gradle.properties file takes precedence.
+4. Get the "repositoryUrl", "repositoryUsername", "repositoryPassword" properties from the file and store it in variables.
+5. Get the 'pluginRepositoryUrl", "pluginRepositoryUsername", "pluginRepositoryPassword" properties from the file and store those in variables.
+6. Set all of these in a SettingsEvaluated section in the init.gradle
+
+Again, with this you can map in a gradle.properties file into the `/home/wss-scanner/.gradle` directory, or use one directly in the project, and specify the repository credentials.
+
+The properties in the gradle.properties file must have the following names for the script to work:
+```properties
+repositoryUrl=<registry_url>
+repositoryUsername=<registry_user>
+repositoryPassword=<registry_password>
+
+pluginRepositoryUrl=<plugin_repository_url>
+pluginRepositoryUsername=<plugin_repository_user>
+pluginRepositoryPassword=<plugin_repository_password>
+```
+For the remediate container, you need to match the ``gradle`` and ``gradle-wrapper`` managers for both the repositoryUrl, and the pluginRepositoryUrl.
