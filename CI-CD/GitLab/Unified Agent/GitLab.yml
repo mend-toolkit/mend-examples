@@ -39,5 +39,4 @@ mend_scan:
       echo Starting Mend Scan
       java -jar wss-unified-agent.jar
     fi
-    echo "Mend Scan"
-    java -jar ./wss-unified-agent.jar
+

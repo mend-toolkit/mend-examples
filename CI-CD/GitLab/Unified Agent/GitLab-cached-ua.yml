@@ -51,6 +51,3 @@ mend_scan:
     else
         echo "Already using the latest version of the Mend Unified Agent"
     fi
-
-    echo "Mend Scan"
-    java -jar ./wss-unified-agent.jar
