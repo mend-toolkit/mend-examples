@@ -10,6 +10,7 @@ This folder contains scripts for use with the Mend SCA platform and Unified agen
 - [Display Vulnerabilities Affecting a Project](#display-vulnerabilities-affecting-a-project)
 - [Display Policy Violations Following a Scan](#display-policy-violations-following-a-scan)
 - [Cache the Latest Version of the Unified Agent](#cache-the-latest-version-of-the-unified-agent)
+- [Plugin Request History export](#request-history-export)
 
 <hr/>
 
@@ -277,3 +278,20 @@ chmod +x ./cache-ua.sh.sh && ./cache-ua.sh.sh
 ```
 
 See additional example for implementation within a build pipeline under [CI-CD](../CI-CD/README.md#caching-the-unified-agent) (`*-cached-ua.yml`).  
+
+<br>
+<hr>
+## Request History Export
+
+[get-request-history.py](get-request-history.py)  
+
+This script exports the product names and their last scan dates to CSV file for reporting purposes, the number of days to query is set as an argument to the script.
+
+**Prerequisites:** 
+* Python3.6 and up
+* pip install requests csv
+
+<br>
+
+**Execution:** 
+python get-request-history.py MEND_URL MEND_APIKEY MEND_USERKEY DAYS_TO_QUERY
