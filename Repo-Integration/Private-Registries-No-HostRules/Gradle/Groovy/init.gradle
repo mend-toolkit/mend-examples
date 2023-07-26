@@ -1,0 +1,62 @@
+import java.util.Properties
+
+Properties readPropertiesFromFile(File file) {
+    if (file.exists()) {
+        Properties properties = new Properties()
+        properties.load(new FileInputStream(file))
+        return properties
+    } else {
+        return null
+    }
+}
+
+println("Loading JFROG Repository")
+def projectPropertiesFile = new File(".", "gradle.properties")
+def projectProperties = readPropertiesFromFile(projectPropertiesFile)
+
+def globalPropertiesFile = new File(gradle.gradleUserHomeDir, 'gradle.properties')
+def globalProperties = readPropertiesFromFile(globalPropertiesFile)
+
+def repositoryUrl = projectProperties?.getProperty("repositoryUrl") ?: globalProperties?.getProperty("repositoryUrl") ?: System?.getenv("MAVEN_REGISTRY")
+def repositoryUsername = projectProperties?.getProperty("repositoryUsername") ?: globalProperties?.getProperty("repositoryUsername") ?: System?.getenv("MAVEN_USER")
+def repositoryPassword = projectProperties?.getProperty("repositoryPassword") ?: globalProperties?.getProperty("repositoryPassword") ?: System?.getenv("MAVEN_PASS")
+
+//Should point to a registry with an upstream remote of: https://plugins.gradle.org/m2/
+def pluginRepositoryUrl = projectProperties?.getProperty("pluginRepositoryUrl") ?: globalProperties?.getProperty("pluginRepositoryUrl") ?: System?.getenv("GRADLE_PLUGIN_REGISTRY")
+def pluginRepositoryUsername = projectProperties?.getProperty("pluginRepositoryUsername") ?: globalProperties?.getProperty("pluginRepositoryUsername") ?: System?.getenv("GRADLE_PLUGIN_USER")
+def pluginRepositoryPassword = projectProperties?.getProperty("pluginRepositoryPassword") ?: globalProperties?.getProperty("pluginRepositoryPassword") ?: System?.getenv("GRADLE_PLUGIN_PASS")
+
+// Plugin repositories section using the same variables
+
+settingsEvaluated { settings ->
+	settings.dependencyResolutionManagement {
+		repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+		repositories {
+			maven {
+				url repositoryUrl?.toString()
+				credentials {
+					username = repositoryUsername?.toString()
+					password = repositoryPassword?.toString()
+				}
+			}
+		}
+	}
+	settings.pluginManagement {
+		repositories {
+			maven {
+				url repositoryUrl?.toString()
+				credentials {
+					username = repositoryUsername?.toString()
+					password = repositoryPassword?.toString()
+				}
+			}
+			maven {
+				url pluginRepositoryUrl?.toString()
+				credentials {
+					username = pluginRepositoryUsername?.toString()
+					password = pluginRepositoryPassword?.toString()
+				}
+			}
+		}
+	}
+}
