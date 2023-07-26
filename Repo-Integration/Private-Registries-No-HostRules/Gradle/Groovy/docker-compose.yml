@@ -7,9 +7,13 @@ services:
     container_name: remediate-server
     environment:
       LOG_LEVEL: DEBUG
-      GRADLE_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/libs-release
-      GRADLE_USER: <artifactory_user>
-      GRADLE_PASS: <artifactory_password>
+      MVN_USER: <username>
+      MVN_PASS: <password>
+      MVN_BASE_URL: https://<artifactory_instance>.jfrog.io/artifactory
+      MVN_RELEASE: https://<artifactory_instance>.jfrog.io/artifactory/libs-release
+      GRADLE_PLUGIN_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/libs-snapshot # Should point to a Gradle Plugin Repository (https://plugins.gradle.org/m2/)
+      GRADLE_PLUGIN_USER: <username>
+      GRADLE_PLUGIN_PASS: <password>
     ports:
       - "8080:8080"
     volumes:
@@ -18,6 +22,9 @@ services:
     restart: always
     extra_hosts:
       - "repo.maven.apache.org:127.0.0.1"
+      - "repo1.maven.apache.org:127.0.0.1"
+      - "repo2.maven.apache.org:127.0.0.1"
+      - "plugins.gradle.org:127.0.0.1"
     logging:
       driver: local
       options:
@@ -49,16 +56,24 @@ services:
     container_name: wss-scanner-ghe
     extra_hosts:
       - "repo.maven.apache.org:127.0.0.1"
+      - "repo1.maven.apache.org:127.0.0.1"
+      - "repo2.maven.apache.org:127.0.0.1"
+      - "plugins.gradle.org:127.0.0.1"
     environment:
       WS_UA_LOG_IN_CONSOLE: true
       LOG_LEVEL: DEBUG
-      GRADLE_HOME: /home/wss-scanner/.gradle
+      MVN_USER: <username>
+      MVN_PASS: <password>
+      MVN_RELEASE: https://<artifactory_instance>.jfrog.io/artifactory/libs-release
+      GRADLE_PLUGIN_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/libs-snapshot # Same as above
+      GRADLE_PLUGIN_USER: <username>
+      GRADLE_PLUGIN_PASS: <password>
     ports:
       - "9393:9393"
     volumes:
       - "C:\\path\\to\\prop.json:/etc/usr/local/whitesource/conf/prop.json"
-      - "C:\\path\\to\\ualog\\:/tmp/"
-      - "C:\\path\\to\\gradle.properties:/home/wss-scanner/.gradle/gradle.properties"
+      - "C:\\path\\to\\gradle.properties:/home/wss-scanner/.gradle/gradle.properties" # Optional
+      - "C:\\path\\to\\init.gradle:/home/wss-scanner/.gradle/init.gradle" # Required
     restart: always
     depends_on:
       - app
