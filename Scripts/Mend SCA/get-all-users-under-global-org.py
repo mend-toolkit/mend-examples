@@ -12,9 +12,6 @@ import sys
 #       MEND_EMAIL
 #       MEND_GLOBAL_ORG_TOKEN
 
-
-
-
 REQUEST_HEADERS = {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
