@@ -2,7 +2,7 @@ import requests, csv, sys
 from datetime import datetime, timedelta
 
 def get_organization_product_vitals(url, org_token, user_key, include_request_token=False):
-    url = url+'/api/v1.4'
+    url = 'https://{}/api/v1.4'.format(url)
 
     request_data = {
         "orgToken": org_token,
