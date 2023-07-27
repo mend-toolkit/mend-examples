@@ -36,11 +36,11 @@ steps:
     curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
     
     ### Run SCA scan ###
-    echo Start Mend SCA scan
-    mend sca -u
+    echo Start Mend dependencies (SCA) scan
+    mend deps -u
     
     ### Run SAST scan ###
-    echo Start Mend SAST scan
+    echo Start Mend code (SAST) scan
     mend sast --name=$(Build.Repository.Name)_$(Build.SourceBranchName) --app AZ$(System.TeamProject)_$(Build.Repository.Name)
 
   env:
@@ -48,7 +48,6 @@ steps:
     MEND_URL: $(MEND_SCA_URL)
     MEND_EMAIL: $(MEND_SCA_EMAIL)
     MEND_USER_KEY: $(MEND_SCA_USERKEY)
-    MEND_ORG_UUID: $(MEND_SCA_ORG_UUID)
 
     ### SAST Environment Variables ###
     MEND_SAST_SERVER_URL: $(MEND_SAST_URL)

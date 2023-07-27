@@ -10,6 +10,7 @@ This folder contains scripts for use with the Mend SCA platform and Unified agen
 - [Display Vulnerabilities Affecting a Project](#display-vulnerabilities-affecting-a-project)
 - [Display Policy Violations Following a Scan](#display-policy-violations-following-a-scan)
 - [Cache the Latest Version of the Unified Agent](#cache-the-latest-version-of-the-unified-agent)
+- [Plugin Request History export](#request-history-export)
 - [Get all Users that are part of Organizations which are a part of a Global Organization](#get-all-users-that-are-part-of-organizations-which-are-a-part-of-a-global-organization)
 
 <hr/>
@@ -274,10 +275,56 @@ The [cache-ua.sh](cache-ua.sh) script can be added to the CI/CD pipeline on a st
 
 ```
 curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/cache-ua.sh.sh 
-chmod +x ./cache-ua.sh.sh && ./cache-ua.sh.sh
+chmod +x ./cache-ua.sh && ./cache-ua.sh
 ```
 
 See additional example for implementation within a build pipeline under [CI-CD](../CI-CD/README.md#caching-the-unified-agent) (`*-cached-ua.yml`).  
+
+
+<br>
+<hr>
+
+## Pending task cleanup
+
+[pending-task-cleanup.sh](pending-task-cleanup.sh)  
+
+This script allows the user to cleanup outstanding [Pending Tasks](https://docs.mend.io/bundle/wsk/page/ui_-_request_history_report_and_pending_tasks.html) in the Mend SCA UI, when this process is no longer required. Please ensure the setting '[Open pending tasks for new libraries](https://docs.mend.io/bundle/wsk/page/ui_-_request_history_report_and_pending_tasks.html)' is disabled under the Integrate, Advanced Settings area. In addition, also ensure that their are no [Policies](https://docs.mend.io/bundle/sca_user_guide/page/managing_automated_policies.html#Applying-Actions-to-a-Library) that are 'Reassign' or 'Condition', which could create new tasks. 
+
+The [pending-task-cleanup.sh](pending-task-cleanup.sh) script is designed to be executed one time per organization to clean up historic pending requests the Mend SCA UI. 
+
+<br>
+
+**Prerequisites:**  
+
+* `jq` and `curl` must be installed
+* The tasks within Mend should be assigned to a user and not to a group (Edit policy->Reasssign->Assign to User) as the getDomainPendingTasks API is based off of tasks assigned to a user
+
+<br>
+
+**Execution:**  
+
+```
+export MEND_URL=https://saas.mend.io
+export WS_APIKEY=x
+export MEND_USER_KEY=x
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/pending-task-cleanup.sh 
+chmod +x ./pending-task-cleanup.sh && ./pending-task-cleanup.sh
+```
+
+## Request History Export
+
+[get-request-history.py](get-request-history.py)  
+
+This script exports the product names and their last scan dates to CSV file for reporting purposes, the number of days to query is set as an argument to the script.
+
+**Prerequisites:** 
+* Python3.6 and up
+* pip install requests csv
+
+<br>
+
+**Execution:** 
+python get-request-history.py MEND_URL MEND_APIKEY MEND_USERKEY DAYS_TO_QUERY
 
 <br />
 <hr />

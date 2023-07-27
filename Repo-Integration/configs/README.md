@@ -5,29 +5,8 @@ In all .whitesource file update examples, you should replace the inherited organ
 # SCA
 ## [Remediate & Renovate](https://docs.mend.io/bundle/integrations/page/mend_remediate_and_renovate.html)
 
-### [Least Vulnerable Package](https://docs.mend.io/bundle/integrations/page/least_vulnerable_packages_feature.html) and Renovate + Smart Merge Control
-```
-{
-  "settingsInheritedFrom": "myorganization/whitesource-config@main",
-  "remediateSettings": {
-    "workflowRules": {
-      "enabled": true,
-      "minVulnerabilitySeverity": "LOW"
-    },
-    "enableRenovate": true,
-    "extends": [
-       "config:base",
-       "github>whitesource/merge-confidence:beta",
-       "github>mend-toolkit/mend-examples//Repo-Integration/Renovate/smart-merge-lvp"
-      ]
-  },
-  "leastVulnerablePackageSettings": {
-    "enabled": true
-    }
-}
-```
-
-### Renovate + Smart Merge Control
+### Renovate + [Smart Merge Control](https://docs.mend.io/bundle/integrations/page/boost_your_pull_request_confidence_using_mend_renovate_s_smart_merge_control.html)
+- Do NOT enable Remediate "workflowRules" with this setting as Security fixes may sit in the dependency dashboard due to low and neutral confidence
 ```
 {
   "settingsInheritedFrom": "myorganization/whitesource-config@main",
@@ -44,14 +23,28 @@ In all .whitesource file update examples, you should replace the inherited organ
   }
 }
 ```
+## Reachability Analysis
+- This feature is currently in closed beta and should not be enabled without Mend Field Engineering assistance.
+```
+{
+  "settingsInheritedFrom": "myorganization/whitesource-config@main",
+  "scanSettings": {
+      "enableReachability": true
+  },
+  "checkRunSettings": {
+    "strictMode": "warning"
+  }
+}
+```
 
 # SAST
-## Java 2x Engine
+## [Java Engine Generation 2](https://docs.mend.io/bundle/integrations/page/configure_the_mend_cli_for_sast.html#Mend-CLI-SAST---General-scan-parameters)
+The below configuration is the same as running ```mend sast -j 2``` with the CLI
 ```
 {
   "settingsInheritedFrom": "myorganization/whitesource-config@main",
   "scanSettingsSAST": {
-    "configExternalURL": "https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Repo-Integration/configs/SAST/Java2x/mendsastcli-config.json"
+    "configExternalURL": "https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Repo-Integration/configs/SAST/java-engine-generation/mendsastcli-config.json"
   }
 }
 ```
