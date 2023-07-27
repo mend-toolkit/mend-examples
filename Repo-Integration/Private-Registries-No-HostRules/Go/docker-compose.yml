@@ -53,7 +53,6 @@ services:
       - "9393:9393"
     volumes:
       - "C:\\path\\to\\prop.json:/etc/usr/local/whitesource/conf/prop.json"
-      - "C:\\path\\to\\ualog\\:/tmp/"
     restart: always
     depends_on:
       - app

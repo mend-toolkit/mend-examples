@@ -59,7 +59,6 @@ services:
       - "9393:9393"
     volumes:
       - "C:\\path\\to\\prop.json:/etc/usr/local/whitesource/conf/prop.json"
-      - "C:\\path\\to\\ualog\\:/tmp/"
       - "C:\\path\\to\\.npmrc:/home/wss-scanner/.npmrc"
     restart: always
     depends_on:
