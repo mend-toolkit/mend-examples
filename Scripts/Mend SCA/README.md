@@ -294,6 +294,7 @@ The [pending-task-cleanup.sh](pending-task-cleanup.sh) script is designed to be 
 **Prerequisites:**  
 
 * `jq` and `curl` must be installed
+* The tasks within Mend should be assigned to a user and not to a group (Edit policy->Reasssign->Assign to User)
 
 <br>
 
