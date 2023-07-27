@@ -287,14 +287,14 @@ See additional example for implementation within a build pipeline under [CI-CD](
 
 This script allows the user to cleanup outstanding [Pending Tasks](https://docs.mend.io/bundle/wsk/page/ui_-_request_history_report_and_pending_tasks.html) in the Mend SCA UI, when this process is no longer required. Please ensure the setting '[Open pending tasks for new libraries](https://docs.mend.io/bundle/wsk/page/ui_-_request_history_report_and_pending_tasks.html)' is disabled under the Integrate, Advanced Settings area. In addition, also ensure that their are no [Policies](https://docs.mend.io/bundle/sca_user_guide/page/managing_automated_policies.html#Applying-Actions-to-a-Library) that are 'Reassign' or 'Condition', which could create new tasks. 
 
-The [pending-task-cleanup.sh](pending-task-cleanup.sh) script is designed to be executed one time per organisation to clean up historic pending requests the Mend SCA UI. 
+The [pending-task-cleanup.sh](pending-task-cleanup.sh) script is designed to be executed one time per organization to clean up historic pending requests the Mend SCA UI. 
 
 <br>
 
 **Prerequisites:**  
 
 * `jq` and `curl` must be installed
-* The tasks within Mend should be assigned to a user and not to a group (Edit policy->Reasssign->Assign to User)
+* The tasks within Mend should be assigned to a user and not to a group (Edit policy->Reasssign->Assign to User) as the getDomainPendingTasks API is based off of tasks assigned to a user
 
 <br>
 
@@ -302,7 +302,7 @@ The [pending-task-cleanup.sh](pending-task-cleanup.sh) script is designed to be 
 
 ```
 export MEND_URL=https://saas.mend.io
-export MEND_APIKEY=x
+export WS_APIKEY=x
 export MEND_USER_KEY=x
 curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/pending-task-cleanup.sh 
 chmod +x ./pending-task-cleanup.sh && ./pending-task-cleanup.sh

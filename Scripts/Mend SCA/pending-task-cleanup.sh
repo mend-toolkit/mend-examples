@@ -10,9 +10,9 @@ fi
 # Set your base API endpoint URLs
 API_VERSION="v1.4"
 
-# Check if MEND_APIKEY is set in the environment
-if [ -z "$MEND_APIKEY" ]; then
-  echo "Warning: MEND_APIKEY is not set in the environment."
+# Check if WS_APIKEY is set in the environment
+if [ -z "$WS_APIKEY" ]; then
+  echo "Warning: WS_APIKEY is not set in the environment."
   exit 1
 fi
 
@@ -29,7 +29,7 @@ INCLUDE_REQUEST_TOKEN=true
 GET_TASKS_API="$MEND_URL/api/$API_VERSION"
 GET_TASKS_PAYLOAD=$(cat <<EOF
 {
-  "orgToken": "$MEND_APIKEY",
+  "orgToken": "$WS_APIKEY",
   "requestType": "getDomainPendingTasks",
   "userKey": "$MEND_USER_KEY",
   "includeRequestToken": $INCLUDE_REQUEST_TOKEN
@@ -60,7 +60,7 @@ for uuid in $uuids; do
   CLOSE_TASK_PAYLOAD=$(cat <<EOF
   {
     "taskUUID": "$uuid",
-    "orgToken": "$MEND_APIKEY",
+    "orgToken": "$WS_APIKEY",
     "requestType": "closePendingTask",
     "userKey": "$MEND_USER_KEY",
     "includeRequestToken": $INCLUDE_REQUEST_TOKEN
