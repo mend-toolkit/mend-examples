@@ -6,11 +6,11 @@ import sys
 # Purpose: Get all of the users that are inside of a global organization
 # Requirements:
 #   Environment Variables: 
-#       WS_URL
-#       WS_APIKEY
-#       WS_USERKEY
-#       WS_EMAIL
-#       WS_GLOBAL_ORG_TOKEN
+#       MEND_URL
+#       MEND_APIKEY
+#       MEND_USERKEY
+#       MEND_EMAIL
+#       MEND_GLOBAL_ORG_TOKEN
 
 
 
