@@ -301,11 +301,11 @@ The [get-all-users-under-global-org.py](get-all-users-under-global-org.py) scrip
 **Execution:**
 ```shell
 # Create Environment Variables
-export WS_URL="https://saas.whitesourcesoftware.com"
-export WS_APIKEY="<org_token>"
-export WS_USERKEY="<userkey>"
-export WS_EMAIL="<MEND_USER_EMAIL>"
-export WS_GLOBAL_ORG_TOKEN="<global_org_token>"
+export MEND_URL="https://saas.whitesourcesoftware.com"
+export MEND_APIKEY="<org_token>"
+export MEND_USERKEY="<userkey>"
+export MEND_EMAIL="<MEND_USER_EMAIL>"
+export MEND_GLOBAL_ORG_TOKEN="<global_org_token>"
 
 # Run the script
 python ./get-all-users-under-global-org.py
