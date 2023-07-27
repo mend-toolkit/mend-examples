@@ -74,3 +74,5 @@ if product_vitals:
 
         if NoData:
             print("[!] No Products within the provided timeframe of {} day(s)".format(number_of_days))
+        else:
+            print("[+] Created CSV: {} with products from the last {} day(s)".format(csv_filename, number_of_days))
