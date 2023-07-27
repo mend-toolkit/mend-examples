@@ -301,7 +301,7 @@ The [pending-task-cleanup.sh](pending-task-cleanup.sh) script is designed to be 
 **Execution:**  
 
 ```
-export MEND_URL=example-https://saas.mend.io
+export MEND_URL=https://saas.mend.io
 export MEND_APIKEY=x
 export MEND_USER_KEY=x
 curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/pending-task-cleanup.sh 
