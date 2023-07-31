@@ -7,8 +7,8 @@ import sys
 # Requirements:
 #   Environment Variables: 
 #       MEND_URL
-#       MEND_APIKEY
-#       MEND_USERKEY
+#       WS_APIKEY
+#       MEND_USER_KEY
 #       MEND_EMAIL
 #       MEND_GLOBAL_ORG_TOKEN
 
@@ -72,8 +72,8 @@ def get_organization_users(base_url: str, user_key: str, org_token: str) -> list
 def main():
     mend_email = os.getenv('MEND_EMAIL')                        # Your Mend User's Email
     mend_url = os.getenv('MEND_URL')                            # URL of your Mend environment
-    mend_apikey = os.getenv('MEND_APIKEY')                      # Your Mend Organization Token
-    mend_userkey = os.getenv('MEND_USERKEY')                    # Your Mend Userkey
+    mend_apikey = os.getenv('WS_APIKEY')                      # Your Mend Organization Token
+    mend_userkey = os.getenv('MEND_USER_KEY')                    # Your Mend Userkey
     mend_global_org_token = os.getenv('MEND_GLOBAL_ORG_TOKEN')  # Your Mend Global Organization Token
 
     print("Getting all organizations under global organization")
