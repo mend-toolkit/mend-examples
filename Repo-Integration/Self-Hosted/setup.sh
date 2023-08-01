@@ -125,7 +125,6 @@ RUN update-ca-certificates' ${BASE_DIR}/latest/wss-$SCM-app/docker/Dockerfile
 COPY docker-image/'"$CERTFILE_BASE"' /usr/local/share/ca-certificates\
 \
 RUN /opt/buildpack/tools/java/17.0.7+7/bin/keytool -import -keystore /opt/buildpack/tools/java/17.0.7+7/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
-RUN /opt/buildpack/tools/java/17.0.7+7/bin/keytool -import -keystore /opt/buildpack/ssl/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
 RUN /opt/buildpack/tools/java/11.0.19+7/bin/keytool -import -keystore /opt/buildpack/tools/java/11.0.19+7/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
 RUN /opt/buildpack/tools/java/8.0.342+7/bin/keytool -import -keystore /opt/buildpack/tools/java/8.0.342+7/jre/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
 RUN update-ca-certificates' ${BASE_DIR}/latest/wss-scanner/docker/Dockerfile
