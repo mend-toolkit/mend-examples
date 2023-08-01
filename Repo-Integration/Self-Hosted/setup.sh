@@ -135,7 +135,6 @@ COPY '"$CERTFILE_BASE"' /usr/local/share/ca-certificates\
 \
 ENV NODE_EXTRA_CA_CERTS='"$CERTFILE_BASE"'\
 RUN /opt/containerbase/tools/java/11.0.19+7/bin/keytool -import -keystore /opt/containerbase/ssl/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
-RUN /opt/containerbase/tools/java/11.0.19+7/bin/keytool -import -keystore /opt/containerbase/tools/java/11.0.19+7/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
 RUN update-ca-certificates\
 ' ${BASE_DIR}/latest/wss-remediate/docker/Dockerfile
             echo Supplied certfile $CERTFILE has been copied to the appropriate places and Dockerfiles have been modified, so that TLS operations in the containers will trust this certificate.
