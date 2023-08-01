@@ -118,20 +118,24 @@ function cert_add(){
             sed -i '27a\
 COPY docker-image/'"$CERTFILE_BASE"' /usr/local/share/ca-certificates\
 \
-RUN /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/keytool -import -keystore /etc/ssl/certs/java/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
+RUN /opt/buildpack/tools/java/8.0.342+7/bin/keytool -import -keystore /opt/buildpack/tools/java/8.0.342+7/jre/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
+RUN /opt/buildpack/tools/java/8.0.342+7/bin/keytool -import -keystore /opt/buildpack/ssl/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
 RUN update-ca-certificates' ${BASE_DIR}/latest/wss-$SCM-app/docker/Dockerfile
             sed -i '359a\
 COPY docker-image/'"$CERTFILE_BASE"' /usr/local/share/ca-certificates\
 \
-RUN /usr/local/java/17.0.3+7/bin/keytool -import -keystore /usr/local/java/17.0.3+7/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
-RUN /usr/local/java/11.0.13+8/bin/keytool -import -keystore /usr/local/java/11.0.13+8/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
+RUN /opt/buildpack/tools/java/17.0.7+7/bin/keytool -import -keystore /opt/buildpack/tools/java/17.0.7+7/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
+RUN /opt/buildpack/tools/java/17.0.7+7/bin/keytool -import -keystore /opt/buildpack/ssl/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
+RUN /opt/buildpack/tools/java/11.0.19+7/bin/keytool -import -keystore /opt/buildpack/tools/java/11.0.19+7/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
+RUN /opt/buildpack/tools/java/8.0.342+7/bin/keytool -import -keystore /opt/buildpack/tools/java/8.0.342+7/jre/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
 RUN update-ca-certificates' ${BASE_DIR}/latest/wss-scanner/docker/Dockerfile
             sed -i '129a\
 COPY '"$CERTFILE_BASE"' ./\
 COPY '"$CERTFILE_BASE"' /usr/local/share/ca-certificates\
 \
 ENV NODE_EXTRA_CA_CERTS='"$CERTFILE_BASE"'\
-RUN /opt/buildpack/tools/java/11.0.12+7/bin/keytool -import -keystore /opt/buildpack/ssl/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
+RUN /opt/containerbase/tools/java/11.0.19+7/bin/keytool -import -keystore /opt/containerbase/ssl/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
+RUN /opt/containerbase/tools/java/11.0.19+7/bin/keytool -import -keystore /opt/containerbase/tools/java/11.0.19+7/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
 RUN update-ca-certificates\
 ' ${BASE_DIR}/latest/wss-remediate/docker/Dockerfile
             echo Supplied certfile $CERTFILE has been copied to the appropriate places and Dockerfiles have been modified, so that TLS operations in the containers will trust this certificate.
