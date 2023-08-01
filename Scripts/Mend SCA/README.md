@@ -349,9 +349,7 @@ The [get-all-users-under-global-org.py](get-all-users-under-global-org.py) scrip
 ```shell
 # Create Environment Variables
 export MEND_URL="https://saas.whitesourcesoftware.com"
-export WS_APIKEY="<org_token>"
 export MEND_USER_KEY="<userkey>"
-export MEND_EMAIL="<MEND_USER_EMAIL>"
 export MEND_GLOBAL_ORG_TOKEN="<global_org_token>"
 
 # Run the script
