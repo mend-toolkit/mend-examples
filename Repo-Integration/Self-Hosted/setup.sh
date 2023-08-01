@@ -97,17 +97,17 @@ function cert_add(){
                 else
                     if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-$SCM-app/docker/Dockerfile | grep -q '^27:');
                         then
-                            echo wss-$SCM-app Dockerfile not in expected format from version $SUPPORTEDVERSION.  Leaving all files unchanged.
+                            echo wss-$SCM-app Dockerfile not in expected format.  Leaving all files unchanged.
                             return;
                     fi
-                    if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-scanner/docker/Dockerfile | grep -q '^355:');  #355 for BB and GLS and GHS 23.4.1 
+                    if !(grep -nF 'COPY docker-image/ /' ${BASE_DIR}/latest/wss-scanner/docker/Dockerfile | grep -q '^334:');
                         then
-                            echo wss-scanner Dockerfile not in expected format from version $SUPPORTEDVERSION.  Leaving all files unchanged.
+                            echo wss-scanner Dockerfile not in expected format.  Leaving all files unchanged.
                             return;
                     fi
                     if !(grep -nF 'COPY package.json yarn.lock ./' ${BASE_DIR}/latest/wss-remediate/docker/Dockerfile | grep -q '^129:');
                         then
-                            echo wss-remediate Dockerfile not in expected format from version $SUPPORTEDVERSION.  Leaving all files unchanged.
+                            echo wss-remediate Dockerfile not in expected format.  Leaving all files unchanged.
                             return;
                     fi
             fi
