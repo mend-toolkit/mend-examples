@@ -20,18 +20,29 @@ REQUEST_HEADERS = {
 
 
 
-def run_api_1_4_request(url: str, request: str, userKey: str, extra_request_args: dict = {}) -> dict:
-    request_object = {
-        "requestType": request,
-        "userKey": userKey
-    }
+def check_api_error(response: dict) -> bool:
+    if "errorCode" in response:
+        print(f"Error in request: \n{json.dumps(response, indent=4)}")
+        sys.exit(-1)
 
-    for key in extra_request_args:
-        request_object[key] = extra_request_args[key]
+    return True
 
-    payload = json.dumps(request_object);
 
-    if "/api/v1.4" not in url:
+
+
+def get_result_from_api_response(response: dict, object_to_get: str) -> list:
+    return_object = []
+    if object_to_get in response:
+        return_object = response[object_to_get]
+
+    return return_object
+
+
+
+def send_api_1_4_request(url: str, request: dict) -> dict:
+    payload = json.dumps(request);
+
+    if "/api" not in url:
         url = f"{url}/api/v1.4"
 
     response = requests.post(url, headers=REQUEST_HEADERS, data=payload)
@@ -42,53 +53,55 @@ def run_api_1_4_request(url: str, request: str, userKey: str, extra_request_args
 
 
 
-def get_all_organizations(base_url: str, user_key: str, global_org_token: str) -> list:
-    extra_args = { "globalOrgToken": global_org_token }
+def create_get_all_organizations_request(user_key: str, global_org_token: str) -> dict:
+    request_dict = { 
+        "requestType": "getAllOrganizations",
+        "userKey": user_key,
+        "globalOrgToken": global_org_token
+    }
+
+    return request_dict
     
-    response = run_api_1_4_request(base_url, "getAllOrganizations", user_key, extra_request_args=extra_args)
-
-    if "organizations" in response:
-        return response['organizations']
-    else:
-        print(f"Request Failed: {json.dumps(response, indent=4)}")
-        sys.exit(-1)
 
 
 
+def create_get_organization_users_request(user_key: str, org_token: str) -> dict:
+    request_dict = {
+        "requestType": "getAllUsers",
+        "userKey": user_key,
+        "orgToken": org_token
+    }
 
-def get_organization_users(base_url: str, user_key: str, org_token: str) -> list:
-    extra_args = { "orgToken": org_token }
-
-    response = run_api_1_4_request(base_url, "getAllUsers", user_key, extra_args)
-    if 'users' in response:
-        return response['users']
-    else:
-        print(f"Request Failed: {json.dumps(response, indent=4)}")
-        sys.exit(-1)
+    return request_dict
 
 
 
 
 def main():
-    mend_email = os.getenv('MEND_EMAIL')                        # Your Mend User's Email
     mend_url = os.getenv('MEND_URL')                            # URL of your Mend environment
-    mend_apikey = os.getenv('WS_APIKEY')                      # Your Mend Organization Token
     mend_userkey = os.getenv('MEND_USER_KEY')                    # Your Mend Userkey
     mend_global_org_token = os.getenv('MEND_GLOBAL_ORG_TOKEN')  # Your Mend Global Organization Token
 
     print("Getting all organizations under global organization")
-    all_orgs = get_all_organizations(mend_url, mend_userkey, mend_global_org_token) # Get all organizations connected with "MEND_GLOBAL_ORG_TOKEN"
+    all_org_request = create_get_all_organizations_request(mend_userkey, mend_global_org_token)
+    all_orgs_response_object = send_api_1_4_request(mend_url, all_org_request) # Get all organizations connected with "MEND_GLOBAL_ORG_TOKEN"
+    check_api_error(all_orgs_response_object)
+    list_of_orgs = get_result_from_api_response(all_orgs_response_object, "organizations")
+
     user_list = set()
 
     print("Getting each user associated with each organization")
-    for org in all_orgs:
-        response = get_organization_users(mend_url, mend_userkey, org['orgToken'])
+    for org in list_of_orgs:
+        all_users_request = create_get_organization_users_request(mend_userkey, org['orgToken'])
+        all_users_response_object = send_api_1_4_request(mend_url, all_users_request)
+        check_api_error(all_users_response_object)
+        list_of_users = get_result_from_api_response(all_users_response_object, "users")
 
-        for user in response:
+        for user in list_of_users:
             user_list.add(user['email'])
 
     print("List of Users: ")
-    print(user_list)
+    print('\n\t'.join(user_list))
 
 
 
