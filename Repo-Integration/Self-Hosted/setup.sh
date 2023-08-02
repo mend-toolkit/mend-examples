@@ -118,7 +118,6 @@ function cert_add(){
             sed -i '27a\
 COPY docker-image/'"$CERTFILE_BASE"' /usr/local/share/ca-certificates\
 \
-RUN /opt/buildpack/tools/java/8.0.342+7/bin/keytool -import -keystore /opt/buildpack/tools/java/8.0.342+7/jre/lib/security/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
 RUN /opt/buildpack/tools/java/8.0.342+7/bin/keytool -import -keystore /opt/buildpack/ssl/cacerts -storepass changeit -noprompt -alias Mend -file '"$CERTFILE_BASE"'\
 RUN update-ca-certificates' ${BASE_DIR}/latest/wss-$SCM-app/docker/Dockerfile
             sed -i '359a\
