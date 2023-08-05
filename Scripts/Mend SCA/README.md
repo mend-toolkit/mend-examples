@@ -11,10 +11,11 @@ This folder contains scripts for use with the Mend SCA platform and Unified agen
 - [Display Policy Violations Following a Scan](#display-policy-violations-following-a-scan)
 - [Cache the Latest Version of the Unified Agent](#cache-the-latest-version-of-the-unified-agent)
 - [Plugin Request History export](#request-history-export)
+- [Get all Users that are part of Organizations which are a part of a Global Organization](#get-all-users-that-are-part-of-organizations-which-are-a-part-of-a-global-organization)
 
 <hr/>
 
-**All scripts & snippets should call [check-project-state.sh](check-project-state.sh) before running to ensure that the scan has completed.**
+**All scripts & snippets that are utilized in a pipeline should call [check-project-state.sh](check-project-state.sh) before running to ensure that the scan has completed.**
 <hr/>
 
 
@@ -279,6 +280,7 @@ chmod +x ./cache-ua.sh && ./cache-ua.sh
 
 See additional example for implementation within a build pipeline under [CI-CD](../CI-CD/README.md#caching-the-unified-agent) (`*-cached-ua.yml`).  
 
+
 <br>
 <hr>
 
@@ -323,3 +325,33 @@ This script exports the product names and their last scan dates to CSV file for 
 
 **Execution:** 
 python get-request-history.py MEND_URL MEND_APIKEY MEND_USERKEY DAYS_TO_QUERY
+
+<br />
+<hr />
+
+# Get all Users that are part of Organizations which are a part of a Global Organization
+
+[get-all-users-under-global-org.py](get-all-users-under-global-org.py)
+
+This script allows a user to retrieve every single user account that is a part of any of their Organizations which reside under the "umbrella" of a Global Organization. This allows an organization to take a full inventory of all users that have access to their resources.
+
+The [get-all-users-under-global-org.py](get-all-users-under-global-org.py) script can be run with Python 3.9+ and utilizes the Mend API 1.4 as well as API 2.0 to get the information necessary.
+
+> **_NOTE:_** If an error occurs with this script that produces an error when attempting to log in via API 2.0, this can happen on a rare occasion. The best thing to do is to implement a more comprehensive retry logic, or just try running the script again.
+
+<br />
+
+**Prerequisites:**  
+
+* `python 3.9+`
+
+**Execution:**
+```shell
+# Create Environment Variables
+export MEND_URL="https://saas.whitesourcesoftware.com"
+export MEND_USER_KEY="<userkey>"
+export MEND_GLOBAL_ORG_TOKEN="<global_org_token>"
+
+# Run the script
+python ./get-all-users-under-global-org.py
+```
