@@ -14,5 +14,5 @@ steps:
   - 'WS_WSS_URL=https://saas.mend.io/agent'
   - 'WS_PRODUCTNAME=$PROJECT_ID'
   - 'WS_PROJECTNAME=$BUILD_ID'
-  - 'WS_FILESYSTEMSCAN: false'
+  - 'WS_FILESYSTEMSCAN=false'
   args: ['java','-jar','wss-unified-agent.jar']
