@@ -9,10 +9,9 @@ steps:
 
 - name: 'docker.io/openjdk'
   env: 
-  - 'WS_APIKEY=$APIKEY' #add your apiKey here
-  - 'WS_USERKEY=$USERKEY' #add your userKey here
+  - 'WS_APIKEY=$APIKEY' #add your apiKey here using: https://cloud.google.com/build/docs/securing-builds/use-secrets
+  - 'WS_USERKEY=$USERKEY' #add your userKey here using: https://cloud.google.com/build/docs/securing-builds/use-secrets
   - 'WS_WSS_URL=https://saas.mend.io/agent'
   - 'WS_PRODUCTNAME=$PROJECT_ID'
   - 'WS_PROJECTNAME=$BUILD_ID'
-  - 'WS_FILESYSTEMSCAN: false'
   args: ['java','-jar','wss-unified-agent.jar']

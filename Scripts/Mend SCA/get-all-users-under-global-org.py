@@ -7,9 +7,7 @@ import sys
 # Requirements:
 #   Environment Variables: 
 #       MEND_URL
-#       WS_APIKEY
 #       MEND_USER_KEY
-#       MEND_EMAIL
 #       MEND_GLOBAL_ORG_TOKEN
 
 REQUEST_HEADERS = {
