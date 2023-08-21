@@ -1,8 +1,8 @@
-## Configuring Private Registries without Host Rules For Self-Hosted Repository Integrations
+## Configuring Private Registries without Host Rules For Self-Managed Repository Integrations
 
-There are often security policies among many organizations that restrict reaching out to public registries such as Maven Central. This is the default repository for downloading dependencies with Maven. In instances such as this, Mend provides the ability to specify host rules inside of the repository.
+There are often security policies among many organizations that restrict reaching out to public registries such as Maven Central. This is the default repository for downloading dependencies with Maven. In instances such as this, Mend provides the ability to specify host rules inside of the repository for each Mend-Hosted repository integration([Github.com](https://docs.mend.io/bundle/integrations/page/configure_mend_for_github_com_to_resolve_your_private_dependencies.html), [Azure Repos](https://docs.mend.io/bundle/integrations/page/installation_of_mend_for_azure_repos.html#Handling-Private-Registries-and-Authenticated-Repositories), [Bitbucket Cloud](https://docs.mend.io/bundle/integrations/page/installation_of_mend_for_bitbucket_cloud.html#Handling-Private-Registries-and-Authenticated-Repositories) .
 
-For Self-hosted Repository Integrations, there is another way of specifying host rules without any need to specify Host Rules inside of the repo, or even at the global level. This can be configured at the container level for ease of configuration, privacy, and to prevent tampering.
+For Self-Managed Repository Integrations, there is another way of specifying host rules without any need to specify Host Rules inside of the repo, or even at the global level. This can be configured at the container level for ease of configuration, privacy, and to prevent tampering.
 
 ### Steps:
 1. Create sensible environment variables. In the example [docker-compose.yml](./docker-compose.yml) file, we use MVN_USER, MVN_PASS, MVN_RELEASES, and MVN_SNAPSHOTS to specify credentials and URL's respectively.
