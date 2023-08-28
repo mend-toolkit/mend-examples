@@ -1,13 +1,15 @@
 # ******** Mend Unified CLI Template for Azure DevOps ********
 #
-# You may wish to alter this file to override the build tool and the Mend scanning technologies used (SCA, SAST or Conatiner).
+# You may wish to alter this file to override the build tool and Mend scanning technologies.
 #
-# For more configeration options, please check the technical documentation portal:
-# 📚 https://docs.mend.io/bundle/cli/page/scan_with_mend_s_unified_cli.html 
+# For more configuration options, please check the technical documentation portal:
+# 📚 https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html
 #
 # ******** Description ********
-# Mend SCA will automatically use package managers and file system scanning to detect open source components. 
-# Mend SAST will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
+# mend dep will automatically use package managers and file system scanning to detect open source components.
+# mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
+
+# If you are NOT using a service user, and have multiple organizations, don't forget to scall the scope -s parameter to set the organization
 
 name: 'mend-cli-scan'
 
@@ -29,29 +31,24 @@ steps:
     # - task: NuGetCommand@0
     # - task: Gradle@0
     # - task: PythonScript@0
-    # The Mend SCA CLI scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+    # The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
 
     ### Download the Mend Unified CLI ###
     echo Downloading Mend CLI
-    curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+    curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
     
-    ### Run SCA scan ###
-    echo Start Mend dependencies (SCA) scan
-    mend deps -u
+    ### Run a Mend Software Composition Analysis Scan
+    echo Run Mend dependencies (SCA) scan
+    mend dep -u
     
-    ### Run SAST scan ###
+    ### Run a Mend Static Application Security Analysis Scan
     echo Start Mend code (SAST) scan
-    mend sast --name=$(Build.Repository.Name)_$(Build.SourceBranchName) --app AZ$(System.TeamProject)_$(Build.Repository.Name)
+    mend code 
 
   env:
-    ### SCA and Container Environment Variables ###
+    ### Authentication Environment Variables ###
     MEND_URL: $(MEND_SCA_URL)
     MEND_EMAIL: $(MEND_SCA_EMAIL)
     MEND_USER_KEY: $(MEND_SCA_USERKEY)
-
-    ### SAST Environment Variables ###
-    MEND_SAST_SERVER_URL: $(MEND_SAST_URL)
-    MEND_SAST_API_TOKEN: $(MEND_SAST_API)
-    MEND_SAST_ORGANIZATION: $(MEND_SAST_ORGANIZATION)
 
   displayName: 'Mend Unified CLI Scan'

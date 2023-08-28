@@ -8,26 +8,28 @@ When the scan fails on a Policy Check, for both SCA and SAST, the exit code for 
 ## SCA Policy Check
 After defining the policies in Mend SCA UI, use the following command to trigger a policy check:
 ```shell
-mend sca --fail-policy # without upload scan to Mend SCA UI
+mend dep --fail-policy # without upload scan to Mend User Interface
 or
-mend sca -u --fail-policy # with upload scan to Mend SCA UI
+mend dep -u --fail-policy # with upload scan to Mend User Interface
 ```
 The output for the run will be:
 ```shell
-Detected 2 Policy violations
+Detected 1 Policy violation
 +----------------------------------+---------------------+-------------------------------------------------------+
 |             LIBRARY              |     POLICY TYPE     |                    POLICY NAME                        |
 +----------------------------------+---------------------+-------------------------------------------------------+
 | javax.mail-1.5.1.jar             | License             |              [License] [ORG] Block GPL                |
 +----------------------------------+---------------------+-------------------------------------------------------+
-| commons-fileupload-1.3.1.jar     | Vulnerability Score | [Security] [Product] Block high vulnerablities and up |
-+----------------------------------+---------------------+-------------------------------------------------------+
 ```
 ## SAST Policy Check
 SAST Policy Check is defined based on the results of the scan using thresholds.
-The thresholds definition can be found [here](https://docs.mend.io/bundle/cli/page/set_builds_to_fail_depending_on_scan_results.html)
-Once a threshold is matched, the following will be added to the scan stdout:
+The thresholds definition can be found [here](https://docs.mend.io/bundle/integrations/page/configure_the_mend_cli_for_sast.html#Mend-CLI-SAST---Threshold-parameters)
 
+Example for setting threshold to return failure exit code if one ore more high findings is found with the ```mend code``` command
 ```shell
-Warning: Scan contains 10 high severity findings, but threshold is set to 5. Scan exited with return code 9
+export MEND_SAST_THRESHOLD_HIGH=1
+```
+Once a threshold is matched, the following will be added to the scan stdout:
+```shell
+Warning: Scan contains 10 high severity findings, but threshold is set to 1. Scan exited with return code 9
 ```

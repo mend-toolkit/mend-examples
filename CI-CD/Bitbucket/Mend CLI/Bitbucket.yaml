@@ -1,25 +1,22 @@
 # ******** Mend Unified CLI Template for Bitbucket CI ********
 #
-# You may wish to alter this file to override the build tool and the Mend scanning technologies used (SCA, SAST or Conatiner).
+# You may wish to alter this file to override the build tool and Mend scanning technologies.
 #
-# For more configeration options, please check the technical documentation portal:
-# 📚 https://docs.mend.io/bundle/cli/page/scan_with_mend_s_unified_cli.html 
+# For more configuration options, please check the technical documentation portal:
+# 📚 https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html
 #
 # ******** Description ********
-# Mend SCA will automatically use package managers and file system scanning to detect open source components. 
-# Mend SAST will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
+# mend dep will automatically use package managers and file system scanning to detect open source components.
+# mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
+
+# If you are NOT using a service user, and have multiple organizations, don't forget to scall the scope -s parameter to set the organization
 
 # The user needs to set up enviroment variables in Bitbucket CI, see here for more inforamtion: https://support.atlassian.com/bitbucket-cloud/docs/variables-and-secrets/
 # The environment variables are:
-### SCA Environment Variables ###
+### Authentication Variables ###
 # MEND_EMAIL: MEND_SCA_EMAIL
 # MEND_USER_KEY: MEND_SCA_USERKEY
 # MEND_URL: https://saas.mend.io
-### SAST Environment Variables ###
-# MEND_SAST_SERVER_URL: https://saas.mend.io/sast
-# MEND_SAST_API_TOKEN: MEND_SAST_API
-# MEND_SAST_ORGANIZATION: MEND_SAST_ORGANIZATION
-
 
 image: atlassian/default-image:latest
   
@@ -30,17 +27,17 @@ pipelines:
     #     name: NPM Build
     #     name: Maven Install
     #     name: Dotnet Restore
-# The Mend SCA CLI scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+# The mend deps scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
 # Mend CLI
     - step:
         name: Mend CLI Scan
         script:
         - |
           echo Downloading Mend CLI
-          curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend
-          ### dependencies (SCA) Scan ###
-          echo Start Mend dependencies (SCA) scan
-          ./mend deps -u
-          ### code (SAST) Scan ###
-          echo Start Mend code (SAST) scan
-          ./mend code
+          curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+          ### Run a Mend Software Composition Analysis Scan
+          echo Run Mend dependencies (SCA) scan
+          mend dep -u
+          ### Run a Mend Static Application Security Analysis Scan
+          echo Run Mend code (SAST) scan
+          mend code
