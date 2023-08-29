@@ -1,14 +1,16 @@
 # ******** Mend Unified CLI Template for Github Actions ********
 #
-# You may wish to alter this file to override the build tool and the Mend scanning technologies used (SCA, SAST or Conatiner).
+# You may wish to alter this file to override the build tool and Mend scanning technologies.
 #
-# For more configeration options, please check the technical documentation portal:
-# 📚 https://docs.mend.io/bundle/cli/page/scan_with_mend_s_unified_cli.html 
+# For more configuration options, please check the technical documentation portal:
+# 📚 https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html
 #
 # ******** Description ********
-# Mend SCA will automatically use package managers and file system scanning to detect open source components. 
-# Mend SAST will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
-# Mend Containers will automatically pull the container defined and scan for open source components. 
+# mend dep will automatically use package managers and file system scanning to detect open source components.
+# mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
+# mend image will scan the local image:tag for open source components and secrets.
+
+# If you are NOT using a service user, and have multiple organizations, don't forget to scall the scope -s parameter to set the organization
 
 name: Mend CLI Scan
 
@@ -31,21 +33,17 @@ jobs:
 #    - name: Build with Maven
 #      run: mvn clean install -DskipTests=true
 ##
-# The Mend SCA CLI scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+# The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
     - name: Mend CLI Scan
       env:
-        #SCA
         MEND_EMAIL: ${{secrets.MEND_SCA_EMAIL}}
         MEND_USER_KEY: ${{secrets.MEND_SCA_USERKEY}}
         MEND_URL: https://saas.mend.io
-        #SAST
-        MEND_SAST_SERVER_URL: https://saas.mend.io/sast
-        MEND_SAST_API_TOKEN: ${{secrets.MEND_SAST_API}}
-        MEND_SAST_ORGANIZATION: ${{secrets.MEND_SAST_ORGANIZATION}}
+
       run: |
         echo Downloading Mend CLI
-        curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend
-        echo Start Mend dependencies (SCA) scan
-        ./mend deps -u
-        echo Start Mend code (SAST) scan
-        ./mend code
+        curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+        echo run Mend dependencies (SCA) scan
+        mend deps -u
+        echo Run Mend code (SAST) scan
+        mend code

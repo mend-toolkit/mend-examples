@@ -1,13 +1,13 @@
 # ******** Mend Unified CLI Template for CircleCI ********
 #
-# You may wish to alter this file to override the build tool and the Mend scanning technologies used (SCA, SAST or Conatiner).
+# You may wish to alter this file to override the build tool and Mend scanning technologies.
 #
-# For more configeration options, please check the technical documentation portal:
-# 📚 https://docs.mend.io/bundle/cli/page/scan_with_mend_s_unified_cli.html 
+# For more configuration options, please check the technical documentation portal:
+# 📚 https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html
 #
 # ******** Description ********
-# Mend SCA will automatically use package managers and file system scanning to detect open source components. 
-# Mend SAST will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
+# mend dep will automatically use package managers and file system scanning to detect open source components. 
+# Mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
 
 # Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
@@ -15,11 +15,24 @@ version: 2.1
 orbs:
   node: circleci/node@4.7.0
   # maven: circleci/maven@1.4.1
+# Context is used below to set environment variables for MEND_EMAIL, MEND_USER_KEY, and MEND_URL
+# https://circleci.com/docs/contexts/#create-and-use-a-context
+workflows:
+  mend-workflow:
+    jobs:
+      - example-mend-job:
+          context:
+            - Mend
 jobs:
   example-mend-job:
+    docker:
+    # prebuilt image with java
+      - image: circleci/openjdk:11-jdk-buster
+        user: root
+    # user root is required when using circleci images due to permissions within the image, this not required for any other image such as ubuntu:latest
     steps:
       ## checkout git
-      # - checkout
+      - checkout
       ## install node/npm
       # - node/install
       ## npm install packages
@@ -28,26 +41,14 @@ jobs:
       ## - maven install
       # - maven/install:
       #    command: '-DskipTests'
-      # execute Mend scan, curling Mend CLI. Remember to set the following environmental variables:
-      ### SCA Environment Variables ###
-      # MEND_EMAIL
-      # MEND_USER_KEY
-      # MEND_URL
-      ### SAST Environment Variables ###
-      # MEND_SAST_SERVER_URL
-      # MEND_SAST_API_TOKEN
-      # MEND_SAST_ORGANIZATION
-# The Mend SCA CLI scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+# The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+# If you are NOT using a service user, and have multiple organizations, don't forget to scall the scope -s parameter to set the organization
       - run: 
           name: Download Mend CLI
-          command: bash <(curl https://downloads.mend.io/production/unified/latest/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend)
+          command: curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
       - run: 
           name: Run Mend dependencies (SCA) scan
-          command: mend deps -u
+          command: mend dep -u
       - run: 
           name: Run Mend code (SAST) scan
           command: mend code
-workflows:
-  example-workflow:
-    jobs:
-      - example-mend-job
