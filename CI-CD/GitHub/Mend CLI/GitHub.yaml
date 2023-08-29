@@ -44,6 +44,6 @@ jobs:
         echo Downloading Mend CLI
         curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
         echo run Mend dependencies (SCA) scan
-        mend deps -u
+        mend dep -u
         echo Run Mend code (SAST) scan
         mend code
