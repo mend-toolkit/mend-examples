@@ -7,7 +7,7 @@ This folder contains supplemental binaries for the Self-Hosted Repository Integr
 
 <hr />
 
-## Update Java ca-certificates
+## [Update Java ca-certificates](./update-java-ca-certificates)
 
 This utility is created by: https://github.com/swisscom/update-java-cacertificates.
 The purpose of this utility is to create a keystore at /etc/ssl/java/cacerts without the need for Java. Here are the following steps to run this:
