@@ -81,7 +81,7 @@ Example docker-compose.yaml snippet:
       # handles certs for most system utilities and git
       - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
       # containerbase java install symlinks /opt/buildpack/ssl/cacerts into the jre security folder
-      - /etc/ssl/java/cacerts:/opt/containerbase/ssl/cacerts
+      - /etc/ssl/java/cacerts:/opt/buildpack/ssl/cacerts
     # ...
 ```
 
@@ -93,7 +93,7 @@ Example docker-compose.yaml snippet:
     volumes:
       # handles certs for most system utilities and git
       - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
-      # containerbase java install symlinks /opt/buildpack/ssl/cacerts into the jre security folder
+      # containerbase java install symlinks /opt/containerbase/ssl/cacerts into the jre security folder
       - /etc/ssl/java/cacerts:/opt/containerbase/ssl/cacerts
     # ...
 ```
@@ -106,7 +106,7 @@ Example docker-compose.yaml snippet:
     volumes:
       # handles certs for most system utilities and git
       - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
-      # containerbase java install symlinks /opt/buildpack/ssl/cacerts into the jre security folder
+      # containerbase java install symlinks /opt/containerbase/ssl/cacerts into the jre security folder
       - /etc/ssl/java/cacerts:/opt/containerbase/ssl/cacerts
 
     environment:
