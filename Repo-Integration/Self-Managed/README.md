@@ -1,7 +1,7 @@
 ![Logo](https://mend-toolkit-resources-public.s3.amazonaws.com/img/mend-io-logo-horizontal.svg)  
 
-# Self-Hosted Repository Integration Automation Scripts
-When used, these scripts will download the latest repository integration run via docker compose:
+# Self-Managed Repository Integration Automation Scripts
+When used, these scripts will download the latest [repository integration](https://docs.mend.io/bundle/integrations/page/repo_integrations.html) run via docker compose:
 - Remediate Server
 - Controller
 - Scanner
