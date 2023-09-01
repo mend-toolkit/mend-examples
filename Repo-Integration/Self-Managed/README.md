@@ -22,22 +22,19 @@ Options Defined:
 
 **bb** - Bitbucket Server
 
-Supplying a self-signed or other unverifiable PK cert for GitHub, GitLab, or Bitbucket:
-
-`setup.sh <option> <certificate_file.crt>`  **Note:** Certificate file **must** have an extension of .crt and have a first line equal to `-----BEGIN CERTIFICATE-----`
+For custom CA information, please see the [certificate readme](./certs.md)
 
 ## Execution
 Execution instructions:  
 
 - Clone the repository & give setup.sh permissions to run
 
-```git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration/Self-Hosted && chmod +x setup.sh```
+```git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration/Self-Managed && chmod +x setup.sh```
 - Add your activation key as an environment variable which will be copied to the .env file which is created by setup.sh
 
 ```export ws_key='your activation key between single quotes'```
 - Run the setup.sh script for your appropriate source control management system as shown in options above
 
-```./setup.sh <option>```, or ```./setup.sh <option> <certificate_file.crt>``` if supplying a self-signed or other cert.
 - Run docker compose depending on how it was installed
 
 ```docker-compose up``` 
