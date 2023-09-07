@@ -43,7 +43,7 @@ steps:
     
     ### Run a Mend Static Application Security Analysis Scan
     echo Start Mend code (SAST) scan
-    mend code 
+    mend code --name=$(Build.Repository.Name)_$(Build.SourceBranchName) --app AZ$(System.TeamProject)_$(Build.Repository.Name)
 
   env:
     ### Authentication Environment Variables ###

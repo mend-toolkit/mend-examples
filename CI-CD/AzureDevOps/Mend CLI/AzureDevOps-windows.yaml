@@ -48,7 +48,7 @@ steps:
       ./mend.exe dep -u
       ### Run a Mend Static Application Security Analysis Scan
       echo "Run Mend code (SAST) scan"
-      ./mend.exe code
+      ./mend.exe code --name=$(Build.Repository.Name)_$(Build.SourceBranchName) --app AZ$(System.TeamProject)_$(Build.Repository.Name)
 
   env:
     ### Authentication Environment Variables ###
