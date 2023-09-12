@@ -9,7 +9,11 @@
 # mend dep will automatically use package managers and file system scanning to detect open source components.
 # mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
 
-# If you are NOT using a service user, and have multiple organizations, don't forget to scall the scope -s parameter to set the organization
+# If you are NOT using a service user, and have multiple organizations, don't forget to set the organization in the scope parameter
+# The following values should be added as environment variables with email and userKey being secrets
+#    MEND_URL: the mend url that you login to - (https://saas.mend.io) for example
+#    MEND_EMAIL: the user email for the mend platform account you wish to scan with
+#    MEND_USER_KEY: the token for the account you wish to scan with
 
 name: 'mend-cli-scan'
 
@@ -24,36 +28,30 @@ pool:
 
 
 steps:
-# Uncomment the appropriate task needed for this.
-#- task: NodeTool@0
-#- task: Maven@0
-#- task: NuGetCommand@0
-#- task: Gradle@0
-#- task: PythonScript@0
+    ### Build the application with your required package manager, e.g: ###
+    # - task: NodeTool@0
+    # - task: Maven@0
+    # - task: NuGetCommand@0
+    # - task: Gradle@0
+    # - task: PythonScript@0
+    # The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
-      ### Build the tool - Uncomment the appropriate package manager or add your own
-      echo "Building the application"
-      # npm install --ignore-scripts
-      # mvn install
-      # dotnet build
-      # gradle build
       ### Download the Mend Unified CLI ###
       echo "Downloading Mend CLI"
       Invoke-WebRequest -Uri "https://downloads.mend.io/cli/windows_amd64/mend.exe" -OutFile "mend.exe"
       ### Run a Mend Software Composition Analysis Scan
-      echo "Run Mend dependencies (SCA) scan"
-      ./mend.exe dep -u
+      echo "Run Mend dependencies scan"
+      ./mend.exe dep -u -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName)
       ### Run a Mend Static Application Security Analysis Scan
-      echo "Run Mend code (SAST) scan"
-      ./mend.exe code
+      echo "Run Mend code scan"
+      ./mend.exe code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName)
 
   env:
-    ### Authentication Environment Variables ###
-    MEND_URL: $(MEND_SCA_URL)
-    MEND_EMAIL: $(MEND_SCA_EMAIL)
-    MEND_USER_KEY: $(MEND_SCA_USERKEY)
+    ### Authentication Environment Variable Secrets ###
+    MEND_EMAIL: $(MEND_EMAIL)
+    MEND_USER_KEY: $(MEND_USER_KEY)
 
   displayName: 'Mend Unified CLI Scan'
