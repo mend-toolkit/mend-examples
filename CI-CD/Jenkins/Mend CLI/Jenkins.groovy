@@ -8,15 +8,15 @@
 // mend dep will automatically use package managers and file system scanning to detect open source components.
 // mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
 
-// If you are NOT using a service user, and have multiple organizations, don't forget to scall the scope -s parameter to set the organization
+// If you are NOT using a service user, and have multiple organizations, don't forget to call the scope -s parameter to set the organization
 
 pipeline {
     agent any
 
     environment {
         // Authentication Variables
-        MEND_EMAIL = "${MEND_SCA_EMAIL}"
-        MEND_USER_KEY = "${MEND_SCA_USERKEY}"
+        MEND_EMAIL = "${MEND_EMAIL}"
+        MEND_USER_KEY = "${MEND_USER_KEY}"
         MEND_URL = "https://saas.mend.io"
     }
 
@@ -50,9 +50,9 @@ pipeline {
 
         stage('Run Mend CLI') {
             steps {
-                echo 'Run Mend Dependency (SCA) Scan'
+                echo 'Run Mend dependencies scan'
                 sh 'mend dep -u --no-color'
-                echo 'Run Mend code (SAST) Scan'
+                echo 'Run Mend code Scan'
                 sh 'mend code --no-color'
             }
         }

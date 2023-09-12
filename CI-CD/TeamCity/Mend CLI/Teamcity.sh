@@ -10,7 +10,7 @@
 # mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
 # mend image will scan the local image:tag for open source components and secrets.
 
-# If you are NOT using a service user, and have multiple organizations, don't forget to scall the scope -s parameter to set the organization
+# If you are NOT using a service user, and have multiple organizations, don't forget to call the scope -s parameter to set the organization
 
 # # Define the parameters:
 # Go to the build settings and click on "Parameters".
@@ -31,7 +31,7 @@
 echo "Downloading Mend CLI"
 curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
 echo "Execute Mend CLI"
-echo "Run Mend dependencies (SCA) scan"
+echo "Run Mend dependencies scan"
 mend dep -u
-echo "Run Mend code (SAST) scan"
+echo "Run Mend code scan"
 mend code

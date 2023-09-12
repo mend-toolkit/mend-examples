@@ -9,13 +9,13 @@
 # mend dep will automatically use package managers and file system scanning to detect open source components.
 # mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
 
-# If you are NOT using a service user, and have multiple organizations, don't forget to scall the scope -s parameter to set the organization
+# If you are NOT using a service user, and have multiple organizations, don't forget to call the scope -s parameter to set the organization
 
 # The user needs to set up enviroment variables in Bitbucket CI, see here for more inforamtion: https://support.atlassian.com/bitbucket-cloud/docs/variables-and-secrets/
 # The environment variables are:
 ### Authentication Variables ###
-# MEND_EMAIL: MEND_SCA_EMAIL
-# MEND_USER_KEY: MEND_SCA_USERKEY
+# MEND_EMAIL: MEND_EMAIL
+# MEND_USER_KEY: MEND_USER_KEY
 # MEND_URL: https://saas.mend.io
 
 image: atlassian/default-image:latest
@@ -36,8 +36,8 @@ pipelines:
           echo Downloading Mend CLI
           curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
           ### Run a Mend Software Composition Analysis Scan
-          echo Run Mend dependencies (SCA) scan
+          echo Run Mend dependencies scan
           mend dep -u
           ### Run a Mend Static Application Security Analysis Scan
-          echo Run Mend code (SAST) scan
+          echo Run Mend code scan
           mend code

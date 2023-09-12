@@ -47,8 +47,8 @@ jobs:
           name: Download Mend CLI
           command: curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
       - run: 
-          name: Run Mend dependencies (SCA) scan
+          name: Run Mend dependencies scan
           command: mend dep -u
       - run: 
-          name: Run Mend code (SAST) scan
+          name: Run Mend code scan
           command: mend code
