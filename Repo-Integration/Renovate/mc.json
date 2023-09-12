@@ -1,0 +1,15 @@
+{
+  "prBodyDefinitions": {
+    "Age": "[![age](https://badges.renovateapi.com/packages/{{datasource}}/{{replace '/' '%2f' depName}}/{{{newVersion}}}/age-slim)](https://docs.renovatebot.com/merge-confidence/)",
+    "Adoption": "[![adoption](https://badges.renovateapi.com/packages/{{datasource}}/{{replace '/' '%2f' depName}}/{{{newVersion}}}/adoption-slim)](https://docs.renovatebot.com/merge-confidence/)",
+    "Passing": "[![passing](https://badges.renovateapi.com/packages/{{datasource}}/{{replace '/' '%2f' depName}}/{{{newVersion}}}/compatibility-slim/{{{currentVersion}}})](https://docs.renovatebot.com/merge-confidence/)",
+    "Confidence": "[![confidence](https://badges.renovateapi.com/packages/{{datasource}}/{{replace '/' '%2f' depName}}/{{{newVersion}}}/confidence-slim/{{{currentVersion}}})](https://docs.renovatebot.com/merge-confidence/)"
+  },
+  "packageRules": [
+    {
+      "datasources": ["maven", "npm", "pypi","nuget","packagist","rubygems"],
+      "updateTypes": ["patch", "minor", "major"],
+      "prBodyColumns": ["Package", "Change", "Age", "Adoption", "Passing", "Confidence"]
+    }
+  ]
+}
