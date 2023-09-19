@@ -53,5 +53,6 @@ steps:
     ### Authentication Environment Variable Secrets###
     MEND_EMAIL: $(MEND_EMAIL)
     MEND_USER_KEY: $(MEND_USER_KEY)
+    MEND_URL: https://saas.mend.io
 
   displayName: 'Mend Unified CLI Scan'
