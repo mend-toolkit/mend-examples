@@ -1,0 +1,153 @@
+# ******** Mend Unified CLI Template for Azure DevOps ********
+#
+# You may wish to alter this file to override the build tool and Mend scanning technologies.
+#
+# For more configuration options, please check the technical documentation portal:
+# 📚 https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html
+#
+# ******** Description ********
+# mend dep will automatically use package managers and file system scanning to detect open source components.
+# mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
+# mend image will scan container images to detect open source components in the operating system and application
+
+# If you are NOT using a service user, and have multiple organizations, don't forget to scall the scope -s parameter to set the organization
+# The following values should be added as environment variables with email and userKey being secrets
+#    MEND_URL: the mend url that you login to - (https://saas.mend.io) for example
+#    MEND_EMAIL: the user email for the mend platform account you wish to scan with
+#    MEND_USER_KEY: the token for the account you wish to scan with
+
+# The ##vso[task.uploadsummary] command adds the mend dependency results onto an extension tab in Azure DevOps 
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/scripts/logging-commands?view=azure-devops&tabs=bash#uploadsummary-add-some-markdown-content-to-the-build-summary
+
+# This example relies on the Microsoft Sarif Scans Tab extension to view the sarif results in the build output
+# https://marketplace.visualstudio.com/items?itemName=sariftools.scans
+
+
+# The scans on pull request do not upload to the Mend Platform and can only be seen in the pipeline output
+# "Releases" in the below example are branches that begin with "v"
+
+
+name: 'mend-cli-scan'
+
+# Define your own pipeline trigger here:
+# Below is defined a trigger for scanning on a push to the main branch and scanning on a push to release branches.  This is considered an ideal time to scan so that an SBOM can be created for software releases and inventory is managed for released software.
+trigger:
+- main
+- v*
+
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+- job: BuildOnMain
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  steps:
+### Build the application with your required package manager.  The below example is for dotnet: ###
+    - script: dotnet restore yoursolutionfile.sln
+      displayName: 'dotnet build'
+### The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+    - script: |
+        echo Downloading Mend CLI
+        curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+    
+        ### Run a Mend Software Composition Analysis Scan
+        echo Run Mend dependencies scan
+        mend dep -u -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --no-color | tee dep-results.txt
+        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/dep-results.txt"
+
+        ### Run a Mend Static Application Security Analysis Scan
+        echo Start Mend code scan
+        mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename code-results
+        ### Move logs and output to folder that will be published later ###
+        mv ~/.mend/logs $(System.DefaultWorkingDirectory)
+        mv $(System.DefaultWorkingDirectory)/dep-results.txt $(System.DefaultWorkingDirectory)/logs/dep-results.txt
+      env:
+      ### Authentication Environment Variables ###
+        MEND_EMAIL: $(MEND_EMAIL)
+        MEND_USER_KEY: $(MEND_USER_KEY)
+      displayName: 'Mend Unified CLI Scan'
+
+      ### Publish logs and sarif results ###
+    - publish: $(System.DefaultWorkingDirectory)/logs
+      artifact: mend-logs
+    - publish: $(System.DefaultWorkingDirectory)/code-results.sarif
+      artifact: CodeAnalysisLogs
+
+- job: BuildOnRelease
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/v'))
+  steps:
+### Build the application with your required package manager.  The below example is for dotnet: ###
+    - script: dotnet restore yoursolutionfile.sln
+      displayName: 'dotnet build'
+### The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+    - script: |
+        echo Downloading Mend CLI
+        curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+        mkdir $(System.DefaultWorkingDirectory)/sarif-results
+    
+        ### Run a Mend Software Composition Analysis Scan
+        echo Run Mend dependencies scan
+        mend dep -u -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --no-color | tee dep-results.txt
+        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/dep-results.txt"
+
+        ### Run a Mend Static Application Security Analysis Scan
+        echo Start Mend code scan
+        mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename $(System.DefaultWorkingDirectory)/sarif-results/code-results   
+      env:
+        ### Authentication Environment Variables ###
+        MEND_EMAIL: $(MEND_EMAIL)
+        MEND_USER_KEY: $(MEND_USER_KEY)
+      displayName: 'Mend Unified CLI Scan'
+
+    - script: docker build . -t $(Build.Repository.Name):$(Build.SourceBranchName)
+      displayName: 'Docker image build'
+
+    - script: |
+        echo Run Mend image scan
+        mend image $(Build.Repository.Name):$(Build.SourceBranchName) --filename $(System.DefaultWorkingDirectory)/sarif-results/image-results.sarif --format sarif
+        ### Move logs and output to folder that will be published later ###
+        mv ~/.mend/logs $(System.DefaultWorkingDirectory)
+        mv $(System.DefaultWorkingDirectory)/dep-results.txt $(System.DefaultWorkingDirectory)/logs/dep-results.txt
+      env:
+        ### Authentication Environment Variables ###
+        MEND_EMAIL: $(MEND_EMAIL)
+        MEND_USER_KEY: $(MEND_USER_KEY)
+      displayName: 'Mend Unified CLI Image Scan'
+
+      ### Publish logs and sarif results ###
+    - publish: $(System.DefaultWorkingDirectory)/logs
+      artifact: mend-logs
+    - publish: $(System.DefaultWorkingDirectory)/sarif-results
+      artifact: CodeAnalysisLogs
+
+- job: BuildOnPullRequest
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+  steps:
+    - script: dotnet restore eShopOnWeb.sln
+      displayName: 'dotnet build'
+    - script: |
+        echo Downloading Mend CLI
+        curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+    
+        ### Run a Mend Software Composition Analysis Scan
+        echo Run Mend dependencies scan
+        mend dep -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --no-color | tee dep-results.txt
+        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/dep-results.txt"
+
+        ### Run a Mend Static Application Security Analysis Scan
+        echo Start Mend code scan
+        mend code --offline -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename code-results
+        mv ~/.mend/logs $(System.DefaultWorkingDirectory)
+        mv $(System.DefaultWorkingDirectory)/dep-results.txt $(System.DefaultWorkingDirectory)/logs/dep-results.txt
+      env:
+      ### Authentication Environment Variables ###
+        MEND_EMAIL: $(MEND_EMAIL)
+        MEND_USER_KEY: $(MEND_USER_KEY)
+      displayName: 'Mend Unified CLI Scan'
+
+      ### Publish logs and sarif results ###      
+    - publish: $(System.DefaultWorkingDirectory)/logs
+      artifact: mend-logs
+    - publish: $(System.DefaultWorkingDirectory)/code-results.sarif
+      artifact: CodeAnalysisLogs

@@ -49,6 +49,7 @@ The below configuration is the same as running ```mend sast -j 2``` with the CLI
 }
 ```
 ## Increase Timeout
+The below configuration increases the perFile timeout to 300 seconds, but leaves the default of 480 minutes per language.  See [timeout parameters](https://docs.mend.io/bundle/mend_sast/page/cli_parameters.html#Timeouts) for more information.
 ```
 {
   "settingsInheritedFrom": "myorganization/whitesource-config@main",
