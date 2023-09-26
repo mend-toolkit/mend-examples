@@ -124,12 +124,14 @@ jobs:
 - job: BuildOnPullRequest
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
   steps:
-    - script: dotnet restore eShopOnWeb.sln
+### Build the application with your required package manager.  The below example is for dotnet: ###
+    - script: dotnet restore yoursolutionfile.sln
       displayName: 'dotnet build'
+### The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
     - script: |
         echo Downloading Mend CLI
         curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
-    
+
         ### Run a Mend Software Composition Analysis Scan
         echo Run Mend dependencies scan
         mend dep -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --no-color | tee dep-results.txt
@@ -146,7 +148,7 @@ jobs:
         MEND_USER_KEY: $(MEND_USER_KEY)
       displayName: 'Mend Unified CLI Scan'
 
-      ### Publish logs and sarif results ###      
+      ### Publish logs and sarif results ###
     - publish: $(System.DefaultWorkingDirectory)/logs
       artifact: mend-logs
     - publish: $(System.DefaultWorkingDirectory)/code-results.sarif
