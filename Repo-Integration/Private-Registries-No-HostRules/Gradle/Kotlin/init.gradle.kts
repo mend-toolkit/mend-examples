@@ -20,13 +20,13 @@ val globalPropertiesFile = gradle.gradleUserHomeDir.resolve("gradle.properties")
 val globalProperties = readPropertiesFromFile(globalPropertiesFile)
 
 val repositoryUrl = projectProperties?.getProperty("repositoryUrl") ?: globalProperties?.getProperty("repositoryUrl") ?: System.getenv("MAVEN_REGISTRY")
-val repositoryUsername = projectProperties?.getProperty("repositoryUsername") ?: globalProperties?.getProperty("repositoryUsername") :? System.getenv("MAVEN_USER")
-val repositoryPassword = projectProperties?.getProperty("repositoryPassword") ?: globalProperties?.getProperty("repositoryPassword") :? System.getenv("MAVEN_PASS")
+val repositoryUsername = projectProperties?.getProperty("repositoryUsername") ?: globalProperties?.getProperty("repositoryUsername") ?: System.getenv("MAVEN_USER")
+val repositoryPassword = projectProperties?.getProperty("repositoryPassword") ?: globalProperties?.getProperty("repositoryPassword") ?: System.getenv("MAVEN_PASS")
 
 //Should point to a registry with an upstream remote of: https://plugins.gralde.org/m2/	
-val pluginRepositoryUrl = projectProperties?.getProperty("pluginRepositoryUrl") ?: globalProperties?.getProperty("pluginRepositoryUrl") :? System.getenv("GRADLE_PLUGIN_REGISTRY")
-val pluginRepositoryUsername = projectProperties?.getProperty("pluginRepositoryUsername") ?: globalProperties?.getProperty("pluginRepositoryUsername") :? System.getenv("GRADLE_PLUGIN_USER")
-val pluginRepositoryPassword = projectProperties?.getProperty("pluginRepositoryPassword") ?: globalProperties?.getProperty("pluginRepositoryPassword") :? System.getenv("GRADLE_PLUGIN_PASS")
+val pluginRepositoryUrl = projectProperties?.getProperty("pluginRepositoryUrl") ?: globalProperties?.getProperty("pluginRepositoryUrl") ?: System.getenv("GRADLE_PLUGIN_REGISTRY")
+val pluginRepositoryUsername = projectProperties?.getProperty("pluginRepositoryUsername") ?: globalProperties?.getProperty("pluginRepositoryUsername") ?: System.getenv("GRADLE_PLUGIN_USER")
+val pluginRepositoryPassword = projectProperties?.getProperty("pluginRepositoryPassword") ?: globalProperties?.getProperty("pluginRepositoryPassword") ?: System.getenv("GRADLE_PLUGIN_PASS")
 
 // Plugin repositories section using the same variables
 settingsEvaluated { 
