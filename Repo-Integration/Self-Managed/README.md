@@ -22,7 +22,7 @@ Options Defined:
 
 **bb** - Bitbucket Server
 
-**version** - If left blank, latest version is installed. [Available versions] (https://docs.mend.io/bundle/integrations/page/mend_developer_integrations_release_notes.html)
+**version** - If left blank, latest version is installed. [Available versions](https://docs.mend.io/bundle/integrations/page/mend_developer_integrations_release_notes.html)
 
 For custom CA information, please see the [certificate readme](./certs.md)
 
