@@ -50,7 +50,7 @@ esac
 ## Dowload agent file and copy to version
 wget https://integrations.mend.io/release/$AGENT_PATH/$AGENT_TAR -P $BASE_DIR
 if [ $? -ne 0 ]; then
-	echo "${red} Download failed: Check if requested version exists, network issues, or other probelms.${end}"
+	echo "${red}Download failed: Check if requested version exists, network issues, or other probelms.${end}"
 	exit
 fi
 AGENT_FILE=$(basename $AGENT_TAR .tar.gz)
