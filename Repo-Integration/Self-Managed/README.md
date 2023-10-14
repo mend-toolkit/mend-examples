@@ -13,7 +13,7 @@ When used, these scripts will download the latest [repository integration](https
 - Docker, Docker Compose, git, wget, SCM Repository instance up and running
 
 ## Options
-`setup.sh` options: **ghe**, **gls**, **bb**
+`setup.sh` options: **ghe**, **gls**, **bb** *optional* **version**
 
 Options Defined:  
 **ghe** - GitHub Enterprise
@@ -21,6 +21,8 @@ Options Defined:
 **gls** - GitLab (self-hosted)
 
 **bb** - Bitbucket Server
+
+**version** - If left blank, latest version is installed. [Available versions] (https://docs.mend.io/bundle/integrations/page/mend_developer_integrations_release_notes.html)
 
 For custom CA information, please see the [certificate readme](./certs.md)
 
