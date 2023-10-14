@@ -17,6 +17,7 @@ mag=$'\e[1;35m'
 cyn=$'\e[1;36m'
 end=$'\e[0m'
 
+
 function scm(){
 
 if [ -z $VERSION ]; then
@@ -36,7 +37,7 @@ case $SCM in
 
     bb)
     AGENT_PATH="Agent-for-BitBucket"
-    AGENT_TAR="agent-4-bitbucket.tar$DASH_VERSION.gz"
+    AGENT_TAR="agent-4-bitbucket$DASH_VERSION.tar.gz"
     ;;
 
     ghe)
