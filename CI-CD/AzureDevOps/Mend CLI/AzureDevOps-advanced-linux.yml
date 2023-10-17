@@ -8,24 +8,12 @@
 # ******** Description ********
 # mend dep will automatically use package managers and file system scanning to detect open source components.
 # mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
-# mend image will scan container images to detect open source components in the operating system and application
 
 # If you are NOT using a service user, and have multiple organizations, don't forget to scall the scope -s parameter to set the organization
 # The following values should be added as environment variables with email and userKey being secrets
 #    MEND_URL: the mend url that you login to - (https://saas.mend.io) for example
 #    MEND_EMAIL: the user email for the mend platform account you wish to scan with
 #    MEND_USER_KEY: the token for the account you wish to scan with
-
-# The ##vso[task.uploadsummary] command adds the mend dependency results onto an extension tab in Azure DevOps 
-# https://learn.microsoft.com/en-us/azure/devops/pipelines/scripts/logging-commands?view=azure-devops&tabs=bash#uploadsummary-add-some-markdown-content-to-the-build-summary
-
-# This example relies on the Microsoft Sarif Scans Tab extension to view the sarif results in the build output
-# https://marketplace.visualstudio.com/items?itemName=sariftools.scans
-
-
-# The scans on pull request do not upload to the Mend Platform and can only be seen in the pipeline output
-# "Releases" in the below example are branches that begin with "v"
-
 
 name: 'mend-cli-scan'
 
@@ -38,13 +26,18 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
+  
+variables:
+- name: MEND_URL
+  value: https://saas.mend.io 
+# value: https://saas-eu.mend.io
 
 jobs:
 - job: BuildOnMain
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   steps:
 ### Build the application with your required package manager.  The below example is for dotnet: ###
-    - script: dotnet restore yoursolutionfile.sln
+    - script: dotnet restore yoursolution.sln
       displayName: 'dotnet build'
 ### The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
     - script: |
@@ -53,33 +46,78 @@ jobs:
     
         ### Run a Mend Software Composition Analysis Scan
         echo Run Mend dependencies scan
-        mend dep -u -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --no-color | tee dep-results.txt
-        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/dep-results.txt"
+        mend dep -u -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --no-color --fail-policy > dep-results.txt
+        export dep_exit=$?
+        cat dep-results.txt
 
         ### Run a Mend Static Application Security Analysis Scan
         echo Start Mend code scan
-        mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename code-results
-        ### Move logs and output to folder that will be published later ###
+        mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename code-results --no-progress
+        export code_exit=$?
+
+        ### Log Clean Up ###
         mv ~/.mend/logs $(System.DefaultWorkingDirectory)
         mv $(System.DefaultWorkingDirectory)/dep-results.txt $(System.DefaultWorkingDirectory)/logs/dep-results.txt
+        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/logs/dep-results.txt"
+
+        ### Collect Mend variables for API Usage ###
+        export WS_PROJECTTOKEN=$(grep -oP "(?<=token=)[^&]+" $(System.DefaultWorkingDirectory)/logs/dep-results.txt)
+        MEND_API2=$(echo "${MEND_URL}" | sed 's/saas/api-saas/g')
+        LOGIN_RESPONSE=$(curl -X POST "${MEND_API2}/api/v2.0/login" -H "Content-Type: application/json" -H 'Accept: application/json' \
+        -d '{"email": "'${MEND_EMAIL}'", "userKey": "'${MEND_USER_KEY}'" }')
+        WS_APIKEY=$(echo "${LOGIN_RESPONSE}" | jq -r '.retVal.orgUuid')
+
+        ### Run SBOM generator ###
+        pip install mend-sbom-export-cli
+        sbom_export_cli --user-key $MEND_USER_KEY --api-key $WS_APIKEY --url $MEND_URL --project $WS_PROJECTTOKEN --out $(System.DefaultWorkingDirectory)/logs
+
+        ### Dependency Reports ###
+        curl -o $(System.DefaultWorkingDirectory)/logs/riskreport.pdf -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
+        -d '{"requestType":"getProjectRiskReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+        curl -o $(System.DefaultWorkingDirectory)/logs/inventoryreport.xlsx -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
+        -d '{"requestType":"getProjectInventoryReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+        curl -o $(System.DefaultWorkingDirectory)/logs/duediligencereport.xlsx -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
+        -d '{"requestType":"getProjectDueDiligenceReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+
+        ### Handle Scan Exit Codes ###
+        mend_exits=$(env | grep exit)
+        if [[ $mend_exits == *"=9" ]]; then 
+          echo "A policy violation was found"
+          echo $mend_exits
+          exit 1
+        else
+          echo " Mend scans were success"
+        fi
       env:
       ### Authentication Environment Variables ###
         MEND_EMAIL: $(MEND_EMAIL)
         MEND_USER_KEY: $(MEND_USER_KEY)
+      ### SAST Thresholds
+        MEND_SAST_THRESHOLD_HIGH: 1
       displayName: 'Mend Unified CLI Scan'
 
       ### Publish logs and sarif results ###
     - publish: $(System.DefaultWorkingDirectory)/logs
       artifact: mend-logs
+      condition: succeededOrFailed()
     - publish: $(System.DefaultWorkingDirectory)/code-results.sarif
       artifact: CodeAnalysisLogs
+      condition: succeededOrFailed()
 
 - job: BuildOnRelease
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/v'))
   steps:
 ### Build the application with your required package manager.  The below example is for dotnet: ###
-    - script: dotnet restore yoursolutionfile.sln
+    - script: dotnet restore yoursolution.sln
       displayName: 'dotnet build'
+### Build the image ###
+    - script: |
+        docker compose version
+        docker compose build
+        docker compose config --images > imagestoscan.txt
+      env:
+        TAG: $(Build.SourceBranchName)
+      displayName: 'Docker Compose Build'
 ### The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
     - script: |
         echo Downloading Mend CLI
@@ -88,68 +126,118 @@ jobs:
     
         ### Run a Mend Software Composition Analysis Scan
         echo Run Mend dependencies scan
-        mend dep -u -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --no-color | tee dep-results.txt
-        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/dep-results.txt"
+        mend dep -u -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --no-color --fail-policy > dep-results.txt
+        export dep_exit=$?
+        cat dep-results.txt
 
         ### Run a Mend Static Application Security Analysis Scan
         echo Start Mend code scan
-        mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename $(System.DefaultWorkingDirectory)/sarif-results/code-results   
-      env:
-        ### Authentication Environment Variables ###
-        MEND_EMAIL: $(MEND_EMAIL)
-        MEND_USER_KEY: $(MEND_USER_KEY)
-      displayName: 'Mend Unified CLI Scan'
+        mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename $(System.DefaultWorkingDirectory)/sarif-results/code-results --no-progress
+        export code_exit=$?
 
-    - script: docker build . -t $(Build.Repository.Name):$(Build.SourceBranchName)
-      displayName: 'Docker image build'
+        ### Run a Mend Image Scan ###
+        echo "Run Mend image scan"
+        echo "Showing images that will be scanned"
+        cat imagestoscan.txt
+        file="imagestoscan.txt"
+        while IFS= read -r line
+        do
+          echo "Scanning the following image with name of $line"
+          slashline=$(echo "$line" | sed 's/\//_/g')
+          escline=$(echo "$slashline" | sed 's/:/_/')
+          mend image $line --filename ~/.mend/logs/$escline.sarif --format sarif --fail-policy
+          image_exit=$?
+          echo "${escline}_exit=${image_exit}" >> image_exits.txt
+          echo "${image_exit} is the current exit code for ${escline}"
+        done < "$file"
 
-    - script: |
-        echo Run Mend image scan
-        mend image $(Build.Repository.Name):$(Build.SourceBranchName) --filename $(System.DefaultWorkingDirectory)/sarif-results/image-results.sarif --format sarif
-        ### Move logs and output to folder that will be published later ###
+        ### Log Clean Up ###
         mv ~/.mend/logs $(System.DefaultWorkingDirectory)
         mv $(System.DefaultWorkingDirectory)/dep-results.txt $(System.DefaultWorkingDirectory)/logs/dep-results.txt
+        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/logs/dep-results.txt"
+
+        ### Collect Mend variables for API Usage ###
+        export WS_PROJECTTOKEN=$(grep -oP "(?<=token=)[^&]+" $(System.DefaultWorkingDirectory)/logs/dep-results.txt)
+        MEND_API2=$(echo "${MEND_URL}" | sed 's/saas/api-saas/g')
+        LOGIN_RESPONSE=$(curl -X POST "${MEND_API2}/api/v2.0/login" -H "Content-Type: application/json" -H 'Accept: application/json' \
+        -d '{"email": "'${MEND_EMAIL}'", "userKey": "'${MEND_USER_KEY}'" }')
+        WS_APIKEY=$(echo "${LOGIN_RESPONSE}" | jq -r '.retVal.orgUuid')
+
+        ### Run SBOM generator ###
+        pip install mend-sbom-export-cli
+        sbom_export_cli --user-key $MEND_USER_KEY --api-key $WS_APIKEY --url $MEND_URL --project $WS_PROJECTTOKEN --out $(System.DefaultWorkingDirectory)/logs
+
+        ### Dependency Reports ###
+        curl -o $(System.DefaultWorkingDirectory)/logs/riskreport.pdf -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
+        -d '{"requestType":"getProjectRiskReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+        curl -o $(System.DefaultWorkingDirectory)/logs/inventoryreport.xlsx -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
+        -d '{"requestType":"getProjectInventoryReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+        curl -o $(System.DefaultWorkingDirectory)/logs/duediligencereport.xlsx -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
+        -d '{"requestType":"getProjectDueDiligenceReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+  
+        ### Handle Scan Exit Codes ###
+        mend_exits=$(env | grep exit)
+        image_exits=$(cat image_exits.txt)
+        if [[ $mend_exits == *"=9" || $image_exits == *"=9" ]]; then 
+          echo "A policy violation was found"
+          echo $mend_exits
+          echo $image_exits
+          exit 1
+        else
+          echo " Mend scans were success"
+        fi
+
       env:
         ### Authentication Environment Variables ###
         MEND_EMAIL: $(MEND_EMAIL)
         MEND_USER_KEY: $(MEND_USER_KEY)
-      displayName: 'Mend Unified CLI Image Scan'
+        ### SAST Thresholds
+        MEND_SAST_THRESHOLD_HIGH: 1
+      displayName: 'Mend Unified CLI Scan'
 
-      ### Publish logs and sarif results ###
+    ### Publish logs and sarif results ###
     - publish: $(System.DefaultWorkingDirectory)/logs
       artifact: mend-logs
+      condition: succeededOrFailed()
     - publish: $(System.DefaultWorkingDirectory)/sarif-results
       artifact: CodeAnalysisLogs
+      condition: succeededOrFailed()
 
 - job: BuildOnPullRequest
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
   steps:
 ### Build the application with your required package manager.  The below example is for dotnet: ###
-    - script: dotnet restore yoursolutionfile.sln
+    - script: dotnet restore yoursolution.sln
       displayName: 'dotnet build'
 ### The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
     - script: |
         echo Downloading Mend CLI
         curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
-
+    
         ### Run a Mend Software Composition Analysis Scan
         echo Run Mend dependencies scan
-        mend dep -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --no-color | tee dep-results.txt
-        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/dep-results.txt"
+        mend dep -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --no-color > dep-results.txt
 
         ### Run a Mend Static Application Security Analysis Scan
         echo Start Mend code scan
-        mend code --offline -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename code-results
+        mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename code-results --no-progress
+
+        ### Log Clean Up ###
         mv ~/.mend/logs $(System.DefaultWorkingDirectory)
         mv $(System.DefaultWorkingDirectory)/dep-results.txt $(System.DefaultWorkingDirectory)/logs/dep-results.txt
+        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/logs/dep-results.txt"
       env:
       ### Authentication Environment Variables ###
         MEND_EMAIL: $(MEND_EMAIL)
         MEND_USER_KEY: $(MEND_USER_KEY)
+      ### SAST Thresholds
+        MEND_SAST_THRESHOLD_ONLY_NEW: true
       displayName: 'Mend Unified CLI Scan'
 
-      ### Publish logs and sarif results ###
+    ### Publish logs and sarif results ###
     - publish: $(System.DefaultWorkingDirectory)/logs
       artifact: mend-logs
+      condition: succeededOrFailed()
     - publish: $(System.DefaultWorkingDirectory)/code-results.sarif
       artifact: CodeAnalysisLogs
+      condition: succeededOrFailed()

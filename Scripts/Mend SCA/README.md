@@ -42,19 +42,26 @@ Then use your pipeline's [publish feature](../../CI-CD/README.md#publishing-mend
 ```
 export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
 export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
-  #RiskReport-Example
-curl -o ./whitesource/riskreport.pdf -X POST "${WS_URL}/api/v1.3" -H "Content-Type: application/json"  -d '{"requestType":"getProjectRiskReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
-curl -o ./whitesource/inventoryreport.xlsx -X POST "${WS_URL}/api/v1.3" -H "Content-Type: application/json"  -d '{"requestType":"getProjectInventoryReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
-curl -o ./whitesource/duediligencereport.xlsx -X POST "${WS_URL}/api/v1.3" -H "Content-Type: application/json"  -d '{"requestType":"getProjectDueDiligenceReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+
+## Risk Report
+curl -o ./whitesource/riskreport.pdf -X POST "${WS_URL}/api/v1.4" -H "Content-Type: application/json" \
+-d '{"requestType":"getProjectRiskReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+
+## Inventory Report
+curl -o ./whitesource/inventoryreport.xlsx -X POST "${WS_URL}/api/v1.4" -H "Content-Type: application/json" \
+-d '{"requestType":"getProjectInventoryReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+
+## DueDiligence Report
+curl -o ./whitesource/duediligencereport.xlsx -X POST "${WS_URL}/api/v1.4" -H "Content-Type: application/json" \
+-d '{"requestType":"getProjectDueDiligenceReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
 ```
 
 <br>
 <hr>
 
-## [SBOM Report Generation](./sbomreports.yml)
+## [SBOM Report Generation](https://github.com/mend-toolkit/Mend-SBOM-Export-CLI)
 
-In the above linked example, SPDX and CycloneDX async reports are called from the pipeline.  The reports can be downloaded from the User Interface or retrieved using [additional API requests](https://docs.mend.io/bundle/api_sca/page/reports_api_-_asynchronous.html)
-
+An example using the sbom-export-cli with Mend Unified CLI can be found in the [AzureDevOps Advanced example](../../CI-CD/AzureDevOps/Mend%20CLI/AzureDevOps-advanced-linux.yml)
 
 <br>
 <hr>
