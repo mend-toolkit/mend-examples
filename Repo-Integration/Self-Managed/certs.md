@@ -2,6 +2,8 @@
 
 **As of v23.8.1**
 
+Use the following instructions to enable Mend.io self-hosted repo integration to connect to a self-hosted SCM system (e.g, GitHub Enterprise) which uses a non-public certificate.
+
 ## Overview
 
 1. Configure docker host system with custom CA certs
