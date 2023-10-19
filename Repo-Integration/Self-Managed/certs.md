@@ -2,9 +2,11 @@
 
 **As of v23.8.1**
 
+Use the following instructions to enable Mend.io self-hosted repo integration to connect to a self-hosted SCM system (e.g, GitHub Enterprise) which uses a non-public certificate.
+
 ## Overview
 
-1. Configure host with custom CA certs
+1. Configure docker host system with custom CA certs
    * Confirm with successful ```curl``` to SCM system
 2. On docker host, export certs using:
    * On RPM-based distros (CentOS, RHEL, Amazon, etc):
@@ -13,7 +15,7 @@
    * On Debian-based distros (Ubuntu, etc):
      * ```update-ca-certificates``` (system)
      * ```update-java-ca-certificates``` (java keystore) - contact Mend for CLI utility
-3. Add cert volume mappings and environment variable to docker-compose.yaml or helm charts
+3. Add cert volume mappings and environment variable to docker-compose.yaml or helm charts (see next section).
 
 ## Container Configurations
 
