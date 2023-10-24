@@ -32,7 +32,7 @@ Example docker-compose.yaml snippet:
     # ...
     volumes:
       # handles certs for most system utilities and git
-      - /etc/pki/ca-trust/extracted/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
+      - /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem:/etc/ssl/certs/ca-certificates.crt
       # containerbase java install symlinks /opt/buildpack/ssl/cacerts into the jre security folder
       - /etc/pki/ca-trust/extracted/java/cacerts:/opt/buildpack/ssl/cacerts
     # ...
@@ -58,7 +58,7 @@ Example docker-compose.yaml snippet:
     # ...
     volumes:
       # handles certs for most system utilities and git
-      - /etc/pki/ca-trust/extracted/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
+      - /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem:/etc/ssl/certs/ca-certificates.crt
       # containerbase java install symlinks /opt/containerbase/ssl/cacerts into the jre security folder
       - /etc/pki/ca-trust/extracted/java/cacerts:/opt/containerbase/ssl/cacerts
 
