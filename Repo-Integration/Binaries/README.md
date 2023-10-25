@@ -9,7 +9,7 @@ This folder contains supplemental binaries for the Self-Hosted Repository Integr
 
 ## [Update Java ca-certificates](./update-java-ca-certificates)
 
-This utility is created by: https://github.com/swisscom/update-java-cacertificates.
+This utility is created by: https://github.com/swisscom/update-java-ca-certificates.
 The purpose of this utility is to create a keystore at /etc/ssl/java/cacerts without the need for Java. Here are the following steps to run this:
 
 1. Download update-java-ca-certificates binary with the command: ``curl https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Repo-Integration/Binaries/update-java-ca-certificates -o /usr/local/bin/update-java-ca-certificates``
