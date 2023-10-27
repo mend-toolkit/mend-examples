@@ -13,7 +13,7 @@
 # The following values should be added as environment variables with email and userKey being secrets
 #    MEND_URL: the mend url that you login to - (https://saas.mend.io) for example
 #    MEND_EMAIL: the user email for the mend platform account you wish to scan with
-#    MEND_USER_KEY: the token for the account you wish to scan with
+#    MEND_USER_KEY: the user key found under my profile for the user you wish to scan with
 
 name: 'mend-cli-scan'
 
@@ -37,7 +37,10 @@ jobs:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   steps:
 ### Build the application with your required package manager.  The below example is for dotnet: ###
-    - script: dotnet restore yoursolution.sln
+    - script: |
+        SLN=$(find ./ -type f -wholename "*.sln" | head -n 1)
+        echo "${SLN} is the solution that will be built"
+        dotnet restore ${SLN}
       displayName: 'dotnet build'
 ### The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
     - script: |
@@ -61,7 +64,7 @@ jobs:
         echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/logs/dep-results.txt"
 
         ### Collect Mend variables for API Usage ###
-        export WS_PROJECTTOKEN=$(grep -oP "(?<=token=)[^&]+" $(System.DefaultWorkingDirectory)/logs/dep-results.txt)
+        WS_PROJECTTOKEN=$(grep -oP "(?<=token=)[^&]+" $(System.DefaultWorkingDirectory)/logs/dep-results.txt)
         MEND_API2=$(echo "${MEND_URL}" | sed 's/saas/api-saas/g')
         LOGIN_RESPONSE=$(curl -X POST "${MEND_API2}/api/v2.0/login" -H "Content-Type: application/json" -H 'Accept: application/json' \
         -d '{"email": "'${MEND_EMAIL}'", "userKey": "'${MEND_USER_KEY}'" }')
@@ -84,6 +87,7 @@ jobs:
         if [[ $mend_exits == *"=9" ]]; then 
           echo "A policy violation was found"
           echo $mend_exits
+          awk '/Detected 1 Policy violations/,/Paths at risk/ {if (!/Paths at risk/) print}' $(System.DefaultWorkingDirectory)/logs/dep-results.txt
           exit 1
         else
           echo " Mend scans were success"
@@ -108,7 +112,10 @@ jobs:
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/v'))
   steps:
 ### Build the application with your required package manager.  The below example is for dotnet: ###
-    - script: dotnet restore yoursolution.sln
+    - script: |
+        SLN=$(find ./ -type f -wholename "*.sln" | head -n 1)
+        echo "${SLN} is the solution that will be built"
+        dotnet restore ${SLN}
       displayName: 'dotnet build'
 ### Build the image ###
     - script: |
@@ -207,7 +214,10 @@ jobs:
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
   steps:
 ### Build the application with your required package manager.  The below example is for dotnet: ###
-    - script: dotnet restore yoursolution.sln
+    - script: |
+        SLN=$(find ./ -type f -wholename "*.sln" | head -n 1)
+        echo "${SLN} is the solution that will be built"
+        dotnet restore ${SLN}
       displayName: 'dotnet build'
 ### The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
     - script: |
