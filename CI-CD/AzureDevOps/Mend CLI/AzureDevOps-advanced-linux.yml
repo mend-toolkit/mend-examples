@@ -9,7 +9,7 @@
 # mend dep will automatically use package managers and file system scanning to detect open source components.
 # mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
 
-# If you are NOT using a service user, and have multiple organizations, don't forget to scall the scope -s parameter to set the organization
+# If you are NOT using a service user, and have multiple organizations, don't forget to set the organization in the scope parameter
 # The following values should be added as environment variables with email and userKey being secrets
 #    MEND_URL: the mend url that you login to - (https://saas.mend.io) for example
 #    MEND_EMAIL: the user email for the mend platform account you wish to scan with
@@ -51,17 +51,29 @@ jobs:
         echo Run Mend dependencies scan
         mend dep -u -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --no-color --fail-policy > dep-results.txt
         export dep_exit=$?
+        if [[ "$dep_exit" == "9" ]]; then
+          echo "##vso[task.logissue type=warning;] Dependency scan policy violation"
+          echo "##vso[task.complete result=SucceededWithIssues;]"
+        else
+          echo "No policy violations found in dependencies scan"
+        fi
         cat dep-results.txt
+        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/dep-results.txt"
 
         ### Run a Mend Static Application Security Analysis Scan
         echo Start Mend code scan
         mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename code-results --no-progress
         export code_exit=$?
+        if [[ "$code_exit" == "9" ]]; then
+          echo "##vso[task.logissue type=warning;] Code scan threshold violation"
+          echo "##vso[task.complete result=SucceededWithIssues;]"
+        else
+          echo "No policy violations found in code scan"
+        fi
 
-        ### Log Clean Up ###
+        ### Logs Folder Cleanup ###
         mv ~/.mend/logs $(System.DefaultWorkingDirectory)
-        mv $(System.DefaultWorkingDirectory)/dep-results.txt $(System.DefaultWorkingDirectory)/logs/dep-results.txt
-        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/logs/dep-results.txt"
+        mv *results* $(System.DefaultWorkingDirectory)/logs/
 
         ### Collect Mend variables for API Usage ###
         WS_PROJECTTOKEN=$(grep -oP "(?<=token=)[^&]+" $(System.DefaultWorkingDirectory)/logs/dep-results.txt)
@@ -81,17 +93,6 @@ jobs:
         -d '{"requestType":"getProjectInventoryReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
         curl -o $(System.DefaultWorkingDirectory)/logs/duediligencereport.xlsx -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
         -d '{"requestType":"getProjectDueDiligenceReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
-
-        ### Handle Scan Exit Codes ###
-        mend_exits=$(env | grep exit)
-        if [[ $mend_exits == *"=9" ]]; then 
-          echo "A policy violation was found"
-          echo $mend_exits
-          awk '/Detected 1 Policy violations/,/Paths at risk/ {if (!/Paths at risk/) print}' $(System.DefaultWorkingDirectory)/logs/dep-results.txt
-          exit 1
-        else
-          echo " Mend scans were success"
-        fi
       env:
       ### Authentication Environment Variables ###
         MEND_EMAIL: $(MEND_EMAIL)
@@ -100,11 +101,11 @@ jobs:
         MEND_SAST_THRESHOLD_HIGH: 1
       displayName: 'Mend Unified CLI Scan'
 
-      ### Publish logs and sarif results ###
+    ### Publish logs and sarif results ###
     - publish: $(System.DefaultWorkingDirectory)/logs
-      artifact: mend-logs
+      artifact: mend-logs-reports
       condition: succeededOrFailed()
-    - publish: $(System.DefaultWorkingDirectory)/code-results.sarif
+    - publish: $(System.DefaultWorkingDirectory)/logs/code-results.sarif
       artifact: CodeAnalysisLogs
       condition: succeededOrFailed()
 
@@ -129,18 +130,30 @@ jobs:
     - script: |
         echo Downloading Mend CLI
         curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
-        mkdir $(System.DefaultWorkingDirectory)/sarif-results
     
         ### Run a Mend Software Composition Analysis Scan
         echo Run Mend dependencies scan
         mend dep -u -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --no-color --fail-policy > dep-results.txt
         export dep_exit=$?
+        if [[ "$dep_exit" == "9" ]]; then
+          echo "##vso[task.logissue type=warning;] Dependency scan policy violation"
+          echo "##vso[task.complete result=SucceededWithIssues;]"
+        else
+          echo "No policy violations found in dependencies scan"
+        fi
         cat dep-results.txt
+        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/dep-results.txt"
 
         ### Run a Mend Static Application Security Analysis Scan
         echo Start Mend code scan
-        mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename $(System.DefaultWorkingDirectory)/sarif-results/code-results --no-progress
+        mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename code-results --no-progress
         export code_exit=$?
+        if [[ "$code_exit" == "9" ]]; then
+          echo "##vso[task.logissue type=warning;] Code scan threshold violation"
+          echo "##vso[task.complete result=SucceededWithIssues;]"
+        else
+          echo "No policy violations found in code scan"
+        fi
 
         ### Run a Mend Image Scan ###
         echo "Run Mend image scan"
@@ -149,19 +162,24 @@ jobs:
         file="imagestoscan.txt"
         while IFS= read -r line
         do
-          echo "Scanning the following image with name of $line"
-          slashline=$(echo "$line" | sed 's/\//_/g')
+          slashline=$(echo "$line" | sed 's/\//-/g')
           escline=$(echo "$slashline" | sed 's/:/_/')
-          mend image $line --filename ~/.mend/logs/$escline.sarif --format sarif --fail-policy
+          echo "Scanning the image named $line with friendly name of $escline"
+          mend image $line -s *//$(Build.Repository.Name)//* --filter critical --fail-policy > $escline-results.txt
           image_exit=$?
-          echo "${escline}_exit=${image_exit}" >> image_exits.txt
-          echo "${image_exit} is the current exit code for ${escline}"
+          if [[ "$image_exit" == "9" ]]; then
+            echo "##vso[task.logissue type=warning;] Image scan policy violation in $escline"
+            echo "##vso[task.complete result=SucceededWithIssues;]"
+          else
+            echo "No policy violations found in $line scan"
+          fi
+          cat $escline-results.txt
+          echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/${escline}-results.txt"
         done < "$file"
 
-        ### Log Clean Up ###
+        ### Logs Folder Cleanup ###
         mv ~/.mend/logs $(System.DefaultWorkingDirectory)
-        mv $(System.DefaultWorkingDirectory)/dep-results.txt $(System.DefaultWorkingDirectory)/logs/dep-results.txt
-        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/logs/dep-results.txt"
+        mv *results* $(System.DefaultWorkingDirectory)/logs/
 
         ### Collect Mend variables for API Usage ###
         export WS_PROJECTTOKEN=$(grep -oP "(?<=token=)[^&]+" $(System.DefaultWorkingDirectory)/logs/dep-results.txt)
@@ -181,19 +199,6 @@ jobs:
         -d '{"requestType":"getProjectInventoryReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
         curl -o $(System.DefaultWorkingDirectory)/logs/duediligencereport.xlsx -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
         -d '{"requestType":"getProjectDueDiligenceReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
-  
-        ### Handle Scan Exit Codes ###
-        mend_exits=$(env | grep exit)
-        image_exits=$(cat image_exits.txt)
-        if [[ $mend_exits == *"=9" || $image_exits == *"=9" ]]; then 
-          echo "A policy violation was found"
-          echo $mend_exits
-          echo $image_exits
-          exit 1
-        else
-          echo " Mend scans were success"
-        fi
-
       env:
         ### Authentication Environment Variables ###
         MEND_EMAIL: $(MEND_EMAIL)
@@ -204,9 +209,9 @@ jobs:
 
     ### Publish logs and sarif results ###
     - publish: $(System.DefaultWorkingDirectory)/logs
-      artifact: mend-logs
+      artifact: mend-logs-reports
       condition: succeededOrFailed()
-    - publish: $(System.DefaultWorkingDirectory)/sarif-results
+    - publish: $(System.DefaultWorkingDirectory)/logs/code-results.sarif
       artifact: CodeAnalysisLogs
       condition: succeededOrFailed()
 
@@ -227,15 +232,16 @@ jobs:
         ### Run a Mend Software Composition Analysis Scan
         echo Run Mend dependencies scan
         mend dep -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --no-color > dep-results.txt
+        cat dep-results.txt
+        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/dep-results.txt"
 
         ### Run a Mend Static Application Security Analysis Scan
         echo Start Mend code scan
         mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename code-results --no-progress
 
-        ### Log Clean Up ###
+        ### Logs Folder Cleanup ###
         mv ~/.mend/logs $(System.DefaultWorkingDirectory)
-        mv $(System.DefaultWorkingDirectory)/dep-results.txt $(System.DefaultWorkingDirectory)/logs/dep-results.txt
-        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/logs/dep-results.txt"
+        mv *results* $(System.DefaultWorkingDirectory)/logs/
       env:
       ### Authentication Environment Variables ###
         MEND_EMAIL: $(MEND_EMAIL)
@@ -248,6 +254,6 @@ jobs:
     - publish: $(System.DefaultWorkingDirectory)/logs
       artifact: mend-logs
       condition: succeededOrFailed()
-    - publish: $(System.DefaultWorkingDirectory)/code-results.sarif
+    - publish: $(System.DefaultWorkingDirectory)/logs/code-results.sarif
       artifact: CodeAnalysisLogs
       condition: succeededOrFailed()

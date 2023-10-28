@@ -9,7 +9,7 @@
 # mend dep will automatically use package managers and file system scanning to detect open source components.
 # mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
 
-# If you are NOT using a service user, and have multiple organizations, don't forget to scall the scope -s parameter to set the organization
+# If you are NOT using a service user, and have multiple organizations, don't forget to set the organization in the scope parameter
 # The following values should be added as environment variables with email and userKey being secrets
 #    MEND_URL: the mend url that you login to - (https://saas.mend.io) for example
 #    MEND_EMAIL: the user email for the mend platform account you wish to scan with
