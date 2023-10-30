@@ -29,11 +29,11 @@ export MEND_URL="https://saas.mend.io"
 
 # The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
 # Run a Mend Software Composition Analysis Scan
-echo "Run Mend dependencies (SCA) scan"
+echo "Run Mend dependencies scan"
 mend dep -u
 
 # Run a Mend Static Application Security Analysis Scan
-echo "Run Mend code (SAST) scan"
+echo "Run Mend code scan"
 mend code
 
 # Build your image (basic docker example below)
@@ -42,5 +42,5 @@ export IMAGETAG=1.0
 docker build . -t $IMAGENAME:$IMAGETAG 
 
 # Run a Mend Container Image Scan
-echo "Run a Mend image scan"
+echo "Run Mend image scan"
 mend image $IMAGENAME:$IMAGETAG

@@ -8,7 +8,8 @@
 - The most important policy should always be first in the priority list since policies are triggered per library
 
 ## Recommendations
-When using the default [UA parameters](https://docs.mend.io/bundle/unified_agent/page/unified_agent_configuration_parameters.html#Policies) the below paramaters should be added to a blank config file or as environment variables to achieve the desired affects
+- The Unified Agent will exit with a -2 code that will break the majority of pipeline tools.  It is highly recommended to use the [Unified CLI](../../Mend%20CLI/CLIPolicyCheck.md) instead if your {package manager is supported}(https://docs.mend.io/bundle/integrations/page/configure_the_mend_cli_for_sca.html#Mend-CLI-SCA-supported-languages).
+- When using the default [UA parameters](https://docs.mend.io/bundle/unified_agent/page/unified_agent_configuration_parameters.html#Policies) the below paramaters should be added to a blank config file or as environment variables to achieve the desired affects
 
 ### Main or Default Branch
 Even though updateInventory=true by default the UA exits with a fail so the blocked results will **NOT** be in the user interface.   Violations will need to be viewed in the policyRejectionSummary.json & checkPolicies-json.txt within the whitesource folder
