@@ -1,0 +1,65 @@
+# ******** Mend Unified CLI Template for Azure DevOps ********
+#
+# You may wish to alter this file to override the build tool and Mend scanning technologies.
+# NOTE: Currently the Mend Platform does not support image scanning. Results can be viewed in the previous Mend UI by clicking the "Grid" next to the mend logo, and selecting "Cloud Native".
+#
+# For more configuration options, please check the technical documentation portal:
+# 📚 https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html
+#
+# ******** Description ********
+# mend image will automatically scan an image for vulnerabilities with Operating System packages, Open Source vulnerabilities, and for secrets.
+#
+# If you are NOT using a service user and have multiple organizations, don't forget to set the organization using the scope parameter
+# The following values should be added as environment variables with email and userkey being secrets
+# MEND_URL: the mend url that you login to - (https://saas.mend.io) for example
+# MEND_EMAIL: the user email for the mend platform account that you wish to scan with
+# MEND_USER_KEY: the user key found under my profile for the user you wish to scan with
+# IMAGE_NAME: The name/repository where the image should be stored/pulled from
+# IMAGE_TAG: The tag for the image that you have built
+
+name: 'mend-image-scan'
+
+# Define your own pipeline trigger here:
+# Below is defined a trigger for scanning on a push to the main branch and scanning on a push to release branches. This is considered an ideal time to scan an image so as to manage an image inventory with each version released.
+trigger:
+- master
+- release*
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: MEND_URL
+    value: https://saas.mend.io
+  - name: IMAGE_NAME
+    value: my-image
+  - name: IMAGE_TAG
+    value: $(Build.BuildId)
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Build an image
+      inputs:
+        repository: $(IMAGE_NAME)
+        command: build
+        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        tags: $(IMAGE_TAG)
+    - script: |
+        echo Downloading Mend CLI
+        curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+        
+        echo Run Mend Image Analysis
+        mend image $(IMAGE_NAME):$(IMAGE_TAG) 
+      env:
+        ### Authentication Environment Variable Secrets ###
+        MEND_EMAIL: $(MEND_EMAIL)
+        MEND_USER_KEY: $(MEND_USER_KEY)
+
