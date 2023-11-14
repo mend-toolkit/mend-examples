@@ -85,7 +85,10 @@ echo "BASE_DIR=${BASE_DIR}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "VERSION=$VERSION" >> ${REPO_INTEGRATION_DIR}/.env
 echo "SCM=$SCM" >> ${REPO_INTEGRATION_DIR}/.env
 echo "WS_ACTIVATION_KEY=${ws_key}" >> ${REPO_INTEGRATION_DIR}/.env
-echo "WS_UA_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
+echo "EXTERNAL_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
+## use for versions < 23.10.2 ## https://whitesource.atlassian.net/wiki/spaces/MEND/pages/2524153813/Advanced+Technical+Information ##
+## echo "WS_UA_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
+
 
 
 echo "${grn}Download Success!!!${end}"
