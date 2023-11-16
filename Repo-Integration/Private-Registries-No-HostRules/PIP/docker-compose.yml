@@ -18,6 +18,7 @@ services:
     restart: always
     extra_hosts:
       - "files.pythonhosted.org:127.0.0.1"
+      - "pypi.org:127.0.0.1"
     logging:
       driver: local
       options:
@@ -49,6 +50,7 @@ services:
     container_name: wss-scanner-ghe
     extra_hosts:
       - "files.pythonhosted.org:127.0.0.1"
+      - "pypi.org:127.0.0.1"
     environment:
       WS_UA_LOG_IN_CONSOLE: true
       LOG_LEVEL: DEBUG
