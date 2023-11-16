@@ -5,6 +5,7 @@ module.exports = {
 	}],
 	"hostRules": [
 		{
+			"hostType": "pypi",
 			"matchHost": process.env.PIP_REGISTRY,
 			"username": process.env.PIP_USER,
 			"password": process.env.PIP_PASS
