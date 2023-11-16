@@ -52,9 +52,9 @@ services:
     environment:
       WS_UA_LOG_IN_CONSOLE: true
       LOG_LEVEL: DEBUG
-      NPM_AUTH: <npm auth token> # NOT THE PASSWORD
       NPM_EMAIL: <artifactory email>
       NPM_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/api/npm/default-npm/
+      NPM_CONFIG_//<artifactory_instance>.jfrog.io/artifactory/api/npm/default-npm/:_auth: <npm auth token> # The NPM auth token is a b64 representation of username:password
     ports:
       - "9393:9393"
     volumes:

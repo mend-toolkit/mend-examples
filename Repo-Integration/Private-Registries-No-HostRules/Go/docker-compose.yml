@@ -7,9 +7,7 @@ services:
     container_name: remediate-server
     environment:
       LOG_LEVEL: DEBUG
-      GO_USER: <username>
-      GO_PASS: <password>
-      GO_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/api/go/default-go
+      GOPROXY: https://<username>:<password>@<artifactory-instance>.jfrog.io/artifactory/api/go/default-go/
     ports:
       - "8080:8080"
     volumes:
@@ -48,7 +46,7 @@ services:
     environment:
       WS_UA_LOG_IN_CONSOLE: true
       LOG_LEVEL: DEBUG
-      GO_PROXY: https://<artifactory_username>:<artifactory_password>@<artifactory_instance>.jfrog.io/artifactory/api/go/default-go
+      GOPROXY: https://<username>:<password>@<artifactory-instance>.jfrog.io/artifactory/api/go/default-go/
     ports:
       - "9393:9393"
     volumes:
