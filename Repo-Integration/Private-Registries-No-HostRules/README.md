@@ -44,11 +44,12 @@ For the remediate container, you need to match the registry to these 5 managers:
 As of the current writing, the Poetry package manager that is used in the scanner container is version 1.1.12. Due to this, there does not seem to be a good way to manage a private registry with Go without using host rules.
 
 #### Go
-Go has a very simple method for connecting to private registries as well. For the scanner, all you need is an environment variable that looks much like Pip's:
+Go has a very simple method for connecting to private registries as well. For the scanner and the remediate container, all you need is an environment variable that looks much like Pip's:
 ```
 GOPROXY: https://<user_email>:<user_password>@<artifactory_instance>.jfrog.io/artifactory/api/go/default-go
 ```
-For the remediate container, you only need to match the registry to the ``go`` manager.
+
+**_NOTE:_** The "go" datasource in Renovate does not support private registries. Therefore, GOPROXY must be used, and hostRules do not work. More information on this topic is here: https://docs.renovatebot.com/modules/datasource/go/
 
 #### Gradle
 For Gradle, we created two different methods of resolving Private Registries. With Groovy, and Kotlin.  
