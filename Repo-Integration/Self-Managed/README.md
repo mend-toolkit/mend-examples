@@ -1,7 +1,7 @@
 ![Logo](https://mend-toolkit-resources-public.s3.amazonaws.com/img/mend-io-logo-horizontal.svg)  
 
 > [!Warning]  
-**This should only be used for Proof of Concepts (PoC) as it does not implement many aspects of a production-ready integration including scaling, log management, load balancing.**  
+**This should only be used for Proof of Concepts (PoC) as it does not implement many aspects of a production-ready integration including scaling, log management, and load balancing.**  
 
 # Self-Managed Repository Integration Automation Scripts
 When used, these scripts will download the latest [repository integration](https://docs.mend.io/bundle/integrations/page/repo_integrations.html) and run via docker compose:
