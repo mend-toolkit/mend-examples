@@ -1,17 +1,17 @@
 #!/bin/bash
 # Prerequisites:
-# apt install jq curl xargs 
+# apt install jq curl
 # WS_USERKEY - An administrator's userkey
 # WS_EMAIL - The administrator's email
 # WS_APIKEY - API Key for organization
 # WS_API_URL - e.g. https://api-saas.mend.io/api/v2.0
 
 # Log into API 2.0 and get the JWT Token
-JWT_TOKEN=$(curl -s -X POST --location "$WS_API_URL/login" --header 'Content-Type: application/json' --data-raw "{\"email\": \"$WS_EMAIL\", \"userKey\": \"$WS_USERKEY\", \"orgToken\": \"$WS_APIKEY\"}" | jq '.retVal.jwtToken' | xargs )
+JWT_TOKEN=$(curl -s -X POST --location "$WS_API_URL/login" --header 'Content-Type: application/json' --data-raw "{\"email\": \"$WS_EMAIL\", \"userKey\": \"$WS_USERKEY\", \"orgToken\": \"$WS_APIKEY\"}" | jq -r '.retVal.jwtToken' )
 
 # Get all products
 PRODUCT_API_RESPONSE=$(curl -s --location "$WS_API_URL/orgs/$WS_APIKEY/products?pageSize=10000&page=0" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN")
-NUM_PRODUCTS=$(echo $PRODUCT_API_RESPONSE | jq '.additionalData.totalItems' | xargs)
+NUM_PRODUCTS=$(echo $PRODUCT_API_RESPONSE | jq -r '.additionalData.totalItems' )
 PRODUCTS=$(echo $PRODUCT_API_RESPONSE | jq '.retVal')
 
 OUTPUT="[]"
@@ -19,7 +19,7 @@ OUTPUT="[]"
 # Loop through each product in $PRODUCTS and get the uuid associated with it.
 for (( i=0; i<=$NUM_PRODUCTS-1; i++ ))
 do
-	CURRENT_PRODUCT_TOKEN=$(echo $PRODUCTS | jq ".[$i].uuid" | xargs)
+	CURRENT_PRODUCT_TOKEN=$(echo $PRODUCTS | jq -r ".[$i].uuid" )
 	echo "Getting Malicious Packages for Product $(($i+1))/$NUM_PRODUCTS: $CURRENT_PRODUCT_TOKEN"
 	
 	# Get all security alerts that have "MSC" in the name
