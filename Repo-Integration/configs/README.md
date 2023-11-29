@@ -16,8 +16,8 @@ In all .whitesource file update examples, you should replace the inherited organ
     },
     "enableRenovate": true,
     "extends": [
-       "config:base",
-       "github>whitesource/merge-confidence:beta",
+       "config:recommended",
+       "mergeConfidence:all-badges",
        "github>mend-toolkit/mend-examples//Repo-Integration/Renovate/smart-merge"
       ]
   }
