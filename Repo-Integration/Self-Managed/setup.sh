@@ -118,6 +118,7 @@ then
 fi
 
 if [ -z "${github_com_token}" ]
+then
     github_com_token=${GITHUB_COM_TOKEN}
 fi
 
