@@ -85,6 +85,7 @@ echo "BASE_DIR=${BASE_DIR}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "VERSION=$VERSION" >> ${REPO_INTEGRATION_DIR}/.env
 echo "SCM=$SCM" >> ${REPO_INTEGRATION_DIR}/.env
 echo "WS_ACTIVATION_KEY=${ws_key}" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GITHUB_COM_TOKEN=${github_com_token}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "EXTERNAL_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
 ## use for versions < 23.10.2 ## https://whitesource.atlassian.net/wiki/spaces/MEND/pages/2524153813/Advanced+Technical+Information ##
 ## echo "WS_UA_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
@@ -98,15 +99,32 @@ echo "${grn}Download Success!!!${end}"
 }
 
 function key_check(){
-## Look for Activation Key
-if [ -z "${ws_key}" ]
+## Look for Activation Key and github.com token
+if [ -z "${ws_key}" ] && [ -z "${WS_KEY}" ]
 then
     echo "${red}Please set your Activation Key as an environment variable using the following command in order to create the prop.json${end}"
-    echo "${cyn}export ws_key='replace-with-your-activation-key-inside-single-quotes'${end}"
+    echo "${cyn}export WS_KEY='replace-with-your-activation-key-inside-single-quotes'${end}"
     exit
-else
-    scm
 fi
+
+if [ -z "${ws_key}" ]
+then
+    ws_key=${WS_KEY}
+fi
+
+if [ -z "${github_com_token}" ] && [ -z "${GITHUB_COM_TOKEN}" ]
+then
+    echo "${red}Please set your github.com access token as an environment variable using the following command:${end}"
+    echo "${cyn}export GITHUB_COM_TOKEN='replace-with-your-github-token-inside-single-quotes'${end}"
+    exit
+fi
+
+if [ -z "${github_com_token}" ]
+then
+    github_com_token=${GITHUB_COM_TOKEN}
+fi
+
+scm
 
 }
 
