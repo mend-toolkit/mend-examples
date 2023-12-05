@@ -40,10 +40,14 @@ Execution instructions:
 ```export ws_key='your activation key between single quotes'```
 - Run the setup.sh script for your appropriate source control management system as shown in options above
 
-- Run docker compose depending on how it was installed
+- Run docker compose depending on how it was installed. Options defined -
+  - SCA only  - docker-compose.yaml
+  - SCA and SAST - docker-compose-sast.yaml
+    - **Note: this is currently only supported for GHE** [(a dedicated SAST scanner container)](https://docs.mend.io/bundle/integrations/page/deploy_with_docker.html#Target-Machine:-Run-the-Containers).
 
-```docker-compose up``` 
+```docker-compose -f <compose file> up```
 
 - Run docker compose in detached mode depending on how it was installed.
 
-```docker-compose up -d```
+```docker-compose -f <compose file> up -d```
+

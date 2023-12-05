@@ -89,7 +89,9 @@ echo "EXTERNAL_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
 ## use for versions < 23.10.2 ## https://whitesource.atlassian.net/wiki/spaces/MEND/pages/2524153813/Advanced+Technical+Information ##
 ## echo "WS_UA_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
 
-
+##  SAST related settings
+rm -rf ${REPO_INTEGRATION_DIR}/.env-sast
+echo "WS_SAST_SCAN_PREFIX=SAST_" >> ${REPO_INTEGRATION_DIR}/.env-sast
 
 echo "${grn}Download Success!!!${end}"
 
