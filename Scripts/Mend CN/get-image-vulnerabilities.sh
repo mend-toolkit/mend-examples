@@ -24,7 +24,7 @@
 # MEND_USER_KEY - An administrator's userkey
 # MEND_EMAIL - The administrator's email
 # WS_APIKEY - API Key for organization (optional)
-# MEND_URL - e.g. https://saas.mend.io/
+# MEND_URL - e.g. https://saas.mend.io
 
 MEND_API_URL=$(echo "${MEND_URL}" | sed -E 's/(saas|app)(.*)/api-\1\2\/api\/v2.0/g')
 
