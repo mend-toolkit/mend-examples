@@ -4,15 +4,17 @@
 # 
 # Users should edit this file to change any headings in the resulting CSV file that are not needed.
 # 
-# For more information on the APIs used, please check our REST API documentation page:
+# For more information on the APIs used, please check our REST API documentation pages:
 # 📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html
 # 📚 https://docs.mend.io/bundle/mend-container-image-api-2-0/page/index.html
 #
 # ******** Description ********
-# This script pulls all of the images in a Mend Container Image Organization and then retrieves vulnerabilities, outputting them in a .csv file
-# The process for this is relatively simple. 1. Log into the Mend API. 
+# This script pulls all of the images in a Mend Container Image Organization and then retrieves vulnerabilities, outputting them to a .csv file
+# The process for this is relatively simple. 
+# 1. Log into the Mend API. 
 # 2. Get all images associated with an organization. 
 # 3. Then get all vulnerabilities associated with each image.
+# 4. Output to a CSV
 # 
 # The WS_API_KEY environment variable is optional. If this is not specified in the script, then the Login API will
 # authenticate to the last organization the user accessed in the Mend UI.
@@ -52,23 +54,31 @@ IMAGES_RESPONSE=$(curl -s --location "$MEND_CN_API_URL/orguuid/$WS_APIKEY/images
 NUM_IMAGES=$(echo $IMAGES_RESPONSE | jq -r '.additionalInfo.totalItems' )
 IMAGES=$(echo $IMAGES_RESPONSE | jq '.data')
 
-
 # This starts as empty but will get added to as we pull vulnerabilities from each image.
 OUTPUT="[]"
 
 for (( i=0; i<$NUM_IMAGES; i++ ))
 do
 	CURRENT_IMAGE_UUID=$(echo $IMAGES | jq -r ".[$i].uuid" )
+	CURRENT_IMAGE_NAME=$(echo $IMAGES | jq -r ".[$i].repo" )
+	CURRENT_IMAGE_TAG=$(echo $IMAGES | jq -r ".[$i].tag")
 	
 	echo "Getting vulnerabilities for Image $(($i+1))/$NUM_IMAGES: $CURRENT_IMAGE_UUID"
 
 	# Get all vulnerabilities for this image
 	CURRENT_OUTPUT=$(curl -s --location "$MEND_CN_API_URL/orguuid/$WS_APIKEY/images/$CURRENT_IMAGE_UUID/vulnerabilities" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN" | jq '.data')
 
+	# The Mend API does not include image name and tag in the response, so let's add that to each JSON object
+	CURRENT_OUTPUT=$(echo $CURRENT_OUTPUT | jq "[ .[] | . + {\"imageName\": \"$CURRENT_IMAGE_NAME\"}]")
+	CURRENT_OUTPUT=$(echo $CURRENT_OUTPUT | jq "[ .[] | . + {\"imageTag\": \"$CURRENT_IMAGE_TAG\"}]")
+
 	# Combine with OUTPUT
 	OUTPUT=$(echo "$OUTPUT $CURRENT_OUTPUT" | jq -s add)
 done
 
+echo -e "\nWriting data to vulnerabilities.csv"
+
 # Define headers and then output as csv format. Users can remove whichever headers are necessary. Note: the CWEs object is an array, so outputting that to CSV is not handled well by jq
-echo $OUTPUT | jq --raw-output '["vulnerabilityId", "description", "epss", "publishedDate", "lastModifiedDated", "packageName", "sourcePackageName", "packageVersion", "packageType", "foundInLayer", "isFromBaseLayer", "layerNumber", "cvss", "severity", "fixVersion", "hasFix", "referenceUrls", "type", "vendorSeverity", "risk", "score"] as $headers | ( $headers, ( .[] | [ .vulnerabilityId, .description, .epss, .publishedDate, .lastModifiedDate, .packageName, .sourcePackageName, .packageVersion, .packageType, .foundInLayer, .isFromBaseLayer, .layerNumber, .cvss, .severity, .fixVersion, .hasFix,.referenceUrls, .type, .vendorSeverity, .risk, .score ] ) ) | @csv' > vulnerabilities.csv
+echo $OUTPUT | jq --raw-output '["imageName", "imageTag", "vulnerabilityId", "description", "epss", "publishedDate", "lastModifiedDated", "packageName", "sourcePackageName", "packageVersion", "packageType", "foundInLayer", "isFromBaseLayer", "layerNumber", "cvss", "severity", "fixVersion", "hasFix", "referenceUrls", "type", "vendorSeverity", "risk", "score"] as $headers | ( $headers, ( .[] | [.imageName, .imageTag, .vulnerabilityId, .description, .epss, .publishedDate, .lastModifiedDate, .packageName, .sourcePackageName, .packageVersion, .packageType, .foundInLayer, .isFromBaseLayer, .layerNumber, .cvss, .severity, .fixVersion, .hasFix,.referenceUrls, .type, .vendorSeverity, .risk, .score ] ) ) | @csv' > vulnerabilities.csv
+
 
