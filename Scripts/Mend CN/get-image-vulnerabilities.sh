@@ -2,7 +2,7 @@
 #
 # ******** Mend Script to pull all vulnerabilities for a Scanned Container Image ********
 # 
-# Users should edit this file to chane any headings in the resulting CSV file that are not needed.
+# Users should edit this file to change any headings in the resulting CSV file that are not needed.
 # 
 # For more information on the APIs used, please check our REST API documentation page:
 # 📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html
@@ -12,7 +12,7 @@
 # This script pulls all of the images in a Mend Container Image Organization and then retrieves vulnerabilities, outputting them in a .csv file
 # The process for this is relatively simple. 1. Log into the Mend API. 
 # 2. Get all images associated with an organization. 
-# 3. Then get all vulnerabilitie associated with each image.
+# 3. Then get all vulnerabilities associated with each image.
 # 
 # The WS_API_KEY environment variable is optional. If this is not specified in the script, then the Login API will
 # authenticate to the last organization the user accessed in the Mend UI.
@@ -26,7 +26,7 @@
 
 MEND_API_URL=$(echo "${MEND_URL}" | sed -E 's/(saas|app)(.*)/api-\1\2\/api\/v2.0/g')
 
-# If the API Key was not specificed then exclude from Login Request body.
+# If the API Key was not specified then exclude from Login Request body.
 if [ -z "$WS_APIKEY" ]
 then
 	echo "WS_APIKEY environment variable was not provided."
