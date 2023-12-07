@@ -24,7 +24,7 @@ When used, these scripts will download the latest [repository integration](https
 2) Lunch and remote into instance (ssh or console)
 3) Install Docker ([using the apt repository](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository))
 
-        a. Set up the Docker repository
+      a. Set up the Docker repository
 
   ```bash
   sudo apt-get update
