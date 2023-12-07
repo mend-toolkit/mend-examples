@@ -17,14 +17,14 @@ When used, these scripts will download the latest [repository integration](https
 
 ## Steps for a fast setup in AWS EC2
 1) Provision a new EC2 instance with the following characteristics:
-  - AMI: Ubuntu Server 22.04 LTS (HVM)
-  - Type: c4.xlarge or larger
-  - Storage: 40GiB (gp2) or higher
-  - Security group: See [here](https://docs.mend.io/bundle/integrations/page/advanced_technical_information.html#Required-Open-Ports) for integration requirements
+   - AMI: Ubuntu Server 22.04 LTS (HVM)
+   - Type: c4.xlarge or larger
+   - Storage: 40GiB (gp2) or higher
+   - Security group: See [here](https://docs.mend.io/bundle/integrations/page/advanced_technical_information.html#Required-Open-Ports) for integration requirements
 2) Lunch and remote into instance (ssh or console)
 3) Install Docker ([using the apt repository](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository))
 
-   a. Set up the Docker repository
+a. Set up the Docker repository
 
   ```bash
   sudo apt-get update
