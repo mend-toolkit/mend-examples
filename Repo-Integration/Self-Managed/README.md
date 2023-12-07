@@ -23,23 +23,23 @@ When used, these scripts will download the latest [repository integration](https
 - Security group: See [here](https://docs.mend.io/bundle/integrations/page/advanced_technical_information.html#Required-Open-Ports) for integration requirements
 2) Lunch and remote into instance (ssh or console)
 3) Install Docker ([using the apt repository](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository))
-    a. Set up the Docker repository
-  		`sudo apt-get update
-  		sudo apt-get install ca-certificates curl gnupg
-  		sudo install -m 0755 -d /etc/apt/keyrings
-  		curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-  		sudo chmod a+r /etc/apt/keyrings/docker.gpg
-  		echo \
-  		  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  		  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  		  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-  		sudo apt-get update`
-    b. Install Docker
-      `sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
-	  c. Setup up Docker for use as non-root user
-    	`sudo usermod -aG docker $USER
-    	newgrp docker`
-    d. Continue with steps below
+a. Set up the Docker repository
+`sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update`
+b. Install Docker
+`sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
+c. Setup up Docker for use as non-root user
+`sudo usermod -aG docker $USER
+newgrp docker`
+d. Continue with steps below
     		
 ## Options
 `setup.sh` options: **ghe**, **gls**, **bb** *optional* **version**
