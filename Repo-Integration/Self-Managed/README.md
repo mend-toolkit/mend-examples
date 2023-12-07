@@ -36,12 +36,17 @@ When used, these scripts will download the latest [repository integration](https
     "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
     $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-  sudo apt-get update```
+  sudo apt-get update
+  ```
 b. Install Docker
-`sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
+  ```bash
+  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  ```
 c. Setup up Docker for use as non-root user
-`sudo usermod -aG docker $USER
-newgrp docker`
+  ```bash
+  sudo usermod -aG docker $USER
+  newgrp docker
+  ```
 d. Continue with steps below
     		
 ## Options
