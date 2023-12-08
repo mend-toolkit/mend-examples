@@ -21,32 +21,32 @@ When used, these scripts will download the latest [repository integration](https
    - Type: c4.xlarge or larger
    - Storage: 40GiB (gp2) or higher
    - Security group: See [here](https://docs.mend.io/bundle/integrations/page/advanced_technical_information.html#Required-Open-Ports) for integration requirements
-2) Lunch and remote into instance (ssh or console)
+2) Launch and remote into instance (ssh or console)
 3) Install Docker ([using the apt repository](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository))
-
-      a. Set up the Docker repository
-
-       sudo apt-get update
-       sudo apt-get install ca-certificates curl gnupg
-       sudo install -m 0755 -d /etc/apt/keyrings
-       curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-       sudo chmod a+r /etc/apt/keyrings/docker.gpg
-       echo \
-         "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-         $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-         sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-       sudo apt-get update
-      
-      b. Install Docker
-      
-       sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-  
-      c. Setup up Docker for use as non-root user
-   
-       sudo usermod -aG docker $USER
-       newgrp docker
-  
-      d. Continue with steps below
+   - Set up the Docker repository
+   ```shell
+    sudo apt-get update
+    sudo apt-get install ca-certificates curl gnupg
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get update
+    ```     
+   - Install Docker
+   ```shell
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+   ```
+   - Setup up Docker for use as [non-root user](https://docs.docker.com/engine/install/linux-postinstall)
+   ```shell
+   sudo groupadd docker
+   sudo usermod -aG docker $USER
+   ```
+   - Ensure docker works as the current user with ```docker version``` 
+   - Continue with the steps below
     		
 ## Options
 `setup.sh` options: **ghe**, **gls**, **bb** *optional* **version**
@@ -58,7 +58,7 @@ Options Defined:
 
 **bb** - Bitbucket Server
 
-**version** - If left blank, latest version is installed. [Available versions](https://docs.mend.io/bundle/integrations/page/mend_developer_integrations_release_notes.html)
+**version** - If left blank, the latest version is installed. [Available versions](https://docs.mend.io/bundle/integrations/page/mend_developer_integrations_release_notes.html)
 
 For custom CA information, please see the [certificate readme](./certs.md)
 
@@ -88,4 +88,3 @@ Execution instructions:
 - Run docker compose in detached mode depending on how it was installed.
 
 ```docker compose -f <compose file> up -d```
-
