@@ -26,7 +26,6 @@ When used, these scripts will download the latest [repository integration](https
 
       a. Set up the Docker repository
 
-       ````bash
        sudo apt-get update
        sudo apt-get install ca-certificates curl gnupg
        sudo install -m 0755 -d /etc/apt/keyrings
@@ -37,8 +36,7 @@ When used, these scripts will download the latest [repository integration](https
          $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
          sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
        sudo apt-get update
-       ````
-
+      
       b. Install Docker
       
        ```bash
