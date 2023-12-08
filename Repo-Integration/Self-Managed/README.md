@@ -83,8 +83,8 @@ Execution instructions:
   - SCA and SAST - docker-compose-sast.yaml
     - **Note: this is currently only supported for GHE** [(a dedicated SAST scanner container)](https://docs.mend.io/bundle/integrations/page/deploy_with_docker.html#Target-Machine:-Run-the-Containers).
 
-```docker compose -f <compose file> up```
+```docker-compose -f <compose file> up```
 
-- Run docker compose in detached mode depending on how it was installed.
+- Run docker-compose in detached mode depending on how it was installed.
 
 ```docker compose -f <compose file> up -d```
