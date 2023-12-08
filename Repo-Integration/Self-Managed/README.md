@@ -42,8 +42,8 @@ When used, these scripts will download the latest [repository integration](https
    ```
    - Setup up Docker for use as [non-root user](https://docs.docker.com/engine/install/linux-postinstall)
    ```shell
-   sudo groupadd docker
    sudo usermod -aG docker $USER
+   newgrp docker
    ```
    - Ensure docker works as the current user with ```docker version``` 
    - Continue with the steps below
