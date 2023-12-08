@@ -39,16 +39,12 @@ When used, these scripts will download the latest [repository integration](https
       
       b. Install Docker
       
-       ```bash
        sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-       ```
   
       c. Setup up Docker for use as non-root user
    
-       ```bash
        sudo usermod -aG docker $USER
        newgrp docker
-       ```
   
       d. Continue with steps below
     		
