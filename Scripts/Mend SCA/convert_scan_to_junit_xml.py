@@ -20,7 +20,32 @@ The execution process looks like:
 4. Run the processor against the ingested object.
 5. Output to XML file.
 
+******** Usage ********
+After creating a scan.json file with the Mend CLI, make sure to install the appropriate dependencies before running this script.
+
+Which Python executable to use:
+Typically after installing python, its possible that you can't just run "python" from the command line as the name of the executable may include the version.
+Some variations of this could look like:
+* python <command>
+* python3
+* python36
+* python37
+* python310
+
+A good way of figuring out what python executable you have is by running the command "which python."
+
+Optional: If you would like, you can run this script in a virtual environment so as to not change your system-level python packages. To do this, run:
+python -m venv .venv
+From there, you can activate the virtual environment using one of the commands found in this section: https://docs.python.org/3/library/venv.html#how-venvs-work
+
+Next, make sure to install the appropriate dependencies:
+pip install declxml
+
+Finally, make sure the INPUT_FILE variable is pointing to the correct file and then run the script:
+python convert_scan_to_junit_xml.py
+
 Pre-requisites:
+apt-get install python39
 pip install declxml
 INPUT_FILE
 """
