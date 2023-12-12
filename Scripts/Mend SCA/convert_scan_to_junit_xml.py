@@ -1,5 +1,6 @@
 import json
 import declxml as xml
+import sys
 
 """
 ******** Mend Script to Convert CLI SCA Scan JSON Files to JUnit XML Files ********
@@ -21,28 +22,10 @@ The execution process looks like:
 5. Output to XML file.
 
 ******** Usage ********
-After creating a scan.json file with the Mend CLI, make sure to install the appropriate dependencies before running this script.
+After creating a scan.json file with the Mend CLI, make sure to install the appropriate dependencies before running this script. Afterwards, you can run the script with:
+python3 convert_scan_to_junit_xml.py [input-file] [output-file]
 
-Which Python executable to use:
-Typically after installing python, its possible that you can't just run "python" from the command line as the name of the executable may include the version.
-Some variations of this could look like:
-* python <command>
-* python3
-* python36
-* python37
-* python310
-
-A good way of figuring out what python executable you have is by running the command "which python."
-
-Optional: If you would like, you can run this script in a virtual environment so as to not change your system-level python packages. To do this, run:
-python -m venv .venv
-From there, you can activate the virtual environment using one of the commands found in this section: https://docs.python.org/3/library/venv.html#how-venvs-work
-
-Next, make sure to install the appropriate dependencies:
-pip install declxml
-
-Finally, make sure the INPUT_FILE variable is pointing to the correct file and then run the script:
-python convert_scan_to_junit_xml.py
+Optional Arguments: if input-file and output-file are not specified, then the values used will be "scan.json" and "scan_junit.xml" respectively.
 
 Pre-requisites:
 apt-get install python39
@@ -50,8 +33,6 @@ pip install declxml
 INPUT_FILE
 """
 
-INPUT_FILE="scan.json"
-OUTPUT_FILE="scan_junit.xml"
 SPACE_INDENT=2
 SPACE_CHAR=" "
 
@@ -67,12 +48,17 @@ def translate_recursively(search_dict, field) -> int:
         if key == field:
             for dependency in search_dict[key]:
                 current_depth = max(current_depth, translate_recursively(dependency, "children"))
-                dependency["properties"] = [
-                    {"name": "dependencyFile", "value": dependency["dependencyFile"]},
-                    {"name": "license", "value": ", ".join(dependency["licenses"])}
-                ]
-                del dependency["dependencyFile"]
-                del dependency["licenses"]
+                dependency["properties"] = []
+                if "dependencyFile" in dependency:
+                    dependency["properties"].append({"name": "dependencyFile", "value": dependency["dependencyFile"]})
+                    del dependency["dependencyFile"]
+                
+                if "licenses" in dependency:
+                    dependency["properties"].append({"name": "licenses", "value": ", ".join(dependency["licenses"])})
+                    del dependency["licenses"]
+                    
+                if dependency["properties"] == []:
+                    del dependency["properties"]
 
         elif isinstance(value, dict):
             translate_recursively(value, field)
@@ -95,31 +81,21 @@ def translate_properties(json_object) -> int:
     max_depth = 0
     for dependency in json_object:
         max_depth = max(translate_recursively(dependency, "children"), max_depth)
-        dependency["properties"] = [
-            {"name": "dependencyFile", "value": dependency["dependencyFile"]},
-            {"name": "license", "value": ", ".join(dependency["licenses"])}
-        ]
-        del dependency["dependencyFile"]
-        del dependency["licenses"]
+        dependency["properties"] = []
+        if "dependencyFile" in dependency:
+            dependency["properties"].append({"name": "dependencyFile", "value": dependency["dependencyFile"]})
+            del dependency["dependencyFile"]
+        
+        if "licenses" in dependency:
+            dependency["properties"].append({"name": "licenses", "value": ", ".join(dependency["licenses"])})
+            del dependency["licenses"]
+            
+        if dependency["properties"] == []:
+            del dependency["properties"]
+            
     return max_depth - 1
 
-
-def main():
-    # Read file and output to object
-    print(f"Getting file contents for: {INPUT_FILE}")
-    with open(INPUT_FILE, "r") as file:
-        json_file_as_object = json.loads(file.read())
-        
-    # Translate object and get max recursion depth for processing
-    max_depth = translate_properties(json_file_as_object) 
-        
-    # Format and add "testsuites/testsuite/testcase" into the object so it gets printed out properly.
-    testsuites = {
-        'testsuite': {
-            'testcase': json_file_as_object
-        }
-    }
-    
+def create_processor(max_depth: int) -> xml.RootProcessor:
     # Create our base "child processor". 
     # Our next for loop does the same thing, but will nest it until max_depth is reached.
     print("Creating document processor")
@@ -128,7 +104,7 @@ def main():
         xml.array(xml.dictionary('property', [
             xml.string('.', attribute="name"),
             xml.string('.', attribute="value")
-        ]), nested="properties"),
+        ], required=False), nested="properties"),
         xml.string('system-out', required=False),
         xml.string('system-err', required=False)
     ], required=False, alias="children")
@@ -139,7 +115,7 @@ def main():
             xml.array(xml.dictionary('property', [
                 xml.string('.', attribute="name"),
                 xml.string('.', attribute="value")
-            ]), nested="properties"),
+            ], required=False), nested="properties"),
             xml.string('system-out', required=False),
             xml.string('system-err', required=False),
             xml.array(child_processor)
@@ -155,13 +131,45 @@ def main():
                 xml.array(xml.dictionary('property', [
                     xml.string('.', attribute="name"),
                     xml.string('.', attribute="value")
-                ]), nested="properties"),
+                ], required=False), nested="properties"),
                 xml.string('system-out', required=False),
                 xml.string('system-err', required=False),
                 xml.array(child_processor)
             ]))
         ])
     ])
+    
+    return scan_processor
+
+
+def main():
+    # Set INPUT_FILE and OUTPUT_FILE if specified.
+    if len(sys.argv) >= 2:
+        INPUT_FILE=sys.argv[1]
+    else:
+        INPUT_FILE="scan.json"
+    
+    if len(sys.argv) == 3:
+        OUTPUT_FILE=sys.argv[2]
+    else:
+        OUTPUT_FILE="scan_junit.xml"
+    
+    # Read file and output to object
+    print(f"Getting file contents for: {INPUT_FILE}")
+    with open(INPUT_FILE, "r") as file:
+        json_file_as_object = json.loads(file.read())
+        
+    # Translate object and get max recursion depth for processing
+    max_depth = translate_properties(json_file_as_object) 
+    
+    scan_processor = create_processor(max_depth)
+        
+    # Format and add "testsuites/testsuite/testcase" into the object so it gets printed out properly.
+    testsuites = {
+        'testsuite': {
+            'testcase': json_file_as_object
+        }
+    }
     
     #Output to XMLFile
     print(f"Processing {INPUT_FILE}...")
