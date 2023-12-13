@@ -23,7 +23,7 @@ services:
         tag: "remediate-server"
 
   app:
-    build:
+    build: 
       context: ${BASE_DIR}/${VERSION}/wss-${SCM}-app/docker
     image: wss-${SCM}-app:${CONTROLLER}
     container_name: wss-${SCM}-app
@@ -32,7 +32,7 @@ services:
     ports:
       - "9494:9494"
       - "5678:5678"
-    volumes:
+    volumes: 
       - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
     depends_on:
       graylog:
@@ -70,8 +70,8 @@ services:
         tag: "wss-scanner"
 
   mongodb:
+    image: "mongo:5.0"
     hostname: "mongodb"
-    image: "mongo:5.0.13"
     volumes:
       - "mongodb_data:/data/db"
     restart: "on-failure"
@@ -92,25 +92,25 @@ services:
       nofile:
         soft: 65536
         hard: 65536
-      ports:
-        - "8999:8999/tcp" # DataNode API
-        - "9200:9200/tcp"
-        - "9300:9300/tcp"
-      volumes:
-        - "graylog-datanode:/var/lib/graylog-datanode"
-      restart: "on-failure"
-      depends_on:
-        - "mongodb"
+    ports:
+      - "8999:8999/tcp" #DataNode API
+      - "9200:9200/tcp"
+      - "9300:9300/tcp"
+    volumes:
+      - "graylog-datanode:/var/lib/graylog-datanode"
+    restart: "on-failure"
+    depends_on:
+      - "mongodb"
 
   graylog:
-    hostname: "graylog-server"
     image: "graylog/graylog:5.2"
+    hostname: "graylog-server"
     depends_on:
       mongodb:
         condition: "service_started"
     entrypoint: "/usr/bin/tini -- wait-for-it datanode:9200 -- /docker-entrypoint.sh"
     environment:
-      GRAYLOG_NODE_ID_FILE: "/usr/share/graylog/data/data/node-id"
+      GRAYLOG_NODE_ID_FILE: "/usr/share/graylog/data/data/node_id"
       GRAYLOG_PASSWORD_SECRET: "${GRAYLOG_PASSWORD_SECRET}"
       GRAYLOG_ROOT_PASSWORD_SHA2: "${GRAYLOG_ROOT_PASSWORD_SHA2}"
       GRAYLOG_HTTP_BIND_ADDRESS: "0.0.0.0:9000"
@@ -118,9 +118,9 @@ services:
       GRAYLOG_MONGODB_URI: "mongodb://mongodb:27017/graylog"
       GRAYLOG_MESSAGE_JOURNAL_DIR: "journal"
     ports:
-      - "5140:5140/udp"   # Syslog
-      - "5140:5140/tcp"   # Syslog
-      - "9000:9000/tcp"   # Server API
+      - "5140:5140/udp" #Syslog
+      - "5140:5140/tcp" #Syslog
+      - "9000:9000/tcp" #Server API
     volumes:
       - "graylog_data:/usr/share/graylog/data/data"
       - "graylog_config:/usr/share/graylog/data/config"
@@ -133,10 +133,10 @@ services:
     restart: "on-failure"
 
 volumes:
-  mongodb_data:
-  graylog-datanode:
-  graylog_data:
-  graylog_journal:
+  mongodb_data: 
+  graylog-datanode: 
+  graylog_data: 
+  graylog_journal: 
   graylog_config:
         
 networks: 
