@@ -45,6 +45,12 @@ export graylog_root_password='the password you would like to use to login to gra
 
 - Run the setup.sh script for your appropriate source control management system as shown in options above
 
+- Run the following commands to increase your memory map count for graylog's elasticsearch.
+```
+sudo echo "vm.max_map_count=262144" >> /etc/sysctl.conf
+sudo sysctl -p
+```
+
 - Run docker compose depending on how it was installed. Options defined -
   - SCA only  - docker-compose.yaml
   - SCA and SAST - docker-compose-sast.yaml
