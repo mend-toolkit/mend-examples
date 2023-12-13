@@ -47,7 +47,7 @@ export graylog_root_password='the password you would like to use to login to gra
 
 - Run the following commands to increase your memory map count for graylog's elasticsearch.
 ```
-sudo echo "vm.max_map_count=262144" >> /etc/sysctl.conf
+sudo sh -c 'echo "vm.max_map_count=262144" >> /etc/sysctl.conf'
 sudo sysctl -p
 ```
 
