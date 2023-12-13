@@ -74,7 +74,7 @@ echo "${grn}${MEND_DIR}/prop.json created successfully${end}"
 
 # Add Graylog Password and Secret
 GRAYLOG_PASSWORD_SECRET="$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 64; echo)"
-GRAYLOG_ROOT_PASSWORD_SHA2="$(echo -n ${GRAYLOG_ROOT_PASSWORD} | shasum -a 256 | cut -d ' ' -f 1)
+GRAYLOG_ROOT_PASSWORD_SHA2="$(echo -n ${GRAYLOG_ROOT_PASSWORD} | shasum -a 256 | cut -d ' ' -f 1)"
 
 ## Grab scanner tags
 CONTROLLER=$(grep -v ^\# ${BASE_DIR}/$VERSION/build.sh | grep . | awk -F "[ ]" 'NR==1 {print $4}' | awk -F ":" '{print $2}')
@@ -139,8 +139,7 @@ then
     exit
 fi
 
-if [ -z "${graylog_root_password}"]
-
+if [ -z "${graylog_root_password}" ]
 then
     graylog_root_password=${GRAYLOG_ROOT_PASSWORD}
 fi
