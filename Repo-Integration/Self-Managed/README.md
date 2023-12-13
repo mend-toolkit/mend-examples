@@ -70,3 +70,7 @@ export graylog_root_password='the password you would like to use to login to gra
   - Two inputs that send API requests periodically for the Scanner and Remediate containers healthcheck endpoints.
   - Dashboards for searching the integration containers individually.
   - Dashboards showing statistics pulled from the healthcheck API inputs.
+
+## Stopping the Integration
+
+In the event that the integration needs to be stopped, please use the command: `docker-compose -f <docker-compose.yaml file> down` to stop the integration. This will ensure that graylog stops gracefully and no data corruption occurs.
