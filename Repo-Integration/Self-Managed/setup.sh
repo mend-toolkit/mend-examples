@@ -72,6 +72,10 @@ cp ${BASE_DIR}/$VERSION/wss-configuration/config/prop.json ${BASE_DIR}/prop.json
 sed -i 's/your-activation-key/fakevalue/1' ${BASE_DIR}/prop.json
 echo "${grn}${MEND_DIR}/prop.json created successfully${end}"
 
+# Add Graylog Password and Secret
+GRAYLOG_PASSWORD_SECRET="$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 64; echo)"
+GRAYLOG_ROOT_PASSWORD_SHA2="$(echo -n ${GRAYLOG_ROOT_PASSWORD} | shasum -a 256 | cut -d ' ' -f 1)
+
 ## Grab scanner tags
 CONTROLLER=$(grep -v ^\# ${BASE_DIR}/$VERSION/build.sh | grep . | awk -F "[ ]" 'NR==1 {print $4}' | awk -F ":" '{print $2}')
 SCANNER=$(grep -v ^\# ${BASE_DIR}/$VERSION/build.sh | grep . | awk -F "[ ]" 'NR==2 {print $4}'| awk -F ":" '{print $2}')
@@ -87,6 +91,10 @@ echo "SCM=$SCM" >> ${REPO_INTEGRATION_DIR}/.env
 echo "WS_ACTIVATION_KEY=${ws_key}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "GITHUB_COM_TOKEN=${github_com_token}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "EXTERNAL_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
+echo "LOG_FORMAT=json" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}" >> ${REPO_INTEGRATION_DIR}/.env
+
 ## use for versions < 23.10.2 ## https://whitesource.atlassian.net/wiki/spaces/MEND/pages/2524153813/Advanced+Technical+Information ##
 ## echo "WS_UA_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
 
@@ -122,6 +130,19 @@ fi
 if [ -z "${github_com_token}" ]
 then
     github_com_token=${GITHUB_COM_TOKEN}
+fi
+
+if [ -z "${graylog_root_password}" ] && [ -z "${GRAYLOG_ROOT_PASSWORD}" ]
+then
+    echo "${red}Please set your Graylog Root Password by using the following command. This will be used to log in as admin after creating the instance:${end}"
+    echo "${cyn}export GRAYLOG_ROOT_PASSWORD='replace-with-your-desired-password-inside-single-quotes'${end}"
+    exit
+fi
+
+if [ -z "${graylog_root_password}"]
+
+then
+    graylog_root_password=${GRAYLOG_ROOT_PASSWORD}
 fi
 
 scm
