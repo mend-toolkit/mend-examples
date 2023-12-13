@@ -60,7 +60,7 @@ export graylog_root_password='the password you would like to use to login to gra
   - Run `docker-compose logs --follow` in a terminal to get the username and password for first time login
   - Navigate to http://localhost:9000 and log in with username: `admin` and password: `the password shown in the graylog logs`
   - Follow the setup steps and keep all of the defaults.
-  - After setup is finished. Log into the platform with with the username/password you set in `$GRAYLOG_ROOT_PASSWORD`
+  - After setup is finished. Log into the platform with with the username: admin and the password you set in `$GRAYLOG_ROOT_PASSWORD`
   - Go to `System -> Content Packs` and upload and install the `mend-graylog-content-pack.json` included in this repo. NOTE: uploading and installing are two different steps.
   - After the content pack is installed and a brief delay, the Mend Repo Integration should start and automatically pipe all logs to the graylog server.
 
