@@ -128,6 +128,7 @@ services:
       - "graylog_data:/usr/share/graylog/data/data"
       - "graylog_config:/usr/share/graylog/data/config"
       - "graylog_journal:/usr/share/graylog/data/journal"
+      - "${MEND_DIR}/graylog/:/usr/share/graylog/data/contentpacks"
     healthcheck:
       test: "bash -c 'printf \"GET / HTTP/1.1\n\n\" > /dev/tcp/0.0.0.0/5140; exit $?;'"
       interval: 30s
