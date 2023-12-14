@@ -106,7 +106,7 @@ echo "${grn}Download Success!!!${end}"
 
 
 echo -e "\n${cyn}Please run the following commands on your system to make appropriate memory changes for graylog:${end}"
-echo "${cyn}sudo echo \"vm.max_map_count=262144{end}\" >> /etc/sysctl.conf${end}"
+echo "${cyn}sudo sh -c echo \"vm.max_map_count=262144{end}\" >> /etc/sysctl.conf${end}"
 echo "${cyn}sudo sysctl -p${end}"
 
 

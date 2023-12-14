@@ -46,21 +46,17 @@ export graylog_root_password='the password you would like to use to login to gra
 - Run the setup.sh script for your appropriate source control management system as shown in options above
 
 - Run the following commands to increase your memory map count for graylog's elasticsearch.
-```
+```shell
 sudo sh -c 'echo "vm.max_map_count=262144" >> /etc/sysctl.conf'
 sudo sysctl -p
 ```
 
-- Run docker compose depending on how it was installed. Options defined -
+- Run docker compose in detached mode depending on how it was installed. Options defined -
   - SCA only  - docker-compose.yaml
   - SCA and SAST - docker-compose-sast.yaml
     - **Note: this is currently only supported for GHE** [(a dedicated SAST scanner container)](https://docs.mend.io/bundle/integrations/page/deploy_with_docker.html#Target-Machine:-Run-the-Containers).
 
-```docker-compose -f <compose file> up```
-
-- Run docker compose in detached mode depending on how it was installed.
-
-```docker-compose -f <compose file> up -d```
+```docker compose -f <compose file> up```
 
 - After running this, graylog will start, and the integration will wait until graylog has been fully configured to accept input from the integration. 
   - Run `docker-compose logs --follow` in a terminal to get the username and password for first time login
@@ -79,4 +75,16 @@ sudo sysctl -p
 
 ## Stopping the Integration
 
-In the event that the integration needs to be stopped, please use the command: `docker-compose -f <docker-compose.yaml file> down` to stop the integration. This will ensure that graylog stops gracefully and no data corruption occurs.
+In the event that the integration needs to be stopped, please use the command: `docker compose -f <docker-compose.yaml file> down` to stop the integration. This will ensure that graylog stops gracefully and no data corruption occurs.
+
+## Basic Troubleshooting
+Removing graylog volumes
+```shell
+docker compose down
+docker volume rm $(docker volume ls | grep graylog | cut -d ' ' -f6)
+```
+Graylog also has some anonymous containers for the certificates that are installed.  If problems occuring during the installation it is recommended to remove all dangling containers and restart the installation
+```shell
+docker compose down
+docker volume rm $(docker volume ls -qf dangling=true)
+```
