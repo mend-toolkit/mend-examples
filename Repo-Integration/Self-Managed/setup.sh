@@ -78,7 +78,7 @@ GRAYLOG_ROOT_PASSWORD_SHA2="$(echo -n ${graylog_root_password} | shasum -a 256 |
 
 # Move Graylog Content Pack to Mend directory
 mkdir -p ${MEND_DIR}/graylog
-cp ${REPO_INTEGRATION_DIR}/mend-graylog-content-pack.json ${MEND_DIR}/graylog/mend-graylog-content-pack.jsonj
+cp ${REPO_INTEGRATION_DIR}/mend-graylog-content-pack.json ${MEND_DIR}/graylog/mend-graylog-content-pack.json
 
 ## Grab scanner tags
 CONTROLLER=$(grep -v ^\# ${BASE_DIR}/$VERSION/build.sh | grep . | awk -F "[ ]" 'NR==1 {print $4}' | awk -F ":" '{print $2}')
@@ -110,7 +110,7 @@ echo "${grn}Download Success!!!${end}"
 
 
 echo -e "\n${cyn}Please run the following commands on your system to make appropriate memory changes for graylog:${end}"
-echo "${cyn}sudo sh -c echo \"vm.max_map_count=262144{end}\" >> /etc/sysctl.conf${end}"
+echo "${cyn}sudo sh -c 'echo \"vm.max_map_count=262144\" >> /etc/sysctl.conf'${end}"
 echo "${cyn}sudo sysctl -p${end}"
 
 
