@@ -97,8 +97,8 @@ sudo sysctl -p
   - Navigate to http://localhost:9000 and log in with username: `admin` and password: `the password shown in the graylog logs`
   - Follow the setup steps and keep all of the defaults.
   - After setup is finished. Log into the platform with with the username: admin and the password you set in `$graylog_root_password`
-  - Go to `System -> Content Packs` and upload and install the `mend-graylog-content-pack.json` included in this repo. NOTE: uploading and installing are two different steps.
-  - After the content pack is installed and a brief delay, the Mend Repo Integration should start and automatically pipe all logs to the graylog server.
+  - Graylog will automatically install the Mend Content Pack and start accepting input from the integrations. 
+  - Once this occurs, the Repository Integration will start.
 
 - Features of the Mend Graylog Content Pack
   - An input for all of the repo integration logs.

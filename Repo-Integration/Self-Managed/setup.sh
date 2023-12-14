@@ -76,6 +76,10 @@ echo "${grn}${MEND_DIR}/prop.json created successfully${end}"
 GRAYLOG_PASSWORD_SECRET="$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 64; echo)"
 GRAYLOG_ROOT_PASSWORD_SHA2="$(echo -n ${graylog_root_password} | shasum -a 256 | cut -d ' ' -f 1)"
 
+# Move Graylog Content Pack to Mend directory
+mkdir -p ${MEND_DIR}/graylog
+cp ${REPO_INTEGRATION_DIR}/mend-graylog-content-pack.json ${MEND_DIR}/graylog/mend-graylog-content-pack.jsonj
+
 ## Grab scanner tags
 CONTROLLER=$(grep -v ^\# ${BASE_DIR}/$VERSION/build.sh | grep . | awk -F "[ ]" 'NR==1 {print $4}' | awk -F ":" '{print $2}')
 SCANNER=$(grep -v ^\# ${BASE_DIR}/$VERSION/build.sh | grep . | awk -F "[ ]" 'NR==2 {print $4}'| awk -F ":" '{print $2}')
