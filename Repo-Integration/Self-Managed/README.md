@@ -92,6 +92,12 @@ sudo sh -c 'echo "vm.max_map_count=262144" >> /etc/sysctl.conf'
 sudo sysctl -p
 ```
 
+**NOTE: Please remove the following lines from the docker-compose file if you are running on Windows with Docker Desktop**
+```
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+```
+
 - Run docker compose in detached mode for your desired setup. Options defined -
   - SCA only ```docker compose up -d```
   - SCA and SAST ```docker compose -f docker-compose-sast.yaml up -d```

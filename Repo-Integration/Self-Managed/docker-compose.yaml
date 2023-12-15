@@ -108,6 +108,8 @@ services:
     depends_on:
       mongodb:
         condition: "service_started"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     entrypoint: "/usr/bin/tini -- wait-for-it datanode:9200 -- /docker-entrypoint.sh"
     environment:
       GRAYLOG_NODE_ID_FILE: "/usr/share/graylog/data/data/node_id"
