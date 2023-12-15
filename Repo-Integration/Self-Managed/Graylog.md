@@ -3,7 +3,7 @@
 If you are new to Graylog, then there might be some confusion on search queries, how the dashboards work, etc. This documentation is meant to bridge the gap between the [Graylog Documentation](https://go2docs.graylog.org/5-2/home.htm) and Mend's implementation of it for the Repository Integrations.
 
 ### Searches
-Searching in graylog is simplistic in nature, and no information or formatting is saved on the "Searches" page after navigating away from it. This means that if you create some widgets or a specific way of searching, then you should save that information to a Dashboard to refer back to later. Typically, there will be three main ways of searching.  
+Searching in graylog is simplistic in nature, and no information or formatting is saved on the "Searches" page after navigating away from it. This means that if you create some widgets or a specific way of searching, then you should save that information to a [Dashboard](#Dashboards) to refer back to later. Typically, there will be three main ways of searching.  
 - "\<keyword\>" - This method simply just filters for a keyword(s) in the full message received by the server.  
 `"/payload/healthcheck"` <- Only shows messages that have the string "/payload/healthcheck"  
 
