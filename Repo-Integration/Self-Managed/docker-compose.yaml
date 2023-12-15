@@ -79,12 +79,8 @@ services:
   datanode:
     image: "graylog/graylog-datanode:5.2"
     hostname: "datanode-1"
-    environment:
-      GRAYLOG_DATANODE_NODE_ID_FILE: "/var/lib/graylog-datanode/node-id"
-      GRAYLOG_DATANODE_PASSWORD_SECRET: "${GRAYLOG_PASSWORD_SECRET}"
-      GRAYLOG_DATANODE_ROOT_PASSWORD_SHA2: "${GRAYLOG_ROOT_PASSWORD_SHA2}"
-      GRAYLOG_DATANODE_MONGODB_URI: "mongodb://mongodb:27017/graylog"
-      GRAYLOG_DATANODE_DATA_DIR: "/var/lib/graylog-datanode"
+    env_file:
+      - .env
     ulimits:
       memlock:
         hard: -1
@@ -111,17 +107,8 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     entrypoint: "/usr/bin/tini -- wait-for-it datanode:9200 -- /docker-entrypoint.sh"
-    environment:
-      GRAYLOG_NODE_ID_FILE: "/usr/share/graylog/data/data/node_id"
-      GRAYLOG_PASSWORD_SECRET: "${GRAYLOG_PASSWORD_SECRET}"
-      GRAYLOG_ROOT_PASSWORD_SHA2: "${GRAYLOG_ROOT_PASSWORD_SHA2}"
-      GRAYLOG_HTTP_BIND_ADDRESS: "0.0.0.0:9000"
-      GRAYLOG_HTTP_EXTERNAL_URI: "http://localhost:9000/"
-      GRAYLOG_MONGODB_URI: "mongodb://mongodb:27017/graylog"
-      GRAYLOG_MESSAGE_JOURNAL_DIR: "journal"
-      GRAYLOG_CONTENT_PACKS_AUTO_INSTALL: "mend-graylog-content-pack.json"
-      GRAYLOG_CONTENT_PACKS_DIR: "data/contentpacks"
-      GRAYLOG_CONTENT_PACKS_LOADER_ENABLED: "true"
+    env_file:
+      - .env
     ports:
       - "5140:5140/udp" #Syslog
       - "5140:5140/tcp" #Syslog

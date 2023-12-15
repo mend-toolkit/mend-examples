@@ -97,8 +97,22 @@ echo "WS_ACTIVATION_KEY=${ws_key}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "GITHUB_COM_TOKEN=${github_com_token}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "EXTERNAL_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
 echo "LOG_FORMAT=json" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_NODE_ID_FILE=/usr/share/graylog/data/data/node_id" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_HTTP_BIND_ADDRESS=0.0.0.0:9000" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_HTTP_EXTERNAL_URI=http://localhost:9000/" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_MONGODB_URI=mongodb://mongodb:27017/graylog" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_MESSAGE_JOURNAL_DIR=journal" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_CONTENT_PACKS_AUTO_INSTALL=mend-graylog-content-pack.json" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_CONTENT_PACKS_DIR=data/contentpacks" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_CONTENT_PACKS_LOADER_ENABLED=true" >> ${REPO_INTEGRATION_DIR}/.env
 echo "GRAYLOG_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "GRAYLOG_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_DATANODE_NODE_ID_FILE=/var/lib/graylog-datanode/node-id" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_DATANODE_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_DATANODE_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_DATANODE_MONGODB_URI=mongodb://mongodb:27017/graylog" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_DATANODE_DATA_DIR=/var/lib/graylog-datanode" >> ${REPO_INTEGRATION_DIR}/.env
+
 
 ## use for versions < 23.10.2 ## https://whitesource.atlassian.net/wiki/spaces/MEND/pages/2524153813/Advanced+Technical+Information ##
 ## echo "WS_UA_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env

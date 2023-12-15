@@ -14,6 +14,7 @@ When used, these scripts will download the latest [repository integration](https
 
 ## Prerequisites
 - Docker, Docker Compose, git, wget, SCM Repository instance up and running
+- Make sure that Ports 9000 and 5678 are open and accessible on the machine you will be running the integration on.
 
 ## Steps for a fast setup in AWS EC2
 1) Provision a new EC2 instance with the following characteristics:
