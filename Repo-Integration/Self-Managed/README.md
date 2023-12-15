@@ -92,12 +92,6 @@ sudo sh -c 'echo "vm.max_map_count=262144" >> /etc/sysctl.conf'
 sudo sysctl -p
 ```
 
-**NOTE: Please remove the following lines from the docker-compose file if you are running on Windows with Docker Desktop**
-```
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-```
-
 - Run docker compose in detached mode for your desired setup. Options defined -
   - SCA only ```docker compose up -d```
   - SCA and SAST ```docker compose -f docker-compose-sast.yaml up -d```
@@ -106,18 +100,17 @@ sudo sysctl -p
 - After running this, wait until all containers are created.  Do not be concerned if the self-managed-graylog container has errored out as unhealthy.  This will occur until the manual setup below been performed.
   - Run `docker compose logs --follow` in a terminal to get the username and password for first time login
   - Navigate to http://your-host-ip-address:9000 and log in with username: `admin` and password: `the password shown in the graylog logs`
-  - Follow the setup steps and keep all of the defaults.
-  - After clicking resume setup all containers should be created and healthy and Graylog will automatically install the Mend Content Pack and start accepting input from the integrations which will also start. 
-  - Log into the platform with with the username: admin and the password you set in `$graylog_root_password`
+  - Follow the setup steps and keep all of the defaults  
+  - After clicking resume setup all containers should be created and healthy and Graylog will automatically install the Mend Content Pack and start accepting input from the integrations which will also start  
+  - Log into the platform with with the username: admin and the password you set in `$graylog_root_password`  
+  - Click the Dashboards link at the top and view the Controller, Scanner, and Remediate Search Dashboards to ensure the integration is running, and Graylog is ingesting messages from the integration  
 
-**TODO** Add Steps to view Dashboard to ensure integration is running smoothly
-
-- Features of the Mend Graylog Content Pack
-  - An input for all of the repo integration logs.
-    - Extractors that allow for easy parsing of the repo integration logs.
-  - Two inputs that send API requests periodically for the Scanner and Remediate containers healthcheck endpoints.
-  - Dashboards for searching the integration containers individually.
-  - Dashboards showing statistics pulled from the healthcheck API inputs.
+- Features of the Mend Graylog Content Pack  
+  - An input for all of the repo integration logs  
+    - Extractors that allow for easy parsing of the repo integration logs  
+  - Two inputs that send API requests periodically for the Scanner and Remediate containers healthcheck endpoints  
+  - Dashboards for searching the integration containers individually  
+  - Dashboards showing statistics pulled from the healthcheck API inputs  
 
 ## Stopping the Integration
 
