@@ -72,6 +72,15 @@ cp ${BASE_DIR}/$VERSION/wss-configuration/config/prop.json ${BASE_DIR}/prop.json
 sed -i 's/your-activation-key/fakevalue/1' ${BASE_DIR}/prop.json
 echo "${grn}${MEND_DIR}/prop.json created successfully${end}"
 
+# Add Graylog Password and Secret
+GRAYLOG_PASSWORD_SECRET="$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 64; echo)"
+GRAYLOG_ROOT_PASSWORD_SHA2="$(echo -n ${graylog_root_password} | shasum -a 256 | cut -d ' ' -f 1)"
+
+# Move Graylog Content Pack to Mend directory
+rm -rf ${MEND_DIR}/graylog
+mkdir -p ${MEND_DIR}/graylog
+cp ${REPO_INTEGRATION_DIR}/mend-graylog-content-pack.json ${MEND_DIR}/graylog/mend-graylog-content-pack.json
+
 ## Grab scanner tags
 CONTROLLER=$(grep -v ^\# ${BASE_DIR}/$VERSION/build.sh | grep . | awk -F "[ ]" 'NR==1 {print $4}' | awk -F ":" '{print $2}')
 SCANNER=$(grep -v ^\# ${BASE_DIR}/$VERSION/build.sh | grep . | awk -F "[ ]" 'NR==2 {print $4}'| awk -F ":" '{print $2}')
@@ -87,6 +96,24 @@ echo "SCM=$SCM" >> ${REPO_INTEGRATION_DIR}/.env
 echo "WS_ACTIVATION_KEY=${ws_key}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "GITHUB_COM_TOKEN=${github_com_token}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "EXTERNAL_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
+echo "LOG_FORMAT=json" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_NODE_ID_FILE=/usr/share/graylog/data/data/node_id" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_HTTP_BIND_ADDRESS=0.0.0.0:9000" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_HTTP_EXTERNAL_URI=http://localhost:9000/" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_MONGODB_URI=mongodb://mongodb:27017/graylog" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_MESSAGE_JOURNAL_DIR=journal" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_CONTENT_PACKS_AUTO_INSTALL=mend-graylog-content-pack.json" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_CONTENT_PACKS_DIR=data/contentpacks" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_CONTENT_PACKS_LOADER_ENABLED=true" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_DATANODE_NODE_ID_FILE=/var/lib/graylog-datanode/node-id" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_DATANODE_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_DATANODE_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_DATANODE_MONGODB_URI=mongodb://mongodb:27017/graylog" >> ${REPO_INTEGRATION_DIR}/.env
+echo "GRAYLOG_DATANODE_DATA_DIR=/var/lib/graylog-datanode" >> ${REPO_INTEGRATION_DIR}/.env
+
+
 ## use for versions < 23.10.2 ## https://whitesource.atlassian.net/wiki/spaces/MEND/pages/2524153813/Advanced+Technical+Information ##
 ## echo "WS_UA_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
 
@@ -95,6 +122,12 @@ rm -rf ${REPO_INTEGRATION_DIR}/.env-sast
 echo "WS_SAST_SCAN_PREFIX=SAST_" >> ${REPO_INTEGRATION_DIR}/.env-sast
 
 echo "${grn}Download Success!!!${end}"
+
+
+echo -e "\n${cyn}Please run the following commands on your system to make appropriate memory changes for graylog:${end}"
+echo "${cyn}sudo sh -c 'echo \"vm.max_map_count=262144\" >> /etc/sysctl.conf'${end}"
+echo "${cyn}sudo sysctl -p${end}"
+
 
 }
 
@@ -122,6 +155,18 @@ fi
 if [ -z "${github_com_token}" ]
 then
     github_com_token=${GITHUB_COM_TOKEN}
+fi
+
+if [ -z "${graylog_root_password}" ] && [ -z "${GRAYLOG_ROOT_PASSWORD}" ]
+then
+    echo "${red}Please set your Graylog Root Password by using the following command. This will be used to log in as admin after creating the instance:${end}"
+    echo "${cyn}export GRAYLOG_ROOT_PASSWORD='replace-with-your-desired-password-inside-single-quotes'${end}"
+    exit
+fi
+
+if [ -z "${graylog_root_password}" ]
+then
+    graylog_root_password=${GRAYLOG_ROOT_PASSWORD}
 fi
 
 scm

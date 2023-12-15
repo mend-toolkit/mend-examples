@@ -14,6 +14,7 @@ When used, these scripts will download the latest [repository integration](https
 
 ## Prerequisites
 - Docker, Docker Compose, git, wget, SCM Repository instance up and running
+- Make sure that Ports 9000 and 5678 are open and accessible on the machine you will be running the integration on.
 
 ## Steps for a fast setup in AWS EC2
 1) Provision a new EC2 instance with the following characteristics:
@@ -67,24 +68,59 @@ Execution instructions:
 
 - Clone the repository & give setup.sh permissions to run
 
-```git clone https://github.com/mend-toolkit/mend-examples.git && cd mend-examples/Repo-Integration/Self-Managed && chmod +x setup.sh```
-- Add your activation key as an environment variable which will be copied to the .env file which is created by setup.sh
+```shell
+git clone https://github.com/mend-toolkit/mend-examples.git 
+cd mend-examples/Repo-Integration/Self-Managed 
+chmod +x setup.sh
+```
+- Add the following environment variables which will be copied to the .env file that is created by setup.sh
+  - Activation key which is obtained from the Mend User Interface Integration page
+  - Github.com personal access token which is important for Remediate and Renovate to prevent Gitbub rate-limiting imposed on non-authenticated requests
+  - Graylog root password which is the password used to login to the Graylog platform after the intial setup
 
-```export ws_key='your activation key between single quotes'```
+```shell
+export ws_key='your activation key between single quotes'
+export github_com_token='replace-with-your-github-token-inside-single-quotes'
+export graylog_root_password='the password you would like to use to login to graylog'
+```
 
-- Add your Github.com access token. This is important for Remediate and Renovate to prevent Gitbub rate-limiting imposed on non-authenticated requests.
-
-`export GITHUB_COM_TOKEN='replace-with-your-github-token-inside-single-quotes'`
-  
 - Run the setup.sh script for your appropriate source control management system as shown in options above
 
-- Run docker compose depending on how it was installed. Options defined -
-  - SCA only  - docker-compose.yaml
-  - SCA and SAST - docker-compose-sast.yaml
+- Run the following commands to increase your memory map count for graylog's elasticsearch.
+
+```shell
+sudo sh -c 'echo "vm.max_map_count=262144" >> /etc/sysctl.conf'
+sudo sysctl -p
+```
+
+- Run docker compose in detached mode for your desired setup. Options defined -
+  - SCA only ```docker compose up -d```
+  - SCA and SAST ```docker compose -f docker-compose-sast.yaml up -d```
     - **Note: this is currently only supported for GHE** [(a dedicated SAST scanner container)](https://docs.mend.io/bundle/integrations/page/deploy_with_docker.html#Target-Machine:-Run-the-Containers).
 
-```docker compose -f <compose file> up```
+- After running this, wait until all containers are created.  Do not be concerned if the self-managed-graylog container has errored out as unhealthy.  This will occur until the manual setup below been performed.
+  - Run `docker compose logs --follow` in a terminal to get the username and password for first time login
+  - Navigate to http://your-host-ip-address:9000 and log in with username: `admin` and password: `the password shown in the graylog logs`
+  - Follow the setup steps and keep all of the defaults  
+  - After clicking resume setup all containers should be created and healthy and Graylog will automatically install the Mend Content Pack and start accepting input from the integrations which will also start  
+  - Log into the platform with with the username: admin and the password you set in `$graylog_root_password`  
+  - Click the Dashboards link at the top and view the Controller, Scanner, and Remediate Search Dashboards to ensure the integration is running, and Graylog is ingesting messages from the integration  
 
-- Run docker compose in detached mode depending on how it was installed.
+- Features of the Mend Graylog Content Pack  
+  - An input for all of the repo integration logs  
+    - Extractors that allow for easy parsing of the repo integration logs  
+  - Two inputs that send API requests periodically for the Scanner and Remediate containers healthcheck endpoints  
+  - Dashboards for searching the integration containers individually  
+  - Dashboards showing statistics pulled from the healthcheck API inputs  
 
-```docker compose -f <compose file> up -d```
+## Stopping the Integration
+
+In the event that the integration needs to be stopped, please use the command: `docker compose -f <docker-compose.yaml file> down` to stop the integration. This will ensure that graylog stops gracefully and no data corruption occurs.
+
+## Basic Troubleshooting
+Removing Graylog volumes
+```shell
+docker compose down
+docker volume rm $(docker volume ls | grep graylog | cut -d ' ' -f6)
+docker volume rm self-managed_mongodb_data
+```
