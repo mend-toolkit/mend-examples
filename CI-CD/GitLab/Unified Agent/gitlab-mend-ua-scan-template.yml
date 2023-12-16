@@ -1,0 +1,74 @@
+# ******** Mend Unified Agent Template for Gitlab CI ********
+#
+# You may wish to alter this file to override the build tool and Mend scanning technologies.
+#
+# For more configuration options, please check the technical documentation portal:
+# 📚 https://docs.mend.io/bundle/unified_agent/page/getting_started_with_the_unified_agent.html
+# 📚 https://docs.mend.io/bundle/unified_agent/page/unified_agent_configuration_parameters.html
+
+# ******** Description ********
+# The following values should be added as environment variables with the values masked.
+#    WS_APIKEY: the api key found on the integrate tab of the Mend User Interface
+#    WS_USERKEY: the user key found under my profile for the user you wish to scan with
+
+
+stages:
+  - scan
+
+# The unified agent scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "dotnet restore"
+# Due to the way gitlab segments jobs and artifacts are not re-usable due to timestamps, we must re-build the project in the same job using presteps"
+## https://gitlab.com/gitlab-org/gitlab/-/issues/234078 ##
+
+mend_ua_scan:
+  stage: scan
+  variables:
+    ### Authentication Variables ###
+    WS_APIKEY: $APIKEY
+    WS_USERKEY: $USERKEY
+    WS_WSS_URL: "https://saas.whitesourcesoftware.com/agent"
+    WS_PRODUCTNAME: ${CI_PROJECT_NAMESPACE}
+    WS_PROJECTNAME: ${CI_PROJECT_NAME}_${CI_COMMIT_BRANCH}
+    ### PreSteps ###
+    WS_MAVEN_RUNPRESTEP: "true"
+    WS_NPM_RUNPRESTEP: "true"
+    WS_BOWER_RUNPRESTEP: "true"
+    WS_NUGET_RUNPRESTEP: "true"
+    WS_PAKET_RUNPRESTEP: "true"
+    WS_PYTHON_RUNPIPENVPRESTEP: "true"
+    WS_PYTHON_RUNPOETRYPRESTEP: "true"
+    WS_PYTHON_RESOLVESETUPFILES: "true"
+    WS_GO_COLLECTDEPENDENCIESATRUNTIME: "true"
+    WS_SBT_RUNPRESTEP: "true"
+    WS_R_RUNPRESTEP: "true"
+    WS_PHP_RUNPRESTEP: "true"
+    WS_RUBY_RUNBUNDLEINSTALL: "true"
+    WS_COCOAPODS_RUNPRESTEP: "true"
+    WS_CARGO_RUNPRESTEP: "true"
+    WS_HEX_RUNPRESTEP: "true"
+    WS_HASKELL_RUNPRESTEP: "true"
+    WS_OCAML_RUNPRESTEP: "true"
+    WS_BAZEL_RUNPRESTEP: "true"
+    ### Additional Configurations not part of default settings ###
+    ### Combine maven/gradle/sbt/ocaml multi modules into a single Mend project ###
+    WS_MAVEN_AGGREGATEMODULES: "true"
+    WS_GRADLE_AGGREGATEMODULES: "true"
+    WS_SBT_AGGREGATEMODULES: "true"
+    WS_OCAML_AGGREGATEMODULES: "true"
+    ### exclude binary matching ###
+    WS_EXCLUDES: "**/.*,**/node_modules,**/src/test,**/testdata,**/*sources.jar,**/*javadoc.jar,**/*.jar,**/*.war,**/*.ear,**/*.aar,**/*.dll,**/*.exe,**/*.msi,**/*.nupkg,**/*.egg,**/*.whl,**/*.tar.gz,**/*.gem,**/*.deb,**/*.udeb,**/*.dmg,**/*.drpm,**/*.rpm,**/*.pkg.tar.xz,**/*.apk,**/*.swf,**/*.swc,**/*.air,**/*.apk,**/*.zip,**/*.gzip,**/*.tar.bz2,**/*.tgz"
+
+  script: |
+    if ! command -v java &> /dev/null
+    then
+      echo "Java is not installed on this system, and is required for a Unified Agent scan"
+      exit 1
+    else
+      echo "Java is installed"
+    fi
+    echo Downloading Unified Agent
+    curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+    java -jar wss-unified-agent.jar
+  artifacts:
+    paths:
+      - whitesource
+    when: always
