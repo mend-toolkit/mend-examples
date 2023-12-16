@@ -15,9 +15,6 @@
 #    MEND_EMAIL: the user email for the mend platform account you wish to scan with
 #    MEND_USER_KEY: the user key found under my profile for the user you wish to scan with
 
-## Change default image to a relevant image for your build ##
-default:
-  image: maven:3.8-openjdk-11
 
 stages:
 #  - build
