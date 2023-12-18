@@ -31,8 +31,8 @@ steps:
     env:
       WS_APIKEY: $(APIKEY)
       WS_USERKEY: $(USERKEY)
-      WS_FILESYSTEMSCAN: false
       WS_WSS_URL: https://saas.mend.io/agent
-      WS_PRODUCTNAME: AZDO_$(System.TeamProject)
+      WS_PRODUCTNAME: $(System.TeamProject)
       WS_PROJECTNAME: $(Build.Repository.Name)_$(Build.SourceBranchName)
+      WS_EXCLUDES: "**/.*,**/node_modules,**/src/test,**/testdata,**/*sources.jar,**/*javadoc.jar,**/*.jar,**/*.war,**/*.ear,**/*.aar,**/*.dll,**/*.exe,**/*.msi,**/*.nupkg,**/*.egg,**/*.whl,**/*.tar.gz,**/*.gem,**/*.deb,**/*.udeb,**/*.dmg,**/*.drpm,**/*.rpm,**/*.pkg.tar.xz,**/*.apk,**/*.swf,**/*.swc,**/*.air,**/*.apk,**/*.zip,**/*.gzip,**/*.tar.bz2,**/*.tgz"
     displayName: Mend Unified Agent Scan
