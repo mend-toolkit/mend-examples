@@ -1,7 +1,7 @@
 ![Logo](https://mend-toolkit-resources-public.s3.amazonaws.com/img/mend-io-logo-horizontal.svg)  
 
 > [!Warning]  
-**This should only be used for Proof of Concepts (PoC) as it does not implement many aspects of a production-ready integration including scaling, log management, and load balancing.**  
+**This should only be used for Proof of Concepts (PoC) as it does not implement many aspects of a production-ready integration including scaling, load balancing, and fault tolerance.  For production rollout it is recommended to deploy using kubernetes.  Please contact your Customer Success Manager to engage with the Field Engineering team to learn more**  
 
 # Self-Managed Repository Integration Automation Scripts
 When used, these scripts will download the latest [repository integration](https://docs.mend.io/bundle/integrations/page/repo_integrations.html) and run via docker compose:
@@ -10,7 +10,7 @@ When used, these scripts will download the latest [repository integration](https
 - Scanner
 
 ## Supported Operating Systems
-- **Linux (Bash):**	CentOS, Debian, Ubuntu, RedHat
+- **Linux (Bash):**	Ubuntu
 
 ## Prerequisites
 - Docker, Docker Compose, git, wget, SCM Repository instance up and running
