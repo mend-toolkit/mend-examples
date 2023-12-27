@@ -73,8 +73,6 @@ do
 	for (( j=0; j<=$NUM_LIBRARIES-1; j++ ))
 	do
 		CURRENT_LIBRARY=$(echo $CURRENT_LIBRARIES | jq ".[$j]")
-		DIRECT_DEPENDENCY=$(echo $CURRENT_LIBRARY | jq -r ".directDependency")
-
 		LIBRARY_NAME=$(echo $CURRENT_LIBRARY | jq -r ".groupId")
 		LIBRARY_UUID=$(echo $CURRENT_LIBRARY | jq -r ".uuid")
 		LIBRARY_VERSION=$(echo $CURRENT_LIBRARY | jq -r ".version")
@@ -102,11 +100,10 @@ do
 			RETURN_LIBRARY=$(jq --null-input \
 				--arg libraryName "$LIBRARY_NAME" \
 				--arg libraryVersion "$LIBRARY_VERSION" \
-				--arg directDependency "$DIRECT_DEPENDENCY" \
 				--arg product "$LIBRARY_PRODUCT" \
 				--arg project "$LIBRARY_PROJECT" \
 				--arg releaseDate "$RELEASE_DATE" \
-				'[{"libraryName": $libraryName, "libraryVersion": $libraryVersion, "directDependency": $directDependency, "product": $product, "project": $project, "releaseDate": $releaseDate}]')
+				'[{"libraryName": $libraryName, "libraryVersion": $libraryVersion, "productName": $product, "projectName": $project, "releaseDate": $releaseDate}]')
 			
 			# This adds the current library to the list of libraries that need to be reported
 			OUTPUT=$(echo "$OUTPUT $RETURN_LIBRARY" | jq -s add)
@@ -124,9 +121,8 @@ echo -e "Output: \n$(echo $OUTPUT | jq '.')"
 # 	{
 #		"libraryName": "<library_name>",
 #		"libraryVersion": "<library_version>",
-#		"directDependency": "<true|false>",
-#		"product": "<product_name>",
-#		"project": "<project_name>",
+#		"productName": "<product_name>",
+#		"projectName": "<project_name>",
 #		"releaseDate": "<release_date>"
 #	},
 #	{
