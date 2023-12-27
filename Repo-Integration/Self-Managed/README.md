@@ -98,15 +98,14 @@ sudo sysctl -p
   - SCA and SAST ```docker compose -f docker-compose-sast.yaml up -d```
     - **Note: this is currently only supported for GHE** [(a dedicated SAST scanner container)](https://docs.mend.io/bundle/integrations/page/deploy_with_docker.html#Target-Machine:-Run-the-Containers).
 
-- After running this, wait until all containers are created.  Do not be concerned if the self-managed-graylog container has errored out as unhealthy.  This will occur until the manual setup below been performed.
+- After running this, wait until all containers are created.  Do not be concerned if the self-managed-graylog container has errored out as unhealthy.  This will occur until the manual setup below been performed.  If the occurs, you will need to rerun the ```docker compose up``` commmand.  The Mend repo integration containers will not start unless the Graylog healthcheck passes which runs every 30 secs which occurs on every startup.
   - Run `docker compose logs --follow` in a terminal to get the username and password for first time login
   - Navigate to http://your-host-ip-address:9000 and log in with username: `admin` and password: `the password shown in the graylog logs`
   - Follow the setup steps and keep all of the defaults  
   - After clicking resume setup all containers should be created and healthy and Graylog will automatically install the Mend Content Pack and start accepting input from the integrations which will also start  
   - Log into the platform with with the username: admin and the password you set in `$graylog_root_password`  
   - Click the Dashboards link at the top and view the Controller, Scanner, and Remediate Search Dashboards to ensure the integration is running, and Graylog is ingesting messages from the integration
-    - Search for "Controller Startup Checks" in the Controller Search Dashbord to see the Mend Repo Integration Startup table
-- The Mend repo integration containers will not start unless the Graylog healthcheck passes which runs every 30 secs.  This occurs on every startup.
+    - Search for ```Controller Startup Checks``` in the Controller Search Dashbord to see the Mend Repo Integration Startup table
 
 
 - Features of the Mend Graylog Content Pack  

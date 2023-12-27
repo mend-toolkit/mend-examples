@@ -169,6 +169,11 @@ then
     graylog_root_password=${GRAYLOG_ROOT_PASSWORD}
 fi
 
+if [[ $(lsb_release -is) != "Ubuntu" ]]; then
+    echo "This script is only supported on Ubuntu distributions"
+    exit 1
+fi
+
 scm
 
 }
