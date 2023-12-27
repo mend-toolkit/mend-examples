@@ -98,7 +98,7 @@ sudo sysctl -p
   - SCA and SAST ```docker compose -f docker-compose-sast.yaml up -d```
     - **Note: this is currently only supported for GHE** [(a dedicated SAST scanner container)](https://docs.mend.io/bundle/integrations/page/deploy_with_docker.html#Target-Machine:-Run-the-Containers).
 
-- After running this, wait until all containers are created.  Do not be concerned if the self-managed-graylog container has errored out as unhealthy.  This will occur until the manual setup below been performed.  If the occurs, you will need to rerun the ```docker compose up``` commmand.  The Mend repo integration containers will not start unless the Graylog healthcheck passes which runs every 30 secs which occurs on every startup.
+- After running this, wait until all containers are created.  Do not be concerned if the self-managed-graylog container has errored out as unhealthy.  This will occur until the manual setup below been performed.  If this occurs, you will need to rerun the ```docker compose up``` commmand.  The Mend repo integration containers will not start unless the Graylog healthcheck passes which runs every 30 secs which occurs on every startup.
   - Run `docker compose logs --follow` in a terminal to get the username and password for first time login
   - Navigate to http://your-host-ip-address:9000 and log in with username: `admin` and password: `the password shown in the graylog logs`
   - Follow the setup steps and keep all of the defaults  
