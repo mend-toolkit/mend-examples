@@ -58,9 +58,7 @@ function create_login_body() {
 
 function api_login() {
 	# Log into API 2.0 and get the JWT Token and Organization UUID
-	echo $LOGIN_BODY
 	LOGIN_RESPONSE=$(curl -s -X POST --location "$MEND_API_URL/login" --header 'Content-Type: application/json' --data-raw "${LOGIN_BODY}")
-	echo $LOGIN_RESPONSE
 	
 	JWT_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.retVal.jwtToken')
 	WS_APIKEY=$(echo $LOGIN_RESPONSE | jq -r '.retVal.orgUuid')
@@ -83,7 +81,7 @@ OUTPUT="[]"
 for (( i=0; i<=$NUM_PRODUCTS-1; i++ ))
 do
 	CURRENT_PRODUCT_TOKEN=$(echo $PRODUCTS | jq -r ".[$i].uuid" )
-	echo  "Getting all direct dependencies for Product $(($i+1))/$NUM_PRODUCTS: $CURRENT_PRODUCT_TOKEN"
+	echo "Getting all direct dependencies for Product $(($i+1))/$NUM_PRODUCTS: $CURRENT_PRODUCT_TOKEN"
 
 	# Get all direct dependencies for the current product in loop
 	CURRENT_LIBRARIES_RESPONSE=$(curl -s --location "$MEND_API_URL/products/$CURRENT_PRODUCT_TOKEN/libraries?pageSize=10000&page=0&search=directDependency:LIKE:true" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN") 
@@ -93,20 +91,20 @@ do
 	for (( j=0; j<=$NUM_LIBRARIES-1; j++ ))
 	do
 		CURRENT_LIBRARY=$(echo $CURRENT_LIBRARIES | jq ".[$j]")
-		LIBRARY_NAME=$(echo $CURRENT_LIBRARY | jq -r ".groupId")
-		LIBRARY_UUID=$(echo $CURRENT_LIBRARY | jq -r ".uuid")
+		LIBRARY_NAME=$(echo $CURRENT_LIBRARY | jq -r ".artifactId")
 		LIBRARY_VERSION=$(echo $CURRENT_LIBRARY | jq -r ".version")
+		LIBRARY_UUID=$(echo $CURRENT_LIBRARY | jq -r ".uuid")
 
-		# Get the release date for a library version using the library versions API
 		echo -ne "\033[2KGetting Release Date for library $(($j+1))/$NUM_LIBRARIES: $LIBRARY_NAME:$LIBRARY_VERSION\r"
 		VERSION_RESPONSE=$(curl -s --location "$MEND_API_URL/orgs/$WS_APIKEY/libraries/$LIBRARY_UUID/versions?ignoreManualData=false" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN")
 		RELEASE_DATE=$(echo $VERSION_RESPONSE | jq -r ".retVal[] | select(.version == \"$LIBRARY_VERSION\") | .lastUpdatedAt")
 		
 		# If release date is not returned by the API, then the user should check it manually
-		if [ -z "$RELEASE_DATE" ]
+		if [ -z "$LIBRARY_NAME" ] || [ -z "$RELEASE_VERSION" ] || [ -z "$RELEASE_DATE" ]
 		then
 			RELEASE_DATE="Not stored in Mend index, please check this manually"
 		else
+			# Get the release date for a library version using the library versions API
 			RELEASE_DATE_FORMATTED=$(echo $RELEASE_DATE | date -d $RELEASE_DATE '+%s')
 			CURRENT_DATE_FORMATTED=$(date '+%s')
 			DIFF=$(($CURRENT_DATE_FORMATTED - $RELEASE_DATE_FORMATTED))
