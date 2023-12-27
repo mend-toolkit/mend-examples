@@ -31,32 +31,16 @@
 # MAX_AGE_IN_DAYS - The number of days ago that a library version can be released before getting added to the output.
 # OUTPUT_FILE - the file to output json information (e.g. output.json)
 
-
 # Reformat MEND_URL for the API to https://api-<env>/api/v2.0
 MEND_API_URL=$(echo "${MEND_URL}" | sed -E 's/(saas|app)(.*)/api-\1\2\/api\/v2.0/g')
 
 function validate_env() {
 	error_message="variable not set. Please set all required environment variables."
-	if [ -z "$MEND_USER_KEY" ] then
-		echo "MEND_USER_KEY $error_message"
-		exit 1
-	fi
-	if [ -z "$MEND_EMAIL" ] then
-		echo "MEND_EMAIL $error_message"
-		exit 1
-	fi
-	if [ -z "$MEND_URL" ] then
-		echo "MEND_URL $error_message"
-		exit 1
-	fi
-	if [ -z "$MAX_AGE_IN_DAYS" ] then
-		echo "MAX_AGE_IN_DAYS $error_message"
-		exit 1
-	fi
-	if [ -z "$OUTPUT_FILE" ] then
-		echo "OUTPUT_FILE $error_message"
-		exit 1
-	fi
+	if [ -z "$MEND_USER_KEY" ]; then echo "MEND_USER_KEY $error_message"; exit 1; fi
+	if [ -z "$MEND_EMAIL" ]; then echo "MEND_EMAIL $error_message"; exit 1; fi
+	if [ -z "$MEND_URL" ]; then echo "MEND_URL $error_message"; exit 1; fi
+	if [ -z "$MAX_AGE_IN_DAYS" ]; then echo "MAX_AGE_IN_DAYS $error_message"; exit 1; fi
+	if [ -z "$OUTPUT_FILE" ]; then echo "OUTPUT_FILE $error_message"; exit 1; fi
 }
 
 function create_login_body() {
@@ -74,7 +58,9 @@ function create_login_body() {
 
 function api_login() {
 	# Log into API 2.0 and get the JWT Token and Organization UUID
+	echo $LOGIN_BODY
 	LOGIN_RESPONSE=$(curl -s -X POST --location "$MEND_API_URL/login" --header 'Content-Type: application/json' --data-raw "${LOGIN_BODY}")
+	echo $LOGIN_RESPONSE
 	
 	JWT_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.retVal.jwtToken')
 	WS_APIKEY=$(echo $LOGIN_RESPONSE | jq -r '.retVal.orgUuid')
