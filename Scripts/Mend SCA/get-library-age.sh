@@ -29,26 +29,60 @@
 # WS_APIKEY - API Key for organization (optional)
 # MEND_URL - e.g. https://saas.mend.io/
 # MAX_AGE_IN_DAYS - The number of days ago that a library version can be released before getting added to the output.
+# OUTPUT_FILE - the file to output json information (e.g. output.json)
+
 
 # Reformat MEND_URL for the API to https://api-<env>/api/v2.0
 MEND_API_URL=$(echo "${MEND_URL}" | sed -E 's/(saas|app)(.*)/api-\1\2\/api\/v2.0/g')
 
-# If API Key was not specified then exclude from Login request body.
-if [ -z "$WS_APIKEY" ]
-then
-	echo "WS_APIKEY environment variable was not provided."
-	echo "The Login API will default to the last organization this user accessed in the Mend UI."
-	LOGIN_BODY="{\"email\": \"$MEND_EMAIL\", \"userKey\": \"$MEND_USER_KEY\" }"
-else
-	echo "Logging in with provided API key."
-	LOGIN_BODY="{\"email\": \"$MEND_EMAIL\", \"userKey\": \"$MEND_USER_KEY\", \"orgToken\": \"$WS_APIKEY\"}"
-fi
+function validate_env() {
+	error_message="variable not set. Please set all required environment variables."
+	if [ -z "$MEND_USER_KEY" ] then
+		echo "MEND_USER_KEY $error_message"
+		exit 1
+	fi
+	if [ -z "$MEND_EMAIL" ] then
+		echo "MEND_EMAIL $error_message"
+		exit 1
+	fi
+	if [ -z "$MEND_URL" ] then
+		echo "MEND_URL $error_message"
+		exit 1
+	fi
+	if [ -z "$MAX_AGE_IN_DAYS" ] then
+		echo "MAX_AGE_IN_DAYS $error_message"
+		exit 1
+	fi
+	if [ -z "$OUTPUT_FILE" ] then
+		echo "OUTPUT_FILE $error_message"
+		exit 1
+	fi
+}
 
-# Log into API 2.0 and get the JWT Token and Organization UUID
-LOGIN_RESPONSE=$(curl -s -X POST --location "$MEND_API_URL/login" --header 'Content-Type: application/json' --data-raw "${LOGIN_BODY}")
+function create_login_body() {
+	# If API Key was not specified then exclude from Login request body.
+	if [ -z "$WS_APIKEY" ]
+	then
+		echo "WS_APIKEY environment variable was not provided."
+		echo "The Login API will default to the last organization this user accessed in the Mend UI."
+		LOGIN_BODY="{\"email\": \"$MEND_EMAIL\", \"userKey\": \"$MEND_USER_KEY\" }"
+	else
+		echo "Logging in with provided API key."
+		LOGIN_BODY="{\"email\": \"$MEND_EMAIL\", \"userKey\": \"$MEND_USER_KEY\", \"orgToken\": \"$WS_APIKEY\"}"
+	fi
+}
 
-JWT_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.retVal.jwtToken')
-WS_APIKEY=$(echo $LOGIN_RESPONSE | jq -r '.retVal.orgUuid')
+function api_login() {
+	# Log into API 2.0 and get the JWT Token and Organization UUID
+	LOGIN_RESPONSE=$(curl -s -X POST --location "$MEND_API_URL/login" --header 'Content-Type: application/json' --data-raw "${LOGIN_BODY}")
+	
+	JWT_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.retVal.jwtToken')
+	WS_APIKEY=$(echo $LOGIN_RESPONSE | jq -r '.retVal.orgUuid')
+}
+
+validate_env
+create_login_body
+api_login
 
 # Get all products
 echo "Retrieving Products from Organization"
@@ -93,7 +127,7 @@ do
 		fi
 		
 		# If the library needs to be reviewed later then get all relevant information and add to output
-		if [ $DIFF -gt $(($MAX_AGE_IN_DAYS*60*60)) ] || [ "$RELEASE_DATE" == "Not stored in Mend index, please check this manually" ]
+		if  [ "$RELEASE_DATE" == "Not stored in Mend index, please check this manually" ] || [ $DIFF -gt $(($MAX_AGE_IN_DAYS*60*60)) ] 
 		then
 			LIBRARY_PROJECT=$(echo $CURRENT_LIBRARY | jq -r ".project.name")
 			LIBRARY_PRODUCT=$(echo $CURRENT_LIBRARY | jq -r ".project.path")
@@ -113,7 +147,8 @@ do
 	echo "" 
 done
 
-echo -e "Output: \n$(echo $OUTPUT | jq '.')"
+echo $OUTPUT | jq '.' > $OUTPUT_FILE
+echo "Done"
 
 # $OUTPUT can now be used to generate a report however needed, such as converting to CSV, XLSX, or PDF format with other utilities.
 # The format of $OUTPUT will be:
