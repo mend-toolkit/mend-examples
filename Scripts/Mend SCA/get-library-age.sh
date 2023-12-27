@@ -9,8 +9,14 @@
 # 📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html
 #
 # ******** Description ********
-# This script pulls all of the products in an organization and then retrieves the libraries for each product 
+# This script pulls all of the products in an organization and then retrieves the direct dependencies for each product 
 # where the release date for the version is greater than the specified amount.
+#
+# Out of the box, this script does not perform the lookup for transitive dependencies due to the fact that
+# with most languages updating transitive libraries is either difficult or impossible. With the languages that do
+# allow upgrading transitive dependencies, this can cause errors inside of the final product, and is typically not 
+# a good practice.
+#
 # Afterwards the scripts combines all of the data pulled for each product and displays it in JSON format.
 #
 # The WS_API_KEY environment variable is optional. If this is not specified in the script, then the Login API will
@@ -57,16 +63,18 @@ OUTPUT="[]"
 for (( i=0; i<=$NUM_PRODUCTS-1; i++ ))
 do
 	CURRENT_PRODUCT_TOKEN=$(echo $PRODUCTS | jq -r ".[$i].uuid" )
-	echo  "Getting all libraries for Product $(($i+1))/$NUM_PRODUCTS: $CURRENT_PRODUCT_TOKEN"
+	echo  "Getting all direct dependencies for Product $(($i+1))/$NUM_PRODUCTS: $CURRENT_PRODUCT_TOKEN"
 
-	# Get all libraries for the current product in loop
-	CURRENT_LIBRARIES_RESPONSE=$(curl -s --location "$MEND_API_URL/products/$CURRENT_PRODUCT_TOKEN/libraries?pageSize=10000&page=0" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN") 
+	# Get all direct dependencies for the current product in loop
+	CURRENT_LIBRARIES_RESPONSE=$(curl -s --location "$MEND_API_URL/products/$CURRENT_PRODUCT_TOKEN/libraries?pageSize=10000&page=0&search=directDependency:LIKE:true" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN") 
 	CURRENT_LIBRARIES=$(echo $CURRENT_LIBRARIES_RESPONSE | jq '.retVal')
 	NUM_LIBRARIES=$(echo $CURRENT_LIBRARIES_RESPONSE | jq -r '.additionalData.totalItems')
 
 	for (( j=0; j<=$NUM_LIBRARIES-1; j++ ))
 	do
 		CURRENT_LIBRARY=$(echo $CURRENT_LIBRARIES | jq ".[$j]")
+		DIRECT_DEPENDENCY=$(echo $CURRENT_LIBRARY | jq -r ".directDependency")
+
 		LIBRARY_NAME=$(echo $CURRENT_LIBRARY | jq -r ".groupId")
 		LIBRARY_UUID=$(echo $CURRENT_LIBRARY | jq -r ".uuid")
 		LIBRARY_VERSION=$(echo $CURRENT_LIBRARY | jq -r ".version")
@@ -89,7 +97,6 @@ do
 		# If the library needs to be reviewed later then get all relevant information and add to output
 		if [ $DIFF -gt $(($MAX_AGE_IN_DAYS*60*60)) ] || [ "$RELEASE_DATE" == "Not stored in Mend index, please check this manually" ]
 		then
-			DIRECT_DEPENDENCY=$(echo $CURRENT_LIBRARY | jq -r ".directDependency")
 			LIBRARY_PROJECT=$(echo $CURRENT_LIBRARY | jq -r ".project.name")
 			LIBRARY_PRODUCT=$(echo $CURRENT_LIBRARY | jq -r ".project.path")
 			RETURN_LIBRARY=$(jq --null-input \
