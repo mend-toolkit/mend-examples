@@ -56,3 +56,11 @@ Dashboards can be confusing, as there isn't much information around them. Some i
 1. When you are satisfied with the information entered, click "Update Preview" to make sure that everything looks right, and then click "Update Widget".
 
 Now that you have a widget created, it will always show information with regard to what you put in that window. If you want to override what it shows temporarily, then you can use the search function on the main page to temporarily show different data.
+
+### Updating the Content Pack
+#### Dashboard Updates
+- Click edit button on the all messages section and update fields with desired field changes
+    - Click Update Widget and click save
+- System -> Content Packs -> Mend Repo Integration -> More Actions -> Create New Version
+    - Expand Dashboard and select the white versions of Controller Search, Healthchecks, Remediate Search, Scanner Search.  Do NOT select Sources
+    - Select Next -> Next -> Create and Download and paste this version over the contents of ./mend-graylog-content-pack.json in your feature branch

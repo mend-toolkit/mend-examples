@@ -20,7 +20,7 @@ When used, these scripts will download the latest [repository integration](https
 1) Provision a new EC2 instance with the following characteristics:
    - AMI: Ubuntu Server 22.04 LTS (HVM)
    - Type: c4.xlarge or larger
-   - Storage: 40GiB (gp2) or higher
+   - Storage: 60GiB (gp2) or higher
    - Security group: See [here](https://docs.mend.io/bundle/integrations/page/advanced_technical_information.html#Required-Open-Ports) for integration requirements
 2) Launch and remote into instance (ssh or console)
 3) Install Docker ([using the apt repository](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository))
@@ -39,14 +39,14 @@ When used, these scripts will download the latest [repository integration](https
     ```     
    - Install Docker
    ```shell
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
    ```
    - Setup up Docker for use as [non-root user](https://docs.docker.com/engine/install/linux-postinstall)
    ```shell
    sudo usermod -aG docker $USER
    newgrp docker
    ```
-   - Ensure docker works as the current user with ```docker version``` 
+   - Ensure docker & docker compose work as the current user with ```docker version && docker compose version``` 
    - Continue with the steps below
     		
 ## Options
@@ -104,7 +104,10 @@ sudo sysctl -p
   - Follow the setup steps and keep all of the defaults  
   - After clicking resume setup all containers should be created and healthy and Graylog will automatically install the Mend Content Pack and start accepting input from the integrations which will also start  
   - Log into the platform with with the username: admin and the password you set in `$graylog_root_password`  
-  - Click the Dashboards link at the top and view the Controller, Scanner, and Remediate Search Dashboards to ensure the integration is running, and Graylog is ingesting messages from the integration  
+  - Click the Dashboards link at the top and view the Controller, Scanner, and Remediate Search Dashboards to ensure the integration is running, and Graylog is ingesting messages from the integration
+    - Search for "Controller Startup Checks" in the Controller Search Dashbord to see the Mend Repo Integration Startup table
+- The Mend repo integration containers will not start unless the Graylog healthcheck passes which runs every 30 secs.  This occurs on every startup.
+
 
 - Features of the Mend Graylog Content Pack  
   - An input for all of the repo integration logs  
