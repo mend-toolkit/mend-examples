@@ -130,6 +130,65 @@ echo "${cyn}sudo sysctl -p${end}"
 
 
 }
+function env_check(){
+
+## Check if operatins system is Ubuntu
+if [[ $(lsb_release -is) != "Ubuntu" ]]; then
+    echo "This script is only supported on Ubuntu distributions"
+    exit 1
+fi
+
+## Check if docker version > 18
+DOCKER_VERSION=$(docker version --format '{{.Server.Version}}')
+if [[ $(echo "$DOCKER_VERSION > 18" | bc -l) -eq 1 ]]; then
+    echo "Docker version is greater than 18."
+else
+    echo "Docker version is not greater than 18.  Please install docker by following the README"
+    exit 1
+fi
+
+## Check if docker compose version > 2
+DOCKER_COMPOSE_VERSION=$(docker compose version --short)
+if [[ $(echo "$DOCKER_COMPOSE_VERSION >= 2" | bc -l) -eq 1 ]]; then
+    echo "Docker Compose version is greater than or equal to 2."
+else
+    echo "Docker Compose version is less than 2.  Please install docker compose by following the README"
+fi
+
+}
+
+function port_check(){
+
+# Get public IP address
+PUBLIC_IP=$(curl http://checkip.amazonaws.com)
+
+# Define the array of ports to check
+PORTS=(5678 9000 8582 9393)  # Replace with your desired ports
+
+for PORT in "${PORTS[@]}"; do
+
+  # Start listener on port 5678 in the background, storing the process ID
+  nc -lvp $PORT &
+  LISTENER_PID=$!
+  echo $LISTENER_PID
+  # Check for connection success
+  nc -zv $PUBLIC_IP $PORT
+
+  # Store the connection check result
+  CONNECTION_RESULT=$?
+  echo $CONNECTION_RESULT
+  # Terminate the specific listener process using its PID
+  kill $LISTENER_PID
+
+  # Report the result
+  if [[ $CONNECTION_RESULT -eq 0 ]]; then
+    echo "Connection successful for $PORT"
+  else
+    echo "Connection failed for $PORT"
+  fi
+done
+
+}
 
 function key_check(){
 ## Look for Activation Key and github.com token
@@ -169,11 +228,6 @@ then
     graylog_root_password=${GRAYLOG_ROOT_PASSWORD}
 fi
 
-if [[ $(lsb_release -is) != "Ubuntu" ]]; then
-    echo "This script is only supported on Ubuntu distributions"
-    exit 1
-fi
-
 scm
 
 }
@@ -183,7 +237,11 @@ then
     echo "${red}Please pass an scm variable such as gls, bb, or ghe${end}"
 else
     if [ "$1" = "gls" ] || [ "$1" = "bb" ] || [ "$1" = "ghe" ]
-        then 
+        then
+            ## Check if environment has prereqs 
+            env_check
+            ## Check if ports are open
+            port_check
             ## Check for valid key and start the process
             key_check
         else
