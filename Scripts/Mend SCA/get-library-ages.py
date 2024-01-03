@@ -29,11 +29,15 @@ The execution process looks like:
 ******** Usage ********
 Make sure to install the appropriate dependencies before running this script and set all required environment variables. Afterwards, you can run the script with:
 pip3 install requests python-dateutil
-python3 get-library-ages.py -o <output_file>.json -a <max_age_in_days>
+python3 get-library-ages.py [-k <org_uuid>] [-p <product_uuid>] -o <output_file>.json -a <max_age_in_days>
 
-Optional Arguments: the only optional arguments for this script are WS_API_KEY and MEND_PRODUCT_TOKEN. 
-If WS_API_KEY is not specified then the Mend API will log in to the last organization accessed from the Mend Platform.
-If MEND_PRODUCT_TOKEN is not specified then it will pull everything in the organizaiton.
+Optional Arguments: the only optional arguments for this script are -k <org_uuid> and -p <product_uuid>. 
+If -k <org_uuid> is not specified then the Mend API will log in to the last organization accessed from the Mend Platform.
+    If the new Mend Unified Platform is not in use, then the user can get the Organization Uuid for a specific organization by running the following API Request: 
+    📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html#tag/Access-Management-Organizations/operation/getUserDomains 
+If -p <product_uuid> is not specified then it will pull everything in the organization.
+    If the new Mend Unified Platform is not in use, then the user can get the Product Uuid for a specific organization by running the following API Request:
+    📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html#tag/Entities-Organization/operation/getDomainProductEntities
 
 Pre-requisites:
 apt-get install python3.9
@@ -41,15 +45,13 @@ pip install requests python-dateutil
 export MEND_USER_KEY='<MEND_USER_KEY>'
 export MEND_URL='<MEND_URL>
 export MEND_EMAIL='<MEND_EMAIL>'
-export WS_API_KEY='<WS_API_KEY>' <-- Optional
-export MEND_PRODUCT_TOKEN='<PRODUCT_TOKEN>' <-- Optional
 """
 
 MEND_USER_KEY = ""
 MEND_EMAIL = ""
 MEND_URL = ""
-MEND_API_KEY = ""
-MEND_PRODUCT_TOKEN = ""
+MEND_ORG_UUID = ""
+MEND_PRODUCT_UUID = ""
 OUTPUT_FILE = ""
 MAX_LIBRARY_AGE = 0
 HEADERS = {'Content-Type': 'application/json'}
@@ -58,6 +60,8 @@ CURRENT_DATE = datetime.now(timezone.utc)
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
+    parser.add_argument('-k', '--orgUuid', dest='org_uuid')
+    parser.add_argument('-p', '--productUuid', dest='product_uuid')
     parser.add_argument('-o', '--outputFile', dest='output_file')
     parser.add_argument('-a', '--libraryAge', dest='library_age')
     return parser.parse_args()
@@ -67,8 +71,8 @@ def validate_env() -> bool:
     global MEND_URL
     global MEND_EMAIL
     global OUTPUT_FILE
-    global MEND_API_KEY
-    global MEND_PRODUCT_TOKEN
+    global MEND_ORG_UUID
+    global MEND_PRODUCT_UUID
     global MAX_LIBRARY_AGE
     
     config = parse_args()
@@ -88,37 +92,34 @@ def validate_env() -> bool:
             raise Exception("-a/--libraryAge")
         MAX_LIBRARY_AGE = int(library_age)
         
+        MEND_ORG_UUID = config.org_uuid if config.org_uuid != None else ""
+        MEND_PRODUCT_UUID = config.product_uuid if config.product_uuid != None else ""
+        
     except KeyError as err:
         print(f"{err.args[0]} environment variable not found. Please set this environment variable and try again.")
         return False
     except Exception as err:
         print(f"{err} flag was not set. Please set this flag and try again.")
         return False
-    
-    if "WS_API_KEY" in os.environ and os.environ['WS_API_KEY'] != '':
-        MEND_API_KEY = os.environ['WS_API_KEY']
         
-    if "MEND_PRODUCT_TOKEN" in os.environ and os.environ['MEND_PRODUCT_TOKEN'] != '':
-        MEND_PRODUCT_TOKEN = os.environ['MEND_PRODUCT_TOKEN']
-    
     return True
 
 def get_login_body() -> str:
-    global MEND_API_KEY
+    global MEND_ORG_UUID
     
     login_body = {
         "userKey": os.environ['MEND_USER_KEY'],
         "email": os.environ['MEND_EMAIL'],
     }
     
-    if MEND_API_KEY != '':
-        login_body['apiKey'] = MEND_API_KEY
+    if MEND_ORG_UUID != '':
+        login_body['apiKey'] = MEND_ORG_UUID
     
     return json.dumps(login_body)
     
 def api_login(request_body: str) -> None:
     global MEND_URL
-    global MEND_API_KEY
+    global MEND_ORG_UUID
     global HEADERS
     global SESSION
     
@@ -128,22 +129,22 @@ def api_login(request_body: str) -> None:
     mend_auth_token = response['retVal']['jwtToken']
     HEADERS['Authorization'] = f"Bearer {mend_auth_token}"
     SESSION.headers.update(HEADERS)
-    MEND_API_KEY = response['retVal']['orgUuid']
+    MEND_ORG_UUID = response['retVal']['orgUuid']
     
 def get_data() -> list:
     global MEND_URL
-    global MEND_API_KEY
-    global MEND_PRODUCT_TOKEN
+    global MEND_ORG_UUID
+    global MEND_PRODUCT_UUID
     global SESSION
     global MAX_LIBRARY_AGE
     
     # Get Products    
-    if MEND_PRODUCT_TOKEN !='':
-        product_resp = SESSION.get(f"{MEND_URL}/products/{MEND_PRODUCT_TOKEN}")
+    if MEND_PRODUCT_UUID !='':
+        product_resp = SESSION.get(f"{MEND_URL}/products/{MEND_PRODUCT_UUID}")
         products = [json.loads(product_resp.content)['retVal']]
         num_products = 1
     else:
-        product_resp = SESSION.get(f"{MEND_URL}/orgs/{MEND_API_KEY}/products?pageSize=10000&page=0")
+        product_resp = SESSION.get(f"{MEND_URL}/orgs/{MEND_ORG_UUID}/products?pageSize=10000&page=0")
         product_response_object = json.loads(product_resp.content)
         num_products = product_response_object['additionalData']['totalItems']
         products = product_response_object['retVal']
@@ -155,12 +156,14 @@ def get_data() -> list:
         
         # Run an API request to get all direct dependencies in product
         print(f"\033[2KGetting all direct dependencies for Product {product_index+1}/{num_products}: {current_product_token}")
-        libraries.append(get_product_data(current_product_token))
+        product_libraries = get_product_data(current_product_token)
+        if product_libraries != None:
+            libraries.append(product_libraries)
     
     return libraries
 
 
-def get_product_data(product_uuid: str) -> list:
+def get_product_data(product_uuid: str):
     global SESSION
     global MEND_URL
     global CURRENT_DATE
@@ -176,7 +179,10 @@ def get_product_data(product_uuid: str) -> list:
         api_login(get_login_body())
         current_libraries_resp = SESSION.get(f"{MEND_URL}/products/{product_uuid}/libraries?pageSize=10000&page=0&search=directDependency:LIKE:true").content
         current_libraries_content = json.loads(current_libraries_resp)
-        
+    
+    # If there is nothing in the product, then return nothing.
+    if "errorMessage" in current_libraries_content['retVal'] and current_libraries_content['retVal']['errorMessage'] == 'org.hibernate.exception.SQLGrammarException: could not extract ResultSet':
+        return
     
     current_libraries = current_libraries_content['retVal']
     num_libraries = current_libraries_content['additionalData']['totalItems']
@@ -191,20 +197,20 @@ def get_product_data(product_uuid: str) -> list:
 def process_library(library: dict):
     global SESSION
     global MEND_URL
-    global MEND_API_KEY
+    global MEND_ORG_UUID
     global MAX_LIBRARY_AGE
     
     library_name = library['artifactId'] if 'artifactId' in library else ""
     library_version = library['version'] if 'version' in library else ""
     library_uuid = library['uuid']
     
-    version_resp = SESSION.get(f"{MEND_URL}/orgs/{MEND_API_KEY}/libraries/{library_uuid}/versions?ignoreManualData=false").content
+    version_resp = SESSION.get(f"{MEND_URL}/orgs/{MEND_ORG_UUID}/libraries/{library_uuid}/versions?ignoreManualData=false").content
     version_content = json.loads(version_resp)
     
     # If the jwtToken has expired, get a new one and run again.
     if "retVal" not in version_content:
         api_login(get_login_body())
-        version_resp = SESSION.get(f"{MEND_URL}/orgs/{MEND_API_KEY}/libraries/{library_uuid}/versions?ignoreManualData=false").content
+        version_resp = SESSION.get(f"{MEND_URL}/orgs/{MEND_ORG_UUID}/libraries/{library_uuid}/versions?ignoreManualData=false").content
         version_content = json.loads(version_resp)
         
     release_date = ""
