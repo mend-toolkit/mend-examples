@@ -157,8 +157,10 @@ def get_data() -> list:
         # Run an API request to get all direct dependencies in product
         print(f"\033[2KGetting all direct dependencies for Product {product_index+1}/{num_products}: {current_product_token}")
         product_libraries = get_product_data(current_product_token)
-        if product_libraries != None:
-            libraries.append(product_libraries)
+        if product_libraries == None:
+            continue
+        for product in product_libraries:
+            libraries.append(product)
     
     return libraries
 
