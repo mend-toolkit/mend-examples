@@ -11,10 +11,7 @@ from dateutil.parser import parse
 """
 ******** Mend Script to Report on Libraries Released After a Period of Time ********
 
-Users can feel free to edit this file to make appropriate changes for desired behavior.
-
-For more information on the Mend CLI and how to generate a file for this script, please check our documentation page:
-📚 https://docs.mend.io/bundle/integrations/page/configure_the_mend_cli_for_sca.html
+Users should feel free to edit this file to make appropriate changes for desired behavior.
 
 ******** Description ********
 This script takes an organization and loops through each product, getting each direct dependency and then getting the age of the library.
@@ -35,7 +32,7 @@ Optional Arguments: the only optional arguments for this script are -k <org_uuid
 If -k <org_uuid> is not specified then the Mend API will log in to the last organization accessed from the Mend Platform.
     If the new Mend Unified Platform is not in use, then the user can get the Organization Uuid for a specific organization by running the following API Request: 
     📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html#tag/Access-Management-Organizations/operation/getUserDomains 
-If -p <product_uuid> is not specified then it will pull everything in the organization.
+If -p <product_uuid> is not specified then it will pull everything in the organization.  It is HIGHLY recommended to specify a product as the script will take a significant amount of time to run for a whole organization.
     If the new Mend Unified Platform is not in use, then the user can get the Product Uuid for a specific organization by running the following API Request:
     📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html#tag/Entities-Organization/operation/getDomainProductEntities
 
