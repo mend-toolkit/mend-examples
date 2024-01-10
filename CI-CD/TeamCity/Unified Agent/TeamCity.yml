@@ -28,8 +28,6 @@ object Build : BuildType({
 #        nodeJS {
 #            name = "NPM"
 #            shellScript = "npm install --only=prod"
-#            dockerImagePlatform = NodeJSBuildStep.ImagePlatform.Any
-#            dockerImage = "node:14.18.3-buster-slim"
 #        }
 # The Unified Agent scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
         script {
