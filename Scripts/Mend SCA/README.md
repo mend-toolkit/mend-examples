@@ -5,13 +5,11 @@ This folder contains scripts for use with the Mend SCA platform and Unified agen
 
 - [Reports Within a Pipeline](#reports-within-a-pipeline)
 - [SBOM Report Generation](#sbom-report-generation)
-- [Adding Red Shield Comment Links to GitHub Issues](#adding-red-shield-comment-links-to-github-issues)
-- [Ignoring Alerts Based on Prioritize](#ignoring-alerts-based-on-prioritize)
-- [Display Vulnerabilities Affecting a Project](#display-vulnerabilities-affecting-a-project)
 - [Display Policy Violations Following a Scan](#display-policy-violations-following-a-scan)
 - [Cache the Latest Version of the Unified Agent](#cache-the-latest-version-of-the-unified-agent)
-- [Plugin Request History export](#request-history-export)
 - [Get all Users that are part of Organizations which are a part of a Global Organization](#get-all-users-that-are-part-of-organizations-which-are-a-part-of-a-global-organization)
+- [Get all libraries where the used version is older than X days](#get-all-libraries-where-the-used-version-is-older-than-x-days)
+- [Get all malicious packages in an organization](#get-all-malicious-packages-in-an-organization)
 
 <hr/>
 
@@ -62,121 +60,6 @@ curl -o ./whitesource/duediligencereport.xlsx -X POST "${WS_URL}/api/v1.4" -H "C
 ## [SBOM Report Generation](https://github.com/mend-toolkit/Mend-SBOM-Export-CLI)
 
 An example using the sbom-export-cli with Mend Unified CLI can be found in the [AzureDevOps Advanced example](../../CI-CD/AzureDevOps/Mend%20CLI/AzureDevOps-advanced-linux.yml)
-
-<br>
-<hr>
-
-## Adding Red Shield Comment Links to GitHub Issues
-
-[ghissue-eua.sh](ghissue-eua.sh)  
-
-Add the following lines after the Unified Agent command in a GitHub action to add comments to your GitHub issues that are created by the Mend GitHub integration. These comments will indicate if the vulnerability has a red shield and provide a link to the Mend UI for further examination.  
-
-<br>
-
-**Prerequisites:**  
-
-* `jq` and `awk` must be installed
-* ENV variables must be set
-  * WS_GENERATEPROJECTDETAILSJSON: true
-  * WS_USERKEY
-  * WS_PRODUCTNAME
-  * WS_PROJECTNAME
-  * WS_WSS_URL
-
-<br>
-
-**Execution:**  
-
-```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/ghissue-eua.sh 
-chmod +x ./ghissue-eua.sh && ./ghissue-eua.sh
-```
-
-<br>
-<hr>
-
-## Ignoring Alerts Based on Prioritize
-
-[ghissue-prioritize.sh](ghissue-prioritize.sh)  
-
-Add the following lines after the Unified Agent command in a CI/CD pipeline to ignore vulnerabilities based on Mend Prioritize Green shields in a repository that is scanned via the Github Integration.
-
-<br>
-
-**Prerequisites:**  
-
-* `jq` and `awk` must be installed
-* ENV variables must be set
-  * WS_GENERATEPROJECTDETAILSJSON: true
-  * WS_USERKEY
-  * WS_PRODUCTNAME
-  * WS_PROJECTNAME
-  * WS_APIKEY
-  * WS_WSS_URL
-
-<br>
-
-**Execution:**  
-
-```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/prioritize-ignore.sh 
-chmod +x ./prioritize-ignore.sh && ./prioritize-ignore.sh
-```
-
-<br>
-<hr>
-
-## Display Vulnerabilities Affecting a Project
-
-[list-project-alerts.sh](list-project-alerts.sh)  
-
-This script can be added to the CI/CD pipeline (or executed independently) following the WhiteSource Unified Agent scan, to list vulnerabilities affecting the last scanned project(s).  
-
-This script parses the `scanProjectDetails.json` file to get the `name` and `projectToken` of the project(s) created/updated during the last scan, and then uses WhiteSource's [getProjectAlertsByType](https://whitesource.atlassian.net/wiki/spaces/WD/pages/1651769359/Alerts+API#Project.2) API request to retrieve all the vulnerability alerts associated with that project. It then prints them to the standard output (`stdout`), sorted by severity and optionally color-coded.  
-
-<br>
-
-**Prerequisites:**  
-
-* `jq` and `curl` must be installed
-* ENV variables must be set
-  * `WS_GENERATEPROJECTDETAILSJSON: true`
-  * `WS_USERKEY` (admin assignment is required)
-  * `WS_WSS_URL`
-  * `WS_UPDATEINVENTORY: true` (defaults to true)
-
-<br>
-
-**Execution:**  
-
-```
-./list-project-alerts.sh
-```
-**Sample Output:**  
-```
-Alerts for project: vulnerable-node
-Alerts: 10 High, 4 Medium, 2 Low
-
-[H] CVE-2017-16138 - mime-1.3.4.tgz
-[H] CVE-2015-8858 - uglify-js-2.3.0.tgz
-[H] CVE-2017-1000228 - ejs-0.8.8.tgz
-[H] CVE-2017-1000048 - qs-4.0.0.tgz
-[H] CVE-2020-8203 - lodash-4.17.11.tgz
-[H] CVE-2021-23337 - lodash-4.17.11.tgz
-[H] CVE-2019-5413 - morgan-1.6.1.tgz
-[H] CVE-2019-10744 - lodash-4.17.11.tgz
-[H] CVE-2017-16119 - fresh-0.3.0.tgz
-[H] CVE-2015-8857 - uglify-js-2.3.0.tgz
-[M] CVE-2020-28500 - lodash-4.17.11.tgz
-[M] CVE-2017-16137 - debug-2.2.0.tgz
-[M] CVE-2019-14939 - mysql-2.12.0.tgz
-[M] WS-2018-0080 - mysql-2.12.0.tgz
-[L] WS-2018-0589 - nwmatcher-1.3.9.tgz
-[L] WS-2017-0280 - mysql-2.12.0.tgz
-```
-
-See known limitations [here](list-project-alerts.sh).  
 
 <br>
 <hr>
@@ -281,7 +164,7 @@ The [cache-ua.sh](cache-ua.sh) script can be added to the CI/CD pipeline on a st
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/cache-ua.sh.sh 
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/cache-ua.sh
 chmod +x ./cache-ua.sh && ./cache-ua.sh
 ```
 
@@ -318,47 +201,62 @@ curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scri
 chmod +x ./pending-task-cleanup.sh && ./pending-task-cleanup.sh
 ```
 
-## Request History Export
 
-[get-request-history.py](get-request-history.py)  
+## Get all libraries where the used version is older than X days
 
-This script exports the product names and their last scan dates to CSV file for reporting purposes, the number of days to query is set as an argument to the script.
+[get-library-ages.py](get-library-ages.py)  
 
-**Prerequisites:** 
-* Python3.6 and up
-* pip install requests csv
+This script allows the retrieval of all libraries in a product or organization that were released longer than X days ago. This allows a user to check the age of a library and make sure it is the version they want.
+
+The [get-library-ages.py](get-library-ages.py) script can be added to the CI/CD pipeline on a static/hosted build agent (prior to the Unified Agent scan task), or triggered independently, manually or by a scheduled task.  
 
 <br>
 
-**Execution:** 
-python get-request-history.py MEND_URL MEND_APIKEY MEND_USERKEY DAYS_TO_QUERY
+**Prerequisites:**  
 
-<br />
-<hr />
+* ``pip3 install requests python-dateutil``
+* ``export MEND_USER_KEY='<MEND_USER_KEY>'``
+* ``export MEND_URL='<MEND_URL>``
+* ``export MEND_EMAIL='<MEND_EMAIL>'``
 
-# Get all Users that are part of Organizations which are a part of a Global Organization
+<br>
 
-[get-all-users-under-global-org.py](get-all-users-under-global-org.py)
+**Execution:**  
 
-This script allows a user to retrieve every single user account that is a part of any of their Organizations which reside under the "umbrella" of a Global Organization. This allows an organization to take a full inventory of all users that have access to their resources.
+```
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/get-library-ages.py
+python3 ./get-library-ages.py
+```
 
-The [get-all-users-under-global-org.py](get-all-users-under-global-org.py) script can be run with Python 3.9+ and utilizes the Mend API 1.4 as well as API 2.0 to get the information necessary.
+<br>
+<hr>
 
-> **_NOTE:_** If an error occurs with this script that produces an error when attempting to log in via API 2.0, this can happen on a rare occasion. The best thing to do is to implement a more comprehensive retry logic, or just try running the script again.
+## Get all malicious packages in an organization
 
-<br />
+[get-malicious-packages.sh](get-malicious-packages.sh)  
+
+This script allows a user to retrieve all malicious packages in an organization for reporting purposes.
+
+The [get-malicious-packages.sh](get-malicious-packages.sh) script can be added to the CI/CD pipeline on a static/hosted build agent (prior to the Unified Agent scan task), or triggered independently, manually or by a scheduled task.  
+
+<br>
 
 **Prerequisites:**  
 
-* `python 3.9+`
+* ``sudo apt-get install jq curl``
+* ``export MEND_USER_KEY`` - An administrator's userkey
+* ``MEND_EMAIL`` - The administrator's email
+* ``MEND_ORG_UUID`` - API Key for organization (optional)
+* ``MEND_URL`` - e.g. https://saas.mend.io/
 
-**Execution:**
-```shell
-# Create Environment Variables
-export MEND_URL="https://saas.whitesourcesoftware.com"
-export MEND_USER_KEY="<userkey>"
-export MEND_GLOBAL_ORG_TOKEN="<global_org_token>"
+<br>
 
-# Run the script
-python ./get-all-users-under-global-org.py
+**Execution:**  
+
 ```
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/get-malicious-packages.sh
+chmod +x ./get-malicious-packages.sh && ./get-malicious-packages.sh
+```
+
+<br>
+<hr>
