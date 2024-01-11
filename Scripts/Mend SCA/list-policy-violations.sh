@@ -14,6 +14,8 @@
 # Prerequisites:
 # apt install jq
 # WS_CHECKPOLICIES: true
+# WS_PRODUCTNAME: <product_name>
+# WS_PROJECTNAME: <project_name>
 
 jsonFile="./whitesource/policyRejectionSummary.json"
 

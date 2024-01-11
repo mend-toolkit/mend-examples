@@ -3,20 +3,36 @@ import json
 import os
 import sys
 
-# Purpose: Get all of the users that are inside of a global organization
-# Requirements:
-#   Environment Variables: 
-#       MEND_URL
-#       MEND_USER_KEY
-#       MEND_GLOBAL_ORG_TOKEN
+"""
+******** Mend Script to get all users that are a part of organizations under a global organization ********
+
+Users should feel free to edit this file to make appropriate changes for desired behavior.
+
+******** Description ********
+This script takes a global organization key and retrieves all users that are a part of organizations under that global org.
+
+The execution process looks like:
+1. Get all organizations under the global organization.
+2. Get all users under each organization.
+3. List all users by printing them in the console.
+
+******** Usage ********
+Make sure to install the appropriate dependencies before running this script and set all required environment variables. You can run the script with:
+pip3 install requests
+python3 get-all-users-under-global-org.py
+
+Pre-requisites:
+apt-get install python3.9
+pip install requests
+export MEND_URL='<MEND_URL>
+export MEND_USER_KEY='<MEND_USER_KEY>'
+export MEND_GLOBAL_ORG_TOKEN='<GLOBAL_ORG_TOKEN>'
+"""
 
 REQUEST_HEADERS = {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
 }
-
-
-
 
 def check_api_error(response: dict) -> bool:
     if "errorCode" in response:
@@ -25,17 +41,12 @@ def check_api_error(response: dict) -> bool:
 
     return True
 
-
-
-
 def get_result_from_api_response(response: dict, object_to_get: str) -> list:
     return_object = []
     if object_to_get in response:
         return_object = response[object_to_get]
 
     return return_object
-
-
 
 def send_api_1_4_request(url: str, request: dict) -> dict:
     payload = json.dumps(request);
@@ -48,9 +59,6 @@ def send_api_1_4_request(url: str, request: dict) -> dict:
 
     return response_object
 
-
-
-
 def create_get_all_organizations_request(user_key: str, global_org_token: str) -> dict:
     request_dict = { 
         "requestType": "getAllOrganizations",
@@ -60,9 +68,6 @@ def create_get_all_organizations_request(user_key: str, global_org_token: str) -
 
     return request_dict
     
-
-
-
 def create_get_organization_users_request(user_key: str, org_token: str) -> dict:
     request_dict = {
         "requestType": "getAllUsers",
@@ -71,9 +76,6 @@ def create_get_organization_users_request(user_key: str, org_token: str) -> dict
     }
 
     return request_dict
-
-
-
 
 def main():
     mend_url = os.getenv('MEND_URL')                            # URL of your Mend environment
@@ -100,9 +102,6 @@ def main():
 
     print("List of Users: ")
     print('\n\t'.join(user_list))
-
-
-
 
 if __name__ == "__main__":
     main()
