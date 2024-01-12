@@ -3,6 +3,9 @@
 > [!Warning]  
 **This should only be used for Proof of Concepts (PoC) as it does not implement many aspects of a production-ready integration including scaling, load balancing, and fault tolerance.  For production rollout it is recommended to deploy using kubernetes.  Please contact your Customer Success Manager to engage with the Field Engineering team to learn more**  
 
+> [!Warning]  
+**With the new setup of the Repo Integration, there is a new logging solution called Graylog that will prevent the startup of the Repo Integration containers until Graylog is set up. To fix this, please follow the instructions under [Execution](#execution) to set this up properly.**
+
 # Self-Managed Repository Integration Automation Scripts
 When used, these scripts will download the latest [repository integration](https://docs.mend.io/bundle/integrations/page/repo_integrations.html) and run via docker compose:
 - Remediate Server
