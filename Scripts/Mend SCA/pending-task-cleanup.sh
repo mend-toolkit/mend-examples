@@ -1,4 +1,25 @@
 #!/bin/bash
+#
+# ******** Mend Script to cleanup all Pending Tasks in an organization ********
+# 
+# Users should edit this file to change any behavior as needed.
+# 
+# For more information on the APIs used, please check our REST API documentation page:
+# 📚 https://docs.mend.io/bundle/api_sca/page/http_api_v1_3_and_v1_4.html
+#
+# ******** Description ********
+# This script pulls all of open pending tasks for an organization and calls the "closePendingTask" 
+# API request for each task to ensure they are all closed.
+
+# This script utilizes the Mend Org UUID to call the API Requests.
+# If the new Mend Unified Platform is not in use, then the user can get the Organization UUID for a specific organization by running the following API request:
+# 📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html#tag/Access-Management-Organizations/operation/getUserDomains 
+
+# Prerequisites:
+# apt install jq curl
+# MEND_USER_KEY - An administrator's userkey
+# MEND_ORG_UUID - API Key for organization (optional)
+# MEND_URL - e.g. https://saas.mend.io/
 
 # Check if MEND_URL is set in the environment
 if [ -z "$MEND_URL" ]; then
@@ -11,7 +32,7 @@ fi
 API_VERSION="v1.4"
 
 # Check if WS_APIKEY is set in the environment
-if [ -z "$WS_APIKEY" ]; then
+if [ -z "$MEND_ORG_UID" ]; then
   echo "Warning: WS_APIKEY is not set in the environment."
   exit 1
 fi
@@ -22,17 +43,14 @@ if [ -z "$MEND_USER_KEY" ]; then
   exit 1
 fi
 
-# Set other request parameters
-INCLUDE_REQUEST_TOKEN=true
-
 # Make the API request using curl for getDomainPendingTasks
 GET_TASKS_API="$MEND_URL/api/$API_VERSION"
 GET_TASKS_PAYLOAD=$(cat <<EOF
 {
-  "orgToken": "$WS_APIKEY",
+  "orgToken": "$MEND_ORG_UUID",
   "requestType": "getDomainPendingTasks",
   "userKey": "$MEND_USER_KEY",
-  "includeRequestToken": $INCLUDE_REQUEST_TOKEN
+  "includeRequestToken": "true"
 }
 EOF
 )
@@ -60,10 +78,10 @@ for uuid in $uuids; do
   CLOSE_TASK_PAYLOAD=$(cat <<EOF
   {
     "taskUUID": "$uuid",
-    "orgToken": "$WS_APIKEY",
+    "orgToken": "$MEND_ORG_UUID",
     "requestType": "closePendingTask",
     "userKey": "$MEND_USER_KEY",
-    "includeRequestToken": $INCLUDE_REQUEST_TOKEN
+    "includeRequestToken": "true"
   }
 EOF
   )
