@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# NOTE: It is currently recommended to use the MEND CLI over the Mend Unified Agent.
+# The Mend CLI will automatically list policy violations, and so with that utility
+# this script is not required.
 #
 # ******** Mend Script to List Policy Violations after a Unified Agent Scan ********
 # 
