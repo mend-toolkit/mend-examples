@@ -1,10 +1,17 @@
 #!/bin/bash
 
-# Description:
-# This script uses Mend's API to display (in the stdout) a list of
-# vulnerabilities affecting the last scanned project(s).
-# It is intended to be executed from the scan's working directory, either
-# independently or following a Unified Agent scan.
+# NOTE: It is currently recommended to use the MEND CLI over the Mend Unified Agent.
+# The Mend CLI will automatically list out project alerts, and so with that utility,
+# this script is not required.
+
+# ******** Mend Script to List Policy Violations after a Unified Agent Scan ********
+# 
+# Users should edit this file to change the behavior of the script as needed.
+#
+# ******** Description ********
+# This script parses the scanProjectDetails.json file, following a Mend Unified Agent scan, and prints to the stdout the
+# security vulnerabilities affecting the last scanned project(s).
+# It is intended to be executed from the scan's working directory, either independently or following a Unified Agent scan.
 
 # Prerequisites:
 # apt install jq curl

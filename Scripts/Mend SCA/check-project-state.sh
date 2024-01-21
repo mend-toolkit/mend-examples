@@ -1,4 +1,17 @@
 #!/bin/bash
+
+# NOTE: It is currently recommended to use the MEND CLI over the Mend Unified Agent.
+# The Mend CLI will automatically wait for the project to finish processing on the mend server
+# before printing results, and so with that utility this script is not required.
+#
+# ******** Mend Script to List Policy Violations after a Unified Agent Scan ********
+# 
+# Users should edit this file to change the behavior of the script as needed.
+#
+# ******** Description ********
+# This script will continually check with Mend Servers to determine whether the scan has finished
+# Processing on Mend Servers. Once the process has finished, then it will exit without error.
+
 # Prerequisites:
 # apt install jq
 # WS_GENERATEPROJECTDETAILSJSON: true

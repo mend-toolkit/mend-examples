@@ -5,19 +5,19 @@ This folder contains scripts for use with the Mend SCA platform and Unified agen
 
 - [Reports Within a Pipeline](#reports-within-a-pipeline)
 - [SBOM Report Generation](#sbom-report-generation)
-- [Adding Red Shield Comment Links to GitHub Issues](#adding-red-shield-comment-links-to-github-issues)
-- [Ignoring Alerts Based on Prioritize](#ignoring-alerts-based-on-prioritize)
+- [Get all Users that are part of Organizations which are a part of a Global Organization](#get-all-users-that-are-part-of-organizations-which-are-a-part-of-a-global-organization)
+- [Get all libraries where the used version is older than X days](#get-all-libraries-where-the-used-version-is-older-than-x-days)
+- [Get all malicious packages in an organization](#get-all-malicious-packages-in-an-organization)
+
+### Unified Agent Scripts  
+The following scripts are designed to be used with the Unified Agent. Currently, it is recommended to use the Mend CLI for scanning purposes. However, these scripts can be used to bridge the gap between the Mend Unified Agent and the CLI in cases where the Unified Agent is required.
+
+- [Cache the Latest Version of the Unified Agent](#cache-the-latest-version-of-the-unified-agent)
 - [Display Vulnerabilities Affecting a Project](#display-vulnerabilities-affecting-a-project)
 - [Display Policy Violations Following a Scan](#display-policy-violations-following-a-scan)
-- [Cache the Latest Version of the Unified Agent](#cache-the-latest-version-of-the-unified-agent)
-- [Plugin Request History export](#request-history-export)
-- [Get all Users that are part of Organizations which are a part of a Global Organization](#get-all-users-that-are-part-of-organizations-which-are-a-part-of-a-global-organization)
+- [Export a Product's Last Scan Date](#export-a-products-last-scan-date)
 
 <hr/>
-
-**All scripts & snippets that are utilized in a pipeline should call [check-project-state.sh](check-project-state.sh) before running to ensure that the scan has completed.**
-<hr/>
-
 
 ## Reports Within a Pipeline
 
@@ -66,63 +66,122 @@ An example using the sbom-export-cli with Mend Unified CLI can be found in the [
 <br>
 <hr>
 
-## Adding Red Shield Comment Links to GitHub Issues
+## Pending task cleanup
 
-[ghissue-eua.sh](ghissue-eua.sh)  
+[pending-task-cleanup.sh](pending-task-cleanup.sh)  
 
-Add the following lines after the Unified Agent command in a GitHub action to add comments to your GitHub issues that are created by the Mend GitHub integration. These comments will indicate if the vulnerability has a red shield and provide a link to the Mend UI for further examination.  
+This script allows the user to cleanup outstanding [Pending Tasks](https://docs.mend.io/bundle/wsk/page/ui_-_request_history_report_and_pending_tasks.html) in the Mend SCA UI, when this process is no longer required. Please ensure the setting '[Open pending tasks for new libraries](https://docs.mend.io/bundle/wsk/page/ui_-_request_history_report_and_pending_tasks.html)' is disabled under the Integrate, Advanced Settings area. In addition, also ensure that their are no [Policies](https://docs.mend.io/bundle/sca_user_guide/page/managing_automated_policies.html#Applying-Actions-to-a-Library) that are 'Reassign' or 'Condition', which could create new tasks. 
+
+The [pending-task-cleanup.sh](pending-task-cleanup.sh) script is designed to be executed one time per organization to clean up historic pending requests the Mend SCA UI. 
 
 <br>
 
 **Prerequisites:**  
 
-* `jq` and `awk` must be installed
-* ENV variables must be set
-  * WS_GENERATEPROJECTDETAILSJSON: true
-  * WS_USERKEY
-  * WS_PRODUCTNAME
-  * WS_PROJECTNAME
-  * WS_WSS_URL
+* `jq` and `curl` must be installed
+* The tasks within Mend should be assigned to a user and not to a group (Edit policy->Reasssign->Assign to User) as the getDomainPendingTasks API is based off of tasks assigned to a user
 
 <br>
 
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/ghissue-eua.sh 
-chmod +x ./ghissue-eua.sh && ./ghissue-eua.sh
+export MEND_URL=https://saas.mend.io
+export WS_APIKEY=x
+export MEND_USER_KEY=x
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/pending-task-cleanup.sh 
+chmod +x ./pending-task-cleanup.sh && ./pending-task-cleanup.sh
+```
+
+
+## Get all libraries where the used version is older than X days
+
+[get-library-ages.py](get-library-ages.py)  
+
+This script allows the retrieval of all libraries in a product or organization that were released longer than X days ago. This allows a user to check the age of a library and make sure it is the version they want.
+
+The [get-library-ages.py](get-library-ages.py) script can be added to the CI/CD pipeline on a static/hosted build agent (prior to the Unified Agent scan task), or triggered independently, manually or by a scheduled task.  
+
+<br>
+
+**Prerequisites:**  
+
+* ``pip3 install requests python-dateutil``
+* ``export MEND_USER_KEY='<MEND_USER_KEY>'``
+* ``export MEND_URL='<MEND_URL>``
+* ``export MEND_EMAIL='<MEND_EMAIL>'``
+
+<br>
+
+**Execution:**  
+
+```
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/get-library-ages.py
+python3 ./get-library-ages.py
 ```
 
 <br>
 <hr>
 
-## Ignoring Alerts Based on Prioritize
+## Get all malicious packages in an organization
 
-[ghissue-prioritize.sh](ghissue-prioritize.sh)  
+[get-malicious-packages.sh](get-malicious-packages.sh)  
 
-Add the following lines after the Unified Agent command in a CI/CD pipeline to ignore vulnerabilities based on Mend Prioritize Green shields in a repository that is scanned via the Github Integration.
+This script allows a user to retrieve all malicious packages in an organization for reporting purposes.
+
+The [get-malicious-packages.sh](get-malicious-packages.sh) script can be added to the CI/CD pipeline on a static/hosted build agent (prior to the Unified Agent scan task), or triggered independently, manually or by a scheduled task.  
 
 <br>
 
 **Prerequisites:**  
 
-* `jq` and `awk` must be installed
-* ENV variables must be set
-  * WS_GENERATEPROJECTDETAILSJSON: true
-  * WS_USERKEY
-  * WS_PRODUCTNAME
-  * WS_PROJECTNAME
-  * WS_APIKEY
-  * WS_WSS_URL
+* ``sudo apt-get install jq curl``
+* ``export MEND_USER_KEY`` - An administrator's userkey
+* ``MEND_EMAIL`` - The administrator's email
+* ``MEND_ORG_UUID`` - API Key for organization (optional)
+* ``MEND_URL`` - e.g. https://saas.mend.io/
 
 <br>
 
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/prioritize-ignore.sh 
-chmod +x ./prioritize-ignore.sh && ./prioritize-ignore.sh
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/get-malicious-packages.sh
+chmod +x ./get-malicious-packages.sh && ./get-malicious-packages.sh
 ```
+
+<br>
+<hr>
+
+# Unified Agent Only Scripts
+
+**All scripts & snippets besides [Cache Unified Agent](#cache-the-latest-version-of-the-unified-agent) in this section that are utilized in a pipeline should call [check-project-state.sh](check-project-state.sh) before running to ensure that the scan has completed.**
+
+## Cache the Latest Version of the Unified Agent
+
+[cache-ua.sh](cache-ua.sh)  
+
+This script allows caching of the [WhiteSource Unified Agent](https://whitesource.atlassian.net/wiki/spaces/WD/pages/1140852201/Getting+Started+with+the+Unified+Agent), so you can periodically check for updates and download the latest version only if needed, rather than redundantly downloading prior to every scan.  
+
+The [cache-ua.sh](cache-ua.sh) script can be added to the CI/CD pipeline on a static/hosted build agent (prior to the Unified Agent scan task), or triggered independently, manually or by a scheduled task.  
+
+<br>
+
+**Prerequisites:**  
+
+* `jq` and `curl` must be installed
+
+<br>
+
+**Execution:**  
+
+```
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/cache-ua.sh
+chmod +x ./cache-ua.sh && ./cache-ua.sh
+```
+
+See additional examples for implementation within a build pipeline under [CI-CD](../CI-CD/README.md#caching-the-unified-agent) (`*-cached-ua.yml`).  
+
 
 <br>
 <hr>
@@ -261,104 +320,3 @@ Rejected Libraries:
 
 <br>
 <hr>
-
-## Cache the Latest Version of the Unified Agent
-
-[cache-ua.sh](cache-ua.sh)  
-
-This script allows caching of the [WhiteSource Unified Agent](https://whitesource.atlassian.net/wiki/spaces/WD/pages/1140852201/Getting+Started+with+the+Unified+Agent), so you can periodically check for updates and download the latest version only if needed, rather than redundantly downloading prior to every scan.  
-
-The [cache-ua.sh](cache-ua.sh) script can be added to the CI/CD pipeline on a static/hosted build agent (prior to the Unified Agent scan task), or triggered independently, manually or by a scheduled task.  
-
-<br>
-
-**Prerequisites:**  
-
-* `jq` and `curl` must be installed
-
-<br>
-
-**Execution:**  
-
-```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/cache-ua.sh.sh 
-chmod +x ./cache-ua.sh && ./cache-ua.sh
-```
-
-See additional example for implementation within a build pipeline under [CI-CD](../CI-CD/README.md#caching-the-unified-agent) (`*-cached-ua.yml`).  
-
-
-<br>
-<hr>
-
-## Pending task cleanup
-
-[pending-task-cleanup.sh](pending-task-cleanup.sh)  
-
-This script allows the user to cleanup outstanding [Pending Tasks](https://docs.mend.io/bundle/wsk/page/ui_-_request_history_report_and_pending_tasks.html) in the Mend SCA UI, when this process is no longer required. Please ensure the setting '[Open pending tasks for new libraries](https://docs.mend.io/bundle/wsk/page/ui_-_request_history_report_and_pending_tasks.html)' is disabled under the Integrate, Advanced Settings area. In addition, also ensure that their are no [Policies](https://docs.mend.io/bundle/sca_user_guide/page/managing_automated_policies.html#Applying-Actions-to-a-Library) that are 'Reassign' or 'Condition', which could create new tasks. 
-
-The [pending-task-cleanup.sh](pending-task-cleanup.sh) script is designed to be executed one time per organization to clean up historic pending requests the Mend SCA UI. 
-
-<br>
-
-**Prerequisites:**  
-
-* `jq` and `curl` must be installed
-* The tasks within Mend should be assigned to a user and not to a group (Edit policy->Reasssign->Assign to User) as the getDomainPendingTasks API is based off of tasks assigned to a user
-
-<br>
-
-**Execution:**  
-
-```
-export MEND_URL=https://saas.mend.io
-export WS_APIKEY=x
-export MEND_USER_KEY=x
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/pending-task-cleanup.sh 
-chmod +x ./pending-task-cleanup.sh && ./pending-task-cleanup.sh
-```
-
-## Request History Export
-
-[get-request-history.py](get-request-history.py)  
-
-This script exports the product names and their last scan dates to CSV file for reporting purposes, the number of days to query is set as an argument to the script.
-
-**Prerequisites:** 
-* Python3.6 and up
-* pip install requests csv
-
-<br>
-
-**Execution:** 
-python get-request-history.py MEND_URL MEND_APIKEY MEND_USERKEY DAYS_TO_QUERY
-
-<br />
-<hr />
-
-# Get all Users that are part of Organizations which are a part of a Global Organization
-
-[get-all-users-under-global-org.py](get-all-users-under-global-org.py)
-
-This script allows a user to retrieve every single user account that is a part of any of their Organizations which reside under the "umbrella" of a Global Organization. This allows an organization to take a full inventory of all users that have access to their resources.
-
-The [get-all-users-under-global-org.py](get-all-users-under-global-org.py) script can be run with Python 3.9+ and utilizes the Mend API 1.4 as well as API 2.0 to get the information necessary.
-
-> **_NOTE:_** If an error occurs with this script that produces an error when attempting to log in via API 2.0, this can happen on a rare occasion. The best thing to do is to implement a more comprehensive retry logic, or just try running the script again.
-
-<br />
-
-**Prerequisites:**  
-
-* `python 3.9+`
-
-**Execution:**
-```shell
-# Create Environment Variables
-export MEND_URL="https://saas.whitesourcesoftware.com"
-export MEND_USER_KEY="<userkey>"
-export MEND_GLOBAL_ORG_TOKEN="<global_org_token>"
-
-# Run the script
-python ./get-all-users-under-global-org.py
-```

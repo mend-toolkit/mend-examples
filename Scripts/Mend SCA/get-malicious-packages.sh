@@ -13,39 +13,41 @@
 # A good way to get this information is to return all alerts for a product with the search filter: "search=vulnerabilityName:LIKE:MSC"
 # Afterwards the scripts combines all of the data pulled for each product.
 # 
-# The WS_API_KEY environment variable is optional. If this is not specified in the script, then the Login API will
+# The MEND_ORG_UUID environment variable is optional. If this is not specified in the script, then the Login API will
 # authenticate to the last organization the user accessed in the Mend UI.
+# If the new Mend Unified Platform is not in use, then the user can get the Organization UUID for a specific organization by running the following API request:
+# 📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html#tag/Access-Management-Organizations/operation/getUserDomains 
 
 # Prerequisites:
 # apt install jq curl
 # MEND_USER_KEY - An administrator's userkey
 # MEND_EMAIL - The administrator's email
-# WS_APIKEY - API Key for organization (optional)
+# MEND_ORG_UUID - API Key for organization (optional)
 # MEND_URL - e.g. https://saas.mend.io/
 
 # Reformat MEND_URL for the API to https://api-<env>/api/v2.0
 MEND_API_URL=$(echo "${MEND_URL}" | sed -E 's/(saas|app)(.*)/api-\1\2\/api\/v2.0/g')
 
 # If API Key was not specified then exclude from Login request body.
-if [ -z "$WS_APIKEY" ]
+if [ -z "$MEND_ORG_UUID" ]
 then
-	echo "WS_APIKEY environment variable was not provided."
+	echo "MEND_ORG_UUID environment variable was not provided."
        	echo -e "The Login API will default to the last organization this user accessed in the Mend UI.\n"
         LOGIN_BODY="{\"email\": \"$MEND_EMAIL\", \"userKey\": \"$MEND_USER_KEY\" }"
 else
 	echo -e "Logging in with provided API key.\n"
-        LOGIN_BODY="{\"email\": \"$MEND_EMAIL\", \"userKey\": \"$MEND_USER_KEY\", \"orgToken\": \"$WS_APIKEY\"}"
+        LOGIN_BODY="{\"email\": \"$MEND_EMAIL\", \"userKey\": \"$MEND_USER_KEY\", \"orgToken\": \"$MEND_ORG_UUID\"}"
 fi
 
 # Log into API 2.0 and get the JWT Token and Organization UUID
 LOGIN_RESPONSE=$(curl -s -X POST --location "$MEND_API_URL/login" --header 'Content-Type: application/json' --data-raw "${LOGIN_BODY}")
 
 JWT_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.retVal.jwtToken')
-WS_APIKEY=$(echo $LOGIN_RESPONSE | jq -r '.retVal.orgUuid')
+MEND_ORG_UUID=$(echo $LOGIN_RESPONSE | jq -r '.retVal.orgUuid')
 
 # Get all products
 echo "Retrieving Products from Organization"
-PRODUCT_API_RESPONSE=$(curl -s --location "$MEND_API_URL/orgs/$WS_APIKEY/products?pageSize=10000&page=0" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN")
+PRODUCT_API_RESPONSE=$(curl -s --location "$MEND_API_URL/orgs/$MEND_ORG_UUID/products?pageSize=10000&page=0" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN")
 NUM_PRODUCTS=$(echo $PRODUCT_API_RESPONSE | jq -r '.additionalData.totalItems' )
 PRODUCTS=$(echo $PRODUCT_API_RESPONSE | jq '.retVal')
 
