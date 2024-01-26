@@ -153,6 +153,7 @@ if [[ $DOCKER_COMPOSE_VERSION -ge 2 ]]; then
     echo "Docker Compose version is greater than or equal to 2."
 else
     echo "Docker Compose version is less than 2.  Please install docker compose by following the README"
+    exit 1
 fi
 
 }
