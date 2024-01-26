@@ -50,8 +50,8 @@ esac
 ## Dowload agent file and copy to version
 wget https://integrations.mend.io/release/$AGENT_PATH/$AGENT_TAR -P $BASE_DIR
 if [ $? -ne 0 ]; then
-	echo "${red}Download failed: Check if requested version exists, network issues, or other probelms.${end}"
-	exit
+        echo "${red}Download failed: Check if requested version exists, network issues, or other probelms.${end}"
+        exit
 fi
 AGENT_FILE=$(basename $AGENT_TAR .tar.gz)
 echo "${grn}$AGENT_FILE is the agent${end}"
@@ -133,23 +133,23 @@ echo "${cyn}sudo sysctl -p${end}"
 function env_check(){
 
 ## Check if operatins system is Ubuntu
-if [[ $(lsb_release -is) != "Ubuntu" ]]; then
+if [[ $(lsb_release -is) -ne "Ubuntu" ]]; then
     echo "This script is only supported on Ubuntu distributions"
     exit 1
 fi
 
 ## Check if docker version > 18
-DOCKER_VERSION=$(docker version --format '{{.Server.Version}}')
-if [[ $(echo "$DOCKER_VERSION > 18" | bc -l) -eq 1 ]]; then
+DOCKER_VERSION=$(docker version --format '{{.Server.Version}}' | cut -d '.' -f 1)
+if [[ $DOCKER_VERSION -gt 18 ]]; then
     echo "Docker version is greater than 18."
 else
     echo "Docker version is not greater than 18.  Please install docker by following the README"
     exit 1
 fi
 
-## Check if docker compose version > 2
-DOCKER_COMPOSE_VERSION=$(docker compose version --short)
-if [[ $(echo "$DOCKER_COMPOSE_VERSION >= 2" | bc -l) -eq 1 ]]; then
+## Check if docker compose version >= 2
+DOCKER_COMPOSE_VERSION=$(docker compose version --short | cut -d '.' -f 1)
+if [[ $DOCKER_COMPOSE_VERSION -ge 2 ]]; then
     echo "Docker Compose version is greater than or equal to 2."
 else
     echo "Docker Compose version is less than 2.  Please install docker compose by following the README"
@@ -159,34 +159,60 @@ fi
 
 function port_check(){
 
-# Get public IP address
-PUBLIC_IP=$(curl http://checkip.amazonaws.com)
+echo -e "\nChecking all required ports are available"
+echo "Checking internally avaialble ports"
+# Test that internal ports are available for use
+INTERNAL_PORTS=(8582 9393)
 
-# Define the array of ports to check
-PORTS=(5678 9000 8582 9393)  # Replace with your desired ports
+for PORT in "${INTERNAL_PORTS[@]}"; do
 
-for PORT in "${PORTS[@]}"; do
+  # Start listener on port in the background, storing the process ID
+  echo "Listening on: $PORT"
+  nc -lp $PORT &
 
-  # Start listener on port 5678 in the background, storing the process ID
-  nc -lvp $PORT &
-  LISTENER_PID=$!
-  echo $LISTENER_PID
   # Check for connection success
-  nc -zv $PUBLIC_IP $PORT
+  echo "Testing connection to: 127.0.0.1:$PORT"
+  nc -z 127.0.0.1 $PORT
 
   # Store the connection check result
   CONNECTION_RESULT=$?
-  echo $CONNECTION_RESULT
-  # Terminate the specific listener process using its PID
-  kill $LISTENER_PID
-
-  # Report the result
-  if [[ $CONNECTION_RESULT -eq 0 ]]; then
-    echo "Connection successful for $PORT"
+  if [[ $CONNECTION_RESULT -ne 0 ]]; then
+    echo "Connection Failed. Exiting..."
+    exit 1
   else
-    echo "Connection failed for $PORT"
+    echo "Connection Result: Success"
   fi
 done
+
+echo  "Checking externally available ports"
+
+# Get public IP address
+PUBLIC_IP=$(curl -s http://checkip.amazonaws.com)
+
+# Define the array of externally facing ports to check
+EXTERNAL_PORTS=(5678 9000)  # Replace with your desired ports
+
+for PORT in "${EXTERNAL_PORTS[@]}"; do
+
+  # Start listener on port 5678 in the background, storing the process ID
+  echo "Listening on: $PORT"
+  nc -lp $PORT &
+
+  # Check for connection success
+  echo "Testing connection to: $PUBLIC_IP:$PORT"
+  nc -z $PUBLIC_IP $PORT
+
+  # Store the connection check result
+  CONNECTION_RESULT=$?
+  if [[ $CONNECTION_RESULT -ne 0 ]]; then
+    echo "Connection Failed. Exiting..."
+    exit 1
+  else
+    echo "Connection Result: Success"
+  fi
+done
+
+echo
 
 }
 
@@ -238,7 +264,7 @@ then
 else
     if [ "$1" = "gls" ] || [ "$1" = "bb" ] || [ "$1" = "ghe" ]
         then
-            ## Check if environment has prereqs 
+            ## Check if environment has prereqs
             env_check
             ## Check if ports are open
             port_check
@@ -249,5 +275,3 @@ else
             exit
         fi
 fi
-
-
