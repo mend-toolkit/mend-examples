@@ -161,32 +161,6 @@ fi
 function port_check(){
 
 echo -e "\nChecking all required ports are available"
-echo "Checking internally avaialble ports"
-# Test that internal ports are available for use
-INTERNAL_PORTS=(8582 9393)
-
-for PORT in "${INTERNAL_PORTS[@]}"; do
-
-  # Start listener on port in the background, storing the process ID
-  echo "Listening on: $PORT"
-  nc -lp $PORT &
-
-  # Check for connection success
-  echo "Testing connection to: 127.0.0.1:$PORT"
-  nc -z 127.0.0.1 $PORT
-
-  # Store the connection check result
-  CONNECTION_RESULT=$?
-  if [[ $CONNECTION_RESULT -ne 0 ]]; then
-    echo "Connection Failed. Exiting..."
-    exit 1
-  else
-    echo "Connection Result: Success"
-  fi
-done
-
-echo  "Checking externally available ports"
-
 # Get public IP address
 PUBLIC_IP=$(curl -s http://checkip.amazonaws.com)
 
