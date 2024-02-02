@@ -1,7 +1,7 @@
 The following scripts can be used to gather data from the Mend.io application and different Source Control Management systems in order to understand how many developers are currently working on repositories throughout the calendar year.
 
-For more information on the APIs used, please check our REST API documentation page: 📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html
-Users should edit these files to add any steps for consuming the information provided by the API requests however needed.
+- For more information on the APIs used, please check our REST API documentation page: 📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html
+- Users should edit these files to add any steps for consuming the information provided by the API requests however needed.
 
 # Supported Operating Systems
 - **Linux (Bash):**	Debian, Ubuntu
@@ -33,12 +33,14 @@ chmod +x get-repo-tags.sh
 ./get-repo-tags.sh
 ```
 
-# [dedup-repo.sh]
+# [dedup-repo.sh](./dedup-repo.sh)
 It is recommended to review the repos.txt, cleanup duplicates, and add source control management prefixes before running the [get-committers.sh](./get-committers.sh) script.  The dedup-repo.sh script can also be modified to accomplish this.
-- Update the script with the appriopriate SCM prefix
 
 ## Usage
 ```shell
+# modify with the appropriate prefix for your source control
+export SCM=https://github.com
+
 curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Committers/dedup-repo.sh
 chmod +x dedup-repo.sh
 ./dedup-repo.sh repos.txt
@@ -61,4 +63,16 @@ git config --global credential.helper 'cache --timeout=9999'
 curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Committers/get-committers.sh
 chmod +x get-committers.sh
 ./get-committers.sh deduprepos.txt
+```
+### Post Processing Cleanup Options
+- The following commands can be used to cleanup the committer.txt output.
+```shell
+# Optional filter to remove blank lines and noreply@github.com results
+grep -v "noreply@github.com" committers.txt | sed '/^$/d' > committers_filtered.txt
+
+# The following command gives a quick line count for spot checking
+wc -l committers_filtered.txt
+
+# Use the following command to print all unique values to a new text file
+awk '!seen[$0]++' committers_filtered.txt >> committers_dedup.txt
 ```

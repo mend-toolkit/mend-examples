@@ -18,7 +18,7 @@ workdir=$PWD
 
 if [ -z "$1" ]
 then
-    echo "Please pass a text file to read repositories from such as repos.txt"
+    echo "Please pass a text file to read repositories from such as deduprepos.txt"
     exit
 else
     file=$1
@@ -27,8 +27,8 @@ fi
 
 for line in $lines; do
     cd $workdir
-    echo "Cloning $url"
-    git clone $url $workdir/currentrepo
+    echo "Cloning $line"
+    git clone $line $workdir/currentrepo
 
     # Handle error if the repo no longer exists
     if [ $? -ne 0 ]
@@ -52,12 +52,3 @@ for line in $lines; do
     fi
 
 done
-
-# Optional filter to remove blank lines and noreply@github.com results
-# grep -v "noreply@github.com" committers.txt | sed '/^$/d' > committers_filtered.txt
-
-# The following command gives a quick line count for spot checking
-# wc -l committers_filtered.txt
-
-# Use the following command to print all unique values to a new text file
-# awk '!seen[$0]++' committers_filtered.txt >> committers_dedup.txt
