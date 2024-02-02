@@ -1,0 +1,46 @@
+The following scripts can be used to gather data from the Mend.io application and different Source Control Management systems in order to understand how many developers are currently working on repositories throughout the calendar year.
+
+For more information on the APIs used, please check our REST API documentation page: 📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html
+Users should edit these files to add any steps for consuming the information provided by the API requests however needed.
+
+# Supported Operating Systems
+- **Linux (Bash):**	Debian, Ubuntu
+
+# Prerequisites
+```shell
+apt install -y jq curl
+```
+# [get-repo-tags.sh](./get-repo-tags.sh)
+This script pulls all of the projects in an organization and then retrieves the tags for each and grabs the values for repoFullName and remoteUrl
+Afterwards the scripts combines all of the data pulled for each project, prints to the screen and also saves to a repos.txt
+
+The WS_API_KEY environment variable is optional. If this is not specified in the script, then the Login API will authenticate to the last organization the user accessed in the Mend UI.
+## Usage
+```shell
+export MEND_USER_KEY="An administrator's userkey"
+export MEND_EMAIL="The administrator's email"
+export MEND_URL="https://saas.mend.io"
+# Optional - if performing for multiple organizations with the same administrator
+export WS_APIKEY="API Key for organization"
+
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Contributing%20Developer/get-repo-tags.sh
+chmod +x get-repo-tags.sh
+./get-repo-tags.sh
+```
+
+# [get-committers.sh](./get-committers.sh)
+This script clones git repositories from a text file and then runs a git command to determine what email addresses committed to the codebase within the last year
+
+## Prerequisites
+- Update the script with your preferred SCM value and BEGIN_DATE
+- Use a git credential manager or use the following command to cache your credentials
+```shell
+git config --global credential.helper 'cache --timeout=9999'
+```
+
+## Usage
+```shell
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Contributing%20Developer/get-committers.sh
+chmod +x get-committers.sh
+./get-committers.sh repos.txt
+```
