@@ -49,9 +49,10 @@ chmod +x dedup-repo.sh
 
 # [get-committers.sh](./get-committers.sh)
 This script clones git repositories from a text file and then runs the ```git shortlog``` command to determine what email addresses committed to the codebase within the last year.
+The output is a committers.txt file with committer email addresses and an uncloned.txt with any repositories that were not cloned.
 
 ## Prerequisites
-- Update the script with your preferred BEGIN_DATE
+- Update the script with your preferred BEGIN_DATE if different than Jan 1, 2023
 - Git credentials should be able to clone all repositories in the list
 - Use a git credential manager or use the following command to cache your credentials
 ```shell

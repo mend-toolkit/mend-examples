@@ -33,8 +33,8 @@ for line in $lines; do
     # Handle error if the repo no longer exists
     if [ $? -ne 0 ]
     then
-        echo "[ERROR] Git repository at $url was not cloned"
-        printf '%s\n' $url >> $workdir/uncloned.txt
+        echo "[ERROR] Git repository at $line was not cloned"
+        printf '%s\n' $line >> $workdir/uncloned.txt
     else
         cd $workdir/currentrepo
 
