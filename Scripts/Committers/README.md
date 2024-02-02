@@ -5,10 +5,15 @@ Users should edit these files to add any steps for consuming the information pro
 
 # Supported Operating Systems
 - **Linux (Bash):**	Debian, Ubuntu
+- **MacOs (zshell):** Sonoma
 
 # Prerequisites
 ```shell
-apt install -y jq curl
+# Linux
+apt install -y jq curl git
+
+# MacOS
+brew install -y jq git
 ```
 # [get-repo-tags.sh](./get-repo-tags.sh)
 This script pulls all of the projects in an organization and then retrieves the tags for each and grabs the values for repoFullName and remoteUrl.  
@@ -28,11 +33,24 @@ chmod +x get-repo-tags.sh
 ./get-repo-tags.sh
 ```
 
+# [dedup-repo.sh]
+It is recommended to review the repos.txt, cleanup duplicates, and add source control management prefixes before running the [get-committers.sh](./get-committers.sh) script.  The dedup-repo.sh script can also be modified to accomplish this.
+- Update the script with the appriopriate SCM prefix
+
+## Usage
+```shell
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Committers/dedup-repo.sh
+chmod +x dedup-repo.sh
+./dedup-repo.sh repos.txt
+
+```
+
 # [get-committers.sh](./get-committers.sh)
 This script clones git repositories from a text file and then runs the ```git shortlog``` command to determine what email addresses committed to the codebase within the last year.
 
 ## Prerequisites
-- Update the script with your preferred SCM value and BEGIN_DATE
+- Update the script with your preferred BEGIN_DATE
+- Git credentials should be able to clone all repositories in the list
 - Use a git credential manager or use the following command to cache your credentials
 ```shell
 git config --global credential.helper 'cache --timeout=9999'
@@ -42,5 +60,5 @@ git config --global credential.helper 'cache --timeout=9999'
 ```shell
 curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Committers/get-committers.sh
 chmod +x get-committers.sh
-./get-committers.sh repos.txt
+./get-committers.sh deduprepos.txt
 ```
