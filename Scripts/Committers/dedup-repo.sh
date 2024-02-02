@@ -1,4 +1,13 @@
-SCM=https://github.com
+#!/bin/bash
+if [ -z "$SCM" ]
+then
+    echo "Please export the SCM variable with your source control prefix such as https://github.com"
+    exit
+else
+    file=$1
+    lines=`cat ${file}`
+fi
+
 if [ -z "$1" ]
 then
     echo "Please pass a text file to read repositories from such as repos.txt"
