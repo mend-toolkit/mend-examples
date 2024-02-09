@@ -58,7 +58,7 @@ stages:
           Invoke-WebRequest -Uri "https://downloads.mend.io/cli/windows_amd64/mend.exe" -OutFile "mend.exe"
           
           echo Run Mend Image Analysis
-          ./mend.exe image $(IMAGE_NAME):$(IMAGE_TAG) 
+          ./mend.exe image $(IMAGE_NAME):$(IMAGE_TAG) --local-pull 
       env:
         ### Authentication Environment Variable Secrets ###
         MEND_EMAIL: $(MEND_EMAIL)

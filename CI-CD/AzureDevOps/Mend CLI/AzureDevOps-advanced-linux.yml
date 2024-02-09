@@ -41,7 +41,7 @@ jobs:
     - script: |
         SLN=$(find ./ -type f -wholename "*.sln" | head -n 1)
         echo "${SLN} is the solution that will be built"
-        dotnet restore ${SLN}
+        dotnet restore ${SLN}  --use-lockfile
       displayName: 'dotnet build'
 ### The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
     - script: |
@@ -118,7 +118,7 @@ jobs:
     - script: |
         SLN=$(find ./ -type f -wholename "*.sln" | head -n 1)
         echo "${SLN} is the solution that will be built"
-        dotnet restore ${SLN}
+        dotnet restore ${SLN} --use-lockfile
       displayName: 'dotnet build'
 ### Build the image ###
     - script: |
@@ -225,7 +225,7 @@ jobs:
     - script: |
         SLN=$(find ./ -type f -wholename "*.sln" | head -n 1)
         echo "${SLN} is the solution that will be built"
-        dotnet restore ${SLN}
+        dotnet restore ${SLN} --use-lockfile
       displayName: 'dotnet build'
 ### The mend dep scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
     - script: |
