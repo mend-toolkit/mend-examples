@@ -14,7 +14,7 @@
     "snippetSize": 10
   },
   "checkRunSettings": {
-    "vulnerableCheckRunConclusionLevel": "none",
+    "vulnerableCheckRunConclusionLevel": "NONE",
     "failOnVulnerabilityMinSeverity": "CRITICAL",
     "licenseCheckRunConclusionLevel": "success",
     "displayMode": "diff",
