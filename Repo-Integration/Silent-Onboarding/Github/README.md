@@ -86,7 +86,7 @@ If your ``repo-config.json`` file has already been created, then you will need t
 This configuration describes to the integration what scans to perform as well as other settings. As you can see, all scans except for SCA dependency scans are disabled by default. Here are some other settings to note:  
 - Checkruns are _**NOT**_ created for each SCA scan. This is denoted by  
 ``checkRunSettings.vulnerableCheckRunConclusionLevel=none``.  
-  - When this parameter is been changed to "success" or "failure" then it will create a checkrun, however it will only fail the checkrun on a repository that has security vulnerabilities if it is set to failure.  
+  - When this parameter has been changed to "success" or "failure" then it will create a checkrun, however it will only fail the checkrun on a repository that has security vulnerabilities if it is set to failure.  
   - When this parameter is set to "failure", then it will only fail checkruns that have **CRITICAL** security vulnerabilities. This is due to: ``checkRunSettings.failOnVulnerabilityMinSeverity=CRITICAL``.  
   - If this parameter is set to "failure" and building the project fails, then a warning will be presented in the checkrun message but the checkrun will not fail. This is denoted by ``checkRunSettings.strictMode=true``  
 - Github Issues will not be created after scans. This is denoted by ``issueSettings.minSeverityLevel=NONE``.  
