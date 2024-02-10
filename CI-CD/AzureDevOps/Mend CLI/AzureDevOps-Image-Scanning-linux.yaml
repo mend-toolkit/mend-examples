@@ -57,7 +57,7 @@ stages:
         curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
         
         echo Run Mend Image Analysis
-        mend image $(IMAGE_NAME):$(IMAGE_TAG) 
+        mend image $(IMAGE_NAME):$(IMAGE_TAG) --local-pull 
       env:
         ### Authentication Environment Variable Secrets ###
         MEND_EMAIL: $(MEND_EMAIL)
