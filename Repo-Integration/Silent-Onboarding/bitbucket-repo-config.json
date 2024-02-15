@@ -1,0 +1,21 @@
+{
+  "scanSettings": {
+    "configMode": "AUTO",
+    "configExternalURL": "",
+    "baseBranches": []
+  },
+  "buildSettings": {
+    "createBuildStatus": false,
+    "failBuilds": false,
+  },
+  "issueSettings": {
+    "minSeverityLevel": "NONE",
+    "issueType": "DEPENDENCY"
+  },
+  "remediateSettings": {
+    "enableRenovate": false,
+    "workflowRules": {
+      "enabled": false
+    }
+  }
+}

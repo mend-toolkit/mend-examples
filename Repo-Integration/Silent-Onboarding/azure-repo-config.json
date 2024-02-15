@@ -1,0 +1,25 @@
+{
+  "scanSettings": {
+    "configMode": "AUTO",
+    "configExternalURL": "",
+    "baseBranches": []
+  },
+  "pullRequestStatusSettings": {
+    "vulnerablePullRequestStatus": "none",
+    "licensePullRequestStatus": "failed",
+    "strictMode": "none",
+    "displayMode": "diff",
+    "useMendStatusNames": true
+  },
+  "issueSettings": {
+    "minSeverityLevel": "NONE",
+    "displayLicenseViolations": false,
+    "issueType": "DEPENDENCY"
+  },
+  "remediateSettings": {
+    "enableRenovate": false,
+    "workflowRules": {
+      "enabled": false
+    }
+  }
+}
