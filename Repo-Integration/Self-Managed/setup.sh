@@ -96,6 +96,7 @@ echo "SCM=$SCM" >> ${REPO_INTEGRATION_DIR}/.env
 echo "WS_ACTIVATION_KEY=${ws_key}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "GITHUB_COM_TOKEN=${github_com_token}" >> ${REPO_INTEGRATION_DIR}/.env
 echo "EXTERNAL_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
+echo "MEND_ADVANCED_MERGE_CONFIDENCE_ENABLED=true" >> ${REPO_INTEGRATION_DIR}/.env
 echo "LOG_FORMAT=json" >> ${REPO_INTEGRATION_DIR}/.env
 echo "GRAYLOG_NODE_ID_FILE=/usr/share/graylog/data/data/node_id" >> ${REPO_INTEGRATION_DIR}/.env
 echo "GRAYLOG_HTTP_BIND_ADDRESS=0.0.0.0:9000" >> ${REPO_INTEGRATION_DIR}/.env
