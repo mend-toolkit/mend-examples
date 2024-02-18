@@ -1,0 +1,7 @@
+{
+    "scans": {
+        "javaEngineGeneration" : 2,
+        "jsEngineGeneration": 2,
+        "csharpEngineGeneration": 2
+    }
+}
