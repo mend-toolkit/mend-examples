@@ -5,7 +5,7 @@ In all .whitesource file update examples, you should replace the inherited organ
 # SAST
 ## [2nd Generation Engines](https://docs.mend.io/bundle/integrations/page/configure_the_mend_cli_for_sast.html#Mend-CLI-SAST---General-scan-parameters)
 The below configuration is the same as running ```mend sast -j 2 --js 2 --cs 2``` with the CLI
-```
+```json
 {
   "settingsInheritedFrom": "myorganization/whitesource-config@main",
   "scanSettingsSAST": {
@@ -15,7 +15,7 @@ The below configuration is the same as running ```mend sast -j 2 --js 2 --cs 2``
 ```
 ## Increase Timeout
 The below configuration increases the perFile timeout to 300 seconds, but leaves the default of 480 minutes per language.  See [timeout parameters](https://docs.mend.io/bundle/mend_sast/page/cli_parameters.html#Timeouts) for more information.
-```
+```json
 {
   "settingsInheritedFrom": "myorganization/whitesource-config@main",
   "scanSettingsSAST": {
