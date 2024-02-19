@@ -22,7 +22,7 @@ When used, these scripts will download the latest [repository integration](https
 ## Steps for a fast setup in AWS EC2
 1) Provision a new EC2 instance with the following characteristics:
    - AMI: Ubuntu Server 22.04 LTS (HVM)
-   - Type: c4.xlarge or larger
+   - Type: r4.xlarge or larger
    - Storage: 60GiB (gp2) or higher
    - Security group: See [here](https://docs.mend.io/bundle/integrations/page/advanced_technical_information.html#Required-Open-Ports) for integration requirements
 2) Launch and remote into instance (ssh or console)

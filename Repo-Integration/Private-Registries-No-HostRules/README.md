@@ -41,7 +41,7 @@ PIP_INDEX_URL: https://<user_email>:<user_password>@<artifactory_instance>.jfrog
 For the remediate container, you need to match the registry to these 5 managers: ``pip-compile``, ``pip-requirements``, ``pip_setup``, ``pipenv``, ``setup-cfg``
 
 #### Poetry
-As of the current writing, the Poetry package manager that is used in the scanner container is version 1.1.12. Due to this, there does not seem to be a good way to manage a private registry with Go without using host rules.
+As of the current writing, the Poetry package manager that is used in the scanner container is version 1.1.12. Due to this, there does not seem to be a good way to manage a private registry with Poetry without using host rules.
 
 #### Go
 Go has a very simple method for connecting to private registries as well. For the scanner and the remediate container, all you need is an environment variable that looks much like Pip's:
