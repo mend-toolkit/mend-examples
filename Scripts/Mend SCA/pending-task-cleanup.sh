@@ -32,7 +32,7 @@ fi
 API_VERSION="v1.4"
 
 # Check if WS_APIKEY is set in the environment
-if [ -z "$MEND_ORG_UID" ]; then
+if [ -z "$MEND_ORG_UUID" ]; then
   echo "Warning: WS_APIKEY is not set in the environment."
   exit 1
 fi
