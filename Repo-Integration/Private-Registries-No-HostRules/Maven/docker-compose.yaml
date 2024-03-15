@@ -15,8 +15,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - "C:\\path\\to\\prop.json:/etc/usr/local/whitesource/conf/prop.json"
-      - "C:\\path\\to\\config.js:/usr/src/app/config.js"
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "/path/to/config.js:/usr/src/app/config.js"
     restart: always
     extra_hosts:
       - "repo.maven.apache.org:127.0.0.1"
@@ -38,7 +38,7 @@ services:
       - "9494:9494"
       - "5678:5678"
     volumes:
-      - "C:\\path\\to\\prop.json\\:/etc/usr/local/whitesource/conf/prop.json"
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
     depends_on:
       - remediate
     logging:
@@ -65,8 +65,8 @@ services:
     ports:
       - "9393:9393"
     volumes:
-      - "C:\\path\\to\\prop.json:/etc/usr/local/whitesource/conf/prop.json"
-      - "C:\\path\\to\\settings.xml:/home/wss-scanner/.m2/settings.xml"
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "/path/to/settings.xml:/home/wss-scanner/.m2/settings.xml"
     restart: always
     depends_on:
       - app

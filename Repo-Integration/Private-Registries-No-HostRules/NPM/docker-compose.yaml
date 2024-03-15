@@ -13,8 +13,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - "C:\\path\\to\\prop.json:/etc/usr/local/whitesource/conf/prop.json"
-      - "C:\\path\\to\\config.js:/usr/src/app/config.js"
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "/path/to/config.js:/usr/src/app/config.js"
     restart: always
     extra_hosts:
       - "registry.npmjs.org:127.0.0.1"
@@ -34,7 +34,7 @@ services:
       - "9494:9494"
       - "5678:5678"
     volumes:
-      - "C:\\path\\to\\prop.json\\:/etc/usr/local/whitesource/conf/prop.json"
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
     depends_on:
       - remediate
     logging:
@@ -54,12 +54,13 @@ services:
       LOG_LEVEL: DEBUG
       NPM_EMAIL: <artifactory email>
       NPM_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/api/npm/default-npm/
+      # This must be specified in the docker-compose.yaml file as .env files do not allow processing special characters in the environment variable name.
       NPM_CONFIG_//<artifactory_instance>.jfrog.io/artifactory/api/npm/default-npm/:_auth: <npm auth token> # The NPM auth token is a b64 representation of username:password
     ports:
       - "9393:9393"
     volumes:
-      - "C:\\path\\to\\prop.json:/etc/usr/local/whitesource/conf/prop.json"
-      - "C:\\path\\to\\.npmrc:/home/wss-scanner/.npmrc"
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "/path/to/.npmrc:/home/wss-scanner/.npmrc"
     restart: always
     depends_on:
       - app

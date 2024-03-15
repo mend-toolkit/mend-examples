@@ -1,0 +1,81 @@
+version: "3"
+services:
+
+  remediate:
+    image: wss-remediate:latest
+    container_name: remediate-server
+    environment:
+      LOG_LEVEL: "DEBUG"
+      NUGET_REGISTRY: "https://<artifactory_instance>.jfrog.io/artifactory/api/nuget/default-nuget"
+      NUGET_USER: "<username>"
+      NUGET_PASS: "<password>"
+    ports:
+      - "8083:8080"
+    volumes:
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "/path/to/config.js:/usr/src/app/config.js"
+    restart: always
+    extra_hosts:
+      - "api.nuget.org:127.0.0.1"
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+
+
+  app:
+    build:
+      context: wss-ghe-app/docker
+      dockerfile: Dockerfile
+    image: wss-ghe-app:24.2.2
+    container_name: wss-ghe-app
+    environment:
+      LOG_LEVEL: "DEBUG"
+    ports:
+      - "9494:9494"
+      - "5678:5678"
+    volumes:
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+    restart: always
+    depends_on:
+      - remediate
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+
+
+  scanner:
+    image: wss-scanner:latest
+    container_name: wss-scanner-ghe
+    environment:
+      EXTERNAL_LOG_IN_CONSOLE: "true"
+      LOG_LEVEL: "DEBUG"
+      NUGET_REGISTRY: "https://<artifactory_instance>.jfrog.io/artifactory/api/nuget/default-nuget"
+      NUGET_USER: "<username>"
+      NUGET_PASS: "<password>"
+    ports:
+      - "9393:9393"
+      - "4000:4000"
+    volumes:
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+        # NOTE: This must be named exactly like below to override the nuget.config file created by the container.
+      - "/path/to/NuGet.Config:/home/wss-scanner/.nuget/NuGet/NuGet.Config"
+    restart: always
+    extra_hosts:
+      - "api.nuget.org:127.0.0.1"
+    depends_on:
+      - app
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+
+
+networks:
+  default:
+    name: my_bridge
+    external: false
