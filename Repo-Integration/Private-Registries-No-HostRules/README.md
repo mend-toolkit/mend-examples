@@ -134,14 +134,14 @@ Map the file into the container as `NuGet.Config` with the correct capitalizatio
    - For the "matchHost", use only the registry domain name without a path: (e.g. ``https://<artifactory-instance>.jfrog.io``)
 
    ```javascript
-   module.exports = [{
+   module.exports = {
      "hostRules": [{
          "hostType": "docker",
          "matchHost": process.env.DOCKER_REGISTRY,
          "userName": process.env.DOCKER_USER,
          "password": process.env.DOCKER_PASS
      }]
-   }]
+   }
    ```
 
    Then, simply map in the necessary environment variables.
