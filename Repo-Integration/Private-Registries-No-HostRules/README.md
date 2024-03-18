@@ -39,8 +39,8 @@ Examples for each package manager may be found in this directory. Customer's may
 
    - For the remediate container, map `config.js` to `/usr/src/app` directory and set environment variables accordingly.
 
-   > [!NOTE]  
-   The POM file in a repository shouldn't specify registry handling, and should defer to the container configuration.
+> [!NOTE]  
+The POM file in a repository shouldn't specify registry handling, and should defer to the container configuration.
 
 2. **NPM**:
  
@@ -60,8 +60,8 @@ Examples for each package manager may be found in this directory. Customer's may
      NPM_CONFIG_//<artifactory_instance>.jfrog.io/artifactory/api/npm/<npm_registry>:_auth: "<NPM_AUTH_TOKEN>"
      ```
 
-   > [!WARNING]  
-   The Auth Token environment variable must be specified in a source that allows special characters in the variable name. For the purpose of these examples, a ``docker-compose.yaml`` file can store this information, but cannot be specified in a ``.env`` file due to how docker compose processes those files.
+> [!WARNING]  
+The Auth Token environment variable must be specified in a source that allows special characters in the variable name. For the purpose of these examples, a ``docker-compose.yaml`` file can store this information, but cannot be specified in a ``.env`` file due to how docker compose processes those files.
 
 3. **Pip**:
 
@@ -84,8 +84,8 @@ Examples for each package manager may be found in this directory. Customer's may
      GOPROXY: https://<user_email>:<user_password>@<artifactory_instance>.jfrog.io/artifactory/api/go/default-go
      ```
 
-   > [!NOTE]  
-   > Go's `datasource` in Renovate doesn't support private registries; use `GOPROXY`. Refer to this [link](https://docs.renovatebot.com/modules/datasource/go/) for details.
+> [!NOTE]  
+Go's `datasource` in Renovate doesn't support private registries; use `GOPROXY`. Refer to this [link](https://docs.renovatebot.com/modules/datasource/go/) for details.
 
 5. **Gradle**:
 
@@ -123,8 +123,8 @@ Examples for each package manager may be found in this directory. Customer's may
    - Create a `NuGet.Config` file that references environment variables for the Artifactory registry.
    - The password is the one provided by Artifactory with the specification `ClearTextPassword` in the `NuGet.Config` file.
 
-   > [!WARNING]  
-   > Map the file into the container as `NuGet.Config` with the correct capitalization. This is because the container already creates this file when installing the dotnet CLI, and needs to be overridden.
+> [!WARNING]  
+Map the file into the container as `NuGet.Config` with the correct capitalization. This is because the container already creates this file when installing the dotnet CLI, and needs to be overridden.
 
 7. **Docker**:
 
@@ -147,6 +147,4 @@ Examples for each package manager may be found in this directory. Customer's may
    Then, simply map in the necessary environment variables.
 
 > [!NOTE]  
-> Many packages don't follow the "SemVer" versioning scheme, which is the default for the ``docker`` manager. Refer to [https://docs.renovatebot.com/docker/#version-compatibility](https://docs.renovatebot.com/docker/#version-compatibility) for details on changing versioning for specific packages. This can be handled directly in the repository and does not need to be handled at the container level. Refer to [https://docs.renovatebot.com/modules/versioning/](https://docs.renovatebot.com/modules/versioning/) for more information on supported versioning schemes and custom versioning.
-
-
+Many packages don't follow the "SemVer" versioning scheme, which is the default for the ``docker`` manager. Refer to [https://docs.renovatebot.com/docker/#version-compatibility](https://docs.renovatebot.com/docker/#version-compatibility) for details on changing versioning for specific packages. This can be handled directly in the repository and does not need to be handled at the container level. Refer to [https://docs.renovatebot.com/modules/versioning/](https://docs.renovatebot.com/modules/versioning/) for more information on supported versioning schemes and custom versioning.
