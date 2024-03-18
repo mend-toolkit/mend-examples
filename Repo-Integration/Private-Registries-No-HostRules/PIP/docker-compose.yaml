@@ -7,13 +7,18 @@ services:
     container_name: remediate-server
     environment:
       LOG_LEVEL: DEBUG
-      GOPROXY: https://<username>:<password>@<artifactory-instance>.jfrog.io/artifactory/api/go/default-go/
+      PIP_USER: <user_email>
+      PIP_PASS: <artifactory provided password>
+      PIP_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
     ports:
       - "8080:8080"
     volumes:
-      - "C:\\path\\to\\prop.json:/etc/usr/local/whitesource/conf/prop.json"
-      - "C:\\path\\to\\config.js:/usr/src/app/config.js"
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "/path/to/config.js:/usr/src/app/config.js"
     restart: always
+    extra_hosts:
+      - "files.pythonhosted.org:127.0.0.1"
+      - "pypi.org:127.0.0.1"
     logging:
       driver: local
       options:
@@ -30,7 +35,7 @@ services:
       - "9494:9494"
       - "5678:5678"
     volumes:
-      - "C:\\path\\to\\prop.json\\:/etc/usr/local/whitesource/conf/prop.json"
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
     depends_on:
       - remediate
     logging:
@@ -43,14 +48,17 @@ services:
   scanner:
     image: wss-scanner:latest
     container_name: wss-scanner-ghe
+    extra_hosts:
+      - "files.pythonhosted.org:127.0.0.1"
+      - "pypi.org:127.0.0.1"
     environment:
       WS_UA_LOG_IN_CONSOLE: true
       LOG_LEVEL: DEBUG
-      GOPROXY: https://<username>:<password>@<artifactory-instance>.jfrog.io/artifactory/api/go/default-go/
+      PIP_INDEX_URL: https://<artifactory_email>:<artifactory_provided_password>@<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
     ports:
       - "9393:9393"
     volumes:
-      - "C:\\path\\to\\prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
     restart: always
     depends_on:
       - app

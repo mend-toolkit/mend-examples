@@ -1,89 +1,150 @@
-## Configuring Private Registries without Host Rules For Self-Managed Repository Integrations
+# Configuring Private Registries without Host Rules For Self-Managed Repository Integrations
 
-There are often security policies among many organizations that restrict reaching out to public registries such as Maven Central. This is the default repository for downloading dependencies with Maven. In instances such as this, Mend provides the ability to specify host rules inside of the repository for each Mend-Hosted repository integration([Github.com](https://docs.mend.io/bundle/integrations/page/configure_mend_for_github_com_to_resolve_your_private_dependencies.html), [Azure Repos](https://docs.mend.io/bundle/integrations/page/installation_of_mend_for_azure_repos.html#Handling-Private-Registries-and-Authenticated-Repositories), [Bitbucket Cloud](https://docs.mend.io/bundle/integrations/page/installation_of_mend_for_bitbucket_cloud.html#Handling-Private-Registries-and-Authenticated-Repositories) .
+Many organizations have security policies that restrict access to public registries like Maven Central, the default repository used by Maven to download dependencies. Mend addresses this by allowing you to specify private registry credentials directly within the repository for each Mend-Hosted repository integration. This is supported for integrations with ([Github.com](https://docs.mend.io/bundle/integrations/page/mend_for_github_com.html), [Azure Repos](https://docs.mend.io/bundle/integrations/page/using_mend_for_azure_repos.html), [Bitbucket Cloud](https://docs.mend.io/bundle/integrations/page/installation_of_mend_for_bitbucket_cloud.html)). 
 
-For Self-Managed Repository Integrations, there is another way of specifying host rules without any need to specify Host Rules inside of the repo, or even at the global level. This can be configured at the container level for ease of configuration, privacy, and to prevent tampering.
+For Self-Managed Repository Integrations, there's an alternative approach to specifying host rules without modifying the repository or using global settings. This container-level configuration enhances ease of use, privacy, and tamper prevention. However, this setup is only applicable if the following criteria apply to your organization:
+
+- The organization uses one private registry source per package manager type for all teams.
+- Individual teams cannot use a different private registry.
+
+> [!TIP]  
+Examples for each package manager may be found in this directory. Customer's may pick from individual ones and combine these configurations to suit their needs.
 
 ### Steps:
-1. Create sensible environment variables. In the example [docker-compose.yml](./docker-compose.yml) file, we use MVN_USER, MVN_PASS, MVN_RELEASES, and MVN_SNAPSHOTS to specify credentials and URL's respectively.
-2. Create a package manager settings file such as a [settings.xml](./settings.xml) where these environment variables can get injected. In the example above, we can access these environment variables with `${env.<VARIABLE_NAME>}`.
-3. For Remediate/Renovate specifically, you can create a [config.js](./config.js) to direct Remediate/Renovate to your desired registry. In this file, we can use `module.exports` to specify the remediate configuration just as if it were in a global configuration. The great thing about this configuration is that the password does not need to be encrypted. You can keep it as plaintext as it remains on the container and never leaves.
-4. Map the appropriate files and variables to the scanner and remediate container. This is demonstrated in the [docker-compose.yml](./docker-compose.yml).
-5. In both the scanner and the remediate container, specify extra_hosts with the default public registry pointing to 127.0.0.1. This will effectively block the public registry from being used by the container.
 
+1. **Create Environment Variables:**
+   - Define sensible environment variables. The example provided in the `./Maven/docker-compose.yml` file uses `MVN_USER`, `MVN_PASS`, `MVN_RELEASES`, and `MVN_SNAPSHOTS` for credentials and URLs. However these could differ across package managers. 
 
-### Explanations:
-1. [Maven](./README.md#Maven)
-2. [NPM](./README.md#NPM)
-3. [Pip](./README.md#Pip)
-4. [Poetry](./README.md#Poetry)
-5. [GO](./README.md#Go)
-6. [Gradle](./README.md#Gradle)
+2. **Package Manager Settings:**
+   - Create a package manager settings file (e.g., `settings.xml`) to inject these environment variables. In the provided Maven example, these variables are accessible using `${env.<VARIABLE_NAME>}`.
 
-#### Maven
-With Maven, adding environment variables to the settings.xml is as easy as ${env.<environment_variable_name>}. Therefore, if you take any generic settings.xml, and set the servers and credentials to environment variables. Then this can be handled when starting up the container by adding the environment variables either to the docker command with `-e` or by using the `environment:` option when specifying the container in a docker-compose.yml file. For the scanner, all you need to do is map the settings.xml into the .m2 directory. For the remediate container, you need to map the config.js file into the `/usr/src/app` directory and set the environment variables accordingly. For the config.js, you can access environment variables by using the directive `process.env.<variable_name>`
+3. **Remediate/Renovate Configuration (Optional):**
+   - Create a `config.js` file (located in `./Maven/config.js` in the example) to direct Remediate/Renovate to your desired registry. Use `module.exports` to specify the Remediate configuration similar to a global configuration. The password can remain in plain text within the container as it is never exposed to the public directly.
 
-> **_NOTE_**: Any attempt in the POM file to specifically reach out to Maven Central will supercede the settings.xml that you map into the container. Therefore, no registry handling should be specified by the project itself, and rather should leave the container to deal with it.
+4. **Map Files and Variables:**
+   - Map the relevant files and variables to the scanner and remediate containers (demonstrated in the `./Maven/docker-compose.yml` file).
 
-#### NPM
-NPM is not too different than maven. The major difference is that, you need different credentials for the scanner and for the Remediate container. For the scanner, you need the NPM Auth Token that is provided by Artifactory. For the Remediate container, you need the username and password provided by Artifactory. The only other difference is that for environment variables in the .npmrc file, you can just specify ${<variable_name>}. Below is an image showing the NPM Password and the NPM Auth Token.
+5. **Block Public Registry (Optional):**
+   - In both containers, specify `extra_hosts` with the default public registry pointing to `127.0.0.1`. This effectively blocks the container from using the public registry.
 
-![Artifactory Credentials Example](./JFrog-Artifactory-Credentials.png)
+### Explanations by Package Manager:
 
-#### Pip
-Pip is probably the most simple method of connecting to private registries. For the scanner, all you need is an environment variable that looks like:
-```
-PIP_INDEX_URL: https://<user_email>:<user_password>@<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
-```
+1. **Maven**:
 
-> **_NOTE_**: As you can probably tell, you do not need a pip.conf file for configuration as you do with the other package managers. Pip will automatically pick up the environment variable and use that, even as priority over any workspace files. There is documentation [here](https://pip.pypa.io/en/stable/topics/configuration/#precedence-override-order) showing how this works.
+   - Add environment variables to `settings.xml` using `${env.<environment_variable_name>}`.
 
-For the remediate container, you need to match the registry to these 5 managers: ``pip-compile``, ``pip-requirements``, ``pip_setup``, ``pipenv``, ``setup-cfg``
+   - Set server and credential environment variables when starting the container.
 
-#### Poetry
-As of the current writing, the Poetry package manager that is used in the scanner container is version 1.1.12. Due to this, there does not seem to be a good way to manage a private registry with Poetry without using host rules.
+   - For the scanner, map `settings.xml` to the `$HOME/.m2` directory.
 
-#### Go
-Go has a very simple method for connecting to private registries as well. For the scanner and the remediate container, all you need is an environment variable that looks much like Pip's:
-```
-GOPROXY: https://<user_email>:<user_password>@<artifactory_instance>.jfrog.io/artifactory/api/go/default-go
-```
+   - For the remediate container, map `config.js` to `/usr/src/app` directory and set environment variables accordingly.
 
-**_NOTE:_** The "go" datasource in Renovate does not support private registries. Therefore, GOPROXY must be used, and hostRules do not work. More information on this topic is here: https://docs.renovatebot.com/modules/datasource/go/
+> [!NOTE]  
+The POM file in a repository shouldn't specify registry handling, and should defer to the container configuration.
 
-#### Gradle
-For Gradle, we created two different methods of resolving Private Registries. With Groovy, and Kotlin.  
+2. **NPM**:
+ 
+   - The scanner requires the NPM Auth Token from Artifactory, while the remediate container needs the username and password.
 
-**Groovy**  
-With groovy, we created an init.gradle file that gets executed before resolving any projects. Here is the flow of the script:
-1. If it exists, get the `gradle.properties` file in the project root directory.
-2. If it exists, get the `gradle.properties` file in the `~/.gradle` directory.
-3. Load the properties from these two files, the root project gradle.properties file takes precedence.
-4. Get the "repositoryUrl", "repositoryUsername", "repositoryPassword" properties from the file and store it in variables.
-5. Get the 'pluginRepositoryUrl", "pluginRepositoryUsername", "pluginRepositoryPassword" properties from the file and store those in variables.
-6. Set all of these in a SettingsEvaluated section in the init.gradle
+   - For the scanner a ``.npmrc`` file should be included that looks like:
+     ```
+     email = ${NPM_EMAIL}
+     always-auth = true
+     registry = ${NPM_REGISTRY}
+     ```
 
-Using this, you can map in a gradle.properties file into the `/home/wss-scanner/.gradle` directory, or use one directly in the project, and specify the repository credentials. These will get loaded before resolving the project dependencies.
+   - The environment variables required for the scanner are:
+     ```
+     NPM_REGISTRY: "https://<artifactory_instance>.jfrog.io/artifactory/api/npm/<npm_registry>"
+     NPM_EMAIL: "<email_username_for_authentication>"
+     NPM_CONFIG_//<artifactory_instance>.jfrog.io/artifactory/api/npm/<npm_registry>:_auth: "<NPM_AUTH_TOKEN>"
+     ```
 
-**Kotlin**  
-With kotlin, we have the same resolution as groovy, but we have a init.gradle.kts file that loads the repositories before resolving projects. Here is the flow of the script:
-1. If it exists, get the `gradle.properties` file in the project root directory.
-2. If it exists, get the `gradle.properties` file in the `~/.gradle` directory.
-3. Load the properties from these two files, the root project gradle.properties file takes precedence.
-4. Get the "repositoryUrl", "repositoryUsername", "repositoryPassword" properties from the file and store it in variables.
-5. Get the 'pluginRepositoryUrl", "pluginRepositoryUsername", "pluginRepositoryPassword" properties from the file and store those in variables.
-6. Set all of these in a SettingsEvaluated section in the init.gradle
+> [!WARNING]  
+The Auth Token environment variable must be specified in a source that allows special characters in the variable name. For the purpose of these examples, a ``docker-compose.yaml`` file can store this information, but cannot be specified in a ``.env`` file due to how docker compose processes those files.
 
-Again, with this you can map in a gradle.properties file into the `/home/wss-scanner/.gradle` directory, or use one directly in the project, and specify the repository credentials.
+3. **Pip**:
 
-The properties in the gradle.properties file must have the following names for the script to work:
-```properties
-repositoryUrl=<registry_url>
-repositoryUsername=<registry_user>
-repositoryPassword=<registry_password>
+   - For the scanner, use an environment variable like:
 
-pluginRepositoryUrl=<plugin_repository_url>
-pluginRepositoryUsername=<plugin_repository_user>
-pluginRepositoryPassword=<plugin_repository_password>
-```
-For the remediate container, you need to match the ``gradle`` and ``gradle-wrapper`` managers for both the repositoryUrl, and the pluginRepositoryUrl.
+     ```
+     PIP_INDEX_URL: https://<user_email>:<user_password>@<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
+     ```
+
+   > [!NOTE]  
+   > Pip prioritizes environment variables over workspace files. Refer to [https://pip.pypa.io/en/stable/topics/configuration/](https://pip.pypa.io/en/stable/topics/configuration/#precedence-override-order) for details.
+
+   No `pip.conf` file is required for the scanner or remediate container; it uses the environment variable.
+
+4. **Go**:
+
+   - For both scanner and remediate containers, use an environment variable similar to Pip's:
+
+     ```
+     GOPROXY: https://<user_email>:<user_password>@<artifactory_instance>.jfrog.io/artifactory/api/go/default-go
+     ```
+
+> [!NOTE]  
+Go's `datasource` in Renovate doesn't support private registries; use `GOPROXY`. Refer to this [link](https://docs.renovatebot.com/modules/datasource/go/) for details.
+
+5. **Gradle**:
+
+   Mend offers two methods for resolving private registries with Gradle: Groovy and Kotlin.
+
+   **Groovy**:
+
+   1. An `init.gradle` file is created to execute before project resolution.
+   2. The script searches for `gradle.properties` files in the project root and user's Gradle directory (`~/.gradle`).
+   3. Properties (`repositoryUrl`, `repositoryUsername`, `repositoryPassword`, etc.) are loaded from these files (with project-level properties taking precedence).
+   4. The script sets these properties in a `SettingsEvaluated` section of `init.gradle`.
+
+   Map a `gradle.properties` file to the `/home/wss-scanner/.gradle` directory or use one directly in the project to specify repository credentials.
+
+   **Kotlin**:
+
+   Similar to Groovy, a `init.gradle.kts` file loads repositories before resolving projects. It follows the same logic as the Groovy script, allowing you to map a `gradle.properties` file for credentials.
+
+   The `gradle.properties` file requires specific property names:
+
+   ```properties
+   repositoryUrl=<registry_url>
+   repositoryUsername=<registry_user>
+   repositoryPassword=<registry_password>
+
+   pluginRepositoryUrl=<plugin_repository_url>
+   pluginRepositoryUsername=<plugin_repository_user>
+   pluginRepositoryPassword=<plugin_repository_password>
+   ```
+
+   For the remediate container, match the `gradle` and `gradle-wrapper` managers for both `repositoryUrl` and `pluginRepositoryUrl`.
+
+6. **NuGet**:
+
+   - Create a `NuGet.Config` file that references environment variables for the Artifactory registry.
+   - The password is the one provided by Artifactory with the specification `ClearTextPassword` in the `NuGet.Config` file.
+
+> [!WARNING]  
+Map the file into the container as `NuGet.Config` with the correct capitalization. This is because the container already creates this file when installing the dotnet CLI, and needs to be overridden.
+
+7. **Docker**:
+
+   - The integration itself doesn't perform image scans.
+   - Only Remediate/Renovate require credentials.
+   - Use a `config.js` file and use in the required environment variables:
+   - For the "matchHost", use only the registry domain name without a path: (e.g. ``https://<artifactory-instance>.jfrog.io``
+
+   ```javascript
+   module.exports = [{
+     "hostRules": [{
+         "hostType": "docker",
+         "matchHost": process.env.DOCKER_REGISTRY,
+         "userName": process.env.DOCKER_USER,
+         "password": process.env.DOCKER_PASS
+     }]
+   }]
+   ```
+
+   Then, simply map in the necessary environment variables.
+
+> [!NOTE]  
+Many packages don't follow the "SemVer" versioning scheme, which is the default for the ``docker`` manager. Refer to [https://docs.renovatebot.com/docker/#version-compatibility](https://docs.renovatebot.com/docker/#version-compatibility) for details on changing versioning for specific packages. This can be handled directly in the repository and does not need to be handled at the container level. Refer to [https://docs.renovatebot.com/modules/versioning/](https://docs.renovatebot.com/modules/versioning/) for more information on supported versioning schemes and custom versioning.

@@ -1,6 +1,6 @@
 module.exports = {
 	"packageRules": [{
-		"matchManagers": ["maven"],
+		"matchManagers": ["maven", "maven-wrapper"],
 		"registryUrls": [ process.env.MVN_RELEASE, process.env.MVN_SNAPSHOT ]
 	}],
 	"hostRules": [
