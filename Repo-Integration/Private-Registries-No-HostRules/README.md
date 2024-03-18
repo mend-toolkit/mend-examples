@@ -1,4 +1,4 @@
-## Configuring Private Registries without Host Rules For Self-Managed Repository Integrations
+# Configuring Private Registries without Host Rules For Self-Managed Repository Integrations
 
 Many organizations have security policies that restrict access to public registries like Maven Central, the default repository used by Maven to download dependencies. Mend addresses this by allowing you to specify private registry credentials directly within the repository for each Mend-Hosted repository integration. This is supported for integrations with ([Github.com](https://docs.mend.io/bundle/integrations/page/mend_for_github_com.html), [Azure Repos](https://docs.mend.io/bundle/integrations/page/using_mend_for_azure_repos.html), [Bitbucket Cloud](https://docs.mend.io/bundle/integrations/page/installation_of_mend_for_bitbucket_cloud.html)). 
 
@@ -40,7 +40,7 @@ Examples for each package manager may be found in this directory. Customer's may
    - For the remediate container, map `config.js` to `/usr/src/app` directory and set environment variables accordingly.
 
    > [!NOTE]  
-   > The POM file in a repository shouldn't specify registry handling, and should defer to the container configuration.
+   The POM file in a repository shouldn't specify registry handling, and should defer to the container configuration.
 
 2. **NPM**:
  
