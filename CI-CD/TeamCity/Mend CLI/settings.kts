@@ -41,8 +41,16 @@ object Mend_CLITemplate : Template({
         param("env.MEND_EMAIL", "")
         param("env.MEND_USER_KEY", "")
     }
-
     steps {
+		script {
+            name = "CloneAndBuildRepo"
+            id = "CloneAndBuildRepo"
+            scriptContent = """
+				//Replace with Repo URL and build steps
+                git clone <Repo URL>
+                npm install
+            """.trimIndent()
+        }
         script {
             name = "DownloadMendCLI"
             id = "DownloadMendCLI"
