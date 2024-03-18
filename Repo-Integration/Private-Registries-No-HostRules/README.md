@@ -71,8 +71,8 @@ The Auth Token environment variable must be specified in a source that allows sp
      PIP_INDEX_URL: https://<user_email>:<user_password>@<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
      ```
 
-   > [!NOTE]  
-   > Pip prioritizes environment variables over workspace files. Refer to [https://pip.pypa.io/en/stable/topics/configuration/](https://pip.pypa.io/en/stable/topics/configuration/#precedence-override-order) for details.
+> [!NOTE]  
+Pip prioritizes environment variables over workspace files. Refer to [https://pip.pypa.io/en/stable/topics/configuration/](https://pip.pypa.io/en/stable/topics/configuration/#precedence-override-order) for details.
 
    No `pip.conf` file is required for the scanner or remediate container; it uses the environment variable.
 
@@ -130,21 +130,24 @@ Map the file into the container as `NuGet.Config` with the correct capitalizatio
 
    - The integration itself doesn't perform image scans.
    - Only Remediate/Renovate require credentials.
-   - Use a `config.js` file and use in the required environment variables:
-   - For the "matchHost", use only the registry domain name without a path: (e.g. ``https://<artifactory-instance>.jfrog.io``
+   - Use a `config.js` file and specify the required environment variables:
+   - For the "matchHost", use only the registry domain name without a path: (e.g. ``https://<artifactory-instance>.jfrog.io``)
 
    ```javascript
-   module.exports = [{
+   module.exports = {
      "hostRules": [{
          "hostType": "docker",
          "matchHost": process.env.DOCKER_REGISTRY,
          "userName": process.env.DOCKER_USER,
          "password": process.env.DOCKER_PASS
      }]
-   }]
+   }
    ```
 
    Then, simply map in the necessary environment variables.
+
+> [!IMPORTANT]  
+The host rule provided in the ``config.js`` file will not force Remediate/Renovate to use this registry for every image. If a Dockerfile specifies an image as ``ubuntu:latest`` then it will attempt to pull it from DockerHub (if DockerHub is blocked, then the resolution for this image will simply fail). Therefore, to force the integration to only use the private registry specified, every instance of an image must point to the repository (e.g. ``FROM <artifactory-instance>.jfrog.io/<repository>/ubuntu:latest``)
 
 > [!NOTE]  
 Many packages don't follow the "SemVer" versioning scheme, which is the default for the ``docker`` manager. Refer to [https://docs.renovatebot.com/docker/#version-compatibility](https://docs.renovatebot.com/docker/#version-compatibility) for details on changing versioning for specific packages. This can be handled directly in the repository and does not need to be handled at the container level. Refer to [https://docs.renovatebot.com/modules/versioning/](https://docs.renovatebot.com/modules/versioning/) for more information on supported versioning schemes and custom versioning.
