@@ -6,14 +6,14 @@
   },
   "buildSettings": {
     "createBuildStatus": false,
-    "failBuilds": false,
+    "displayMode": "diff",
+    "failBuilds": "false"
   },
   "issueSettings": {
     "minSeverityLevel": "NONE",
     "issueType": "DEPENDENCY"
   },
   "remediateSettings": {
-    "enableRenovate": false,
     "workflowRules": {
       "enabled": false
     }
