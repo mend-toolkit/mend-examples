@@ -42,34 +42,40 @@ fi
 # Log into API 2.0 and get the JWT Token and Organization UUID
 LOGIN_RESPONSE=$(curl -s -X POST --location "$MEND_API_URL/login" --header 'Content-Type: application/json' --data-raw "${LOGIN_BODY}")
 
-JWT_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.retVal.jwtToken')
-MEND_ORG_UUID=$(echo $LOGIN_RESPONSE | jq -r '.retVal.orgUuid')
+JWT_TOKEN=$(echo "$LOGIN_RESPONSE" | jq -r '.retVal.jwtToken')
+MEND_ORG_UUID=$(echo "$LOGIN_RESPONSE" | jq -r '.retVal.orgUuid')
 
 # Get all products
 echo "Retrieving Products from Organization"
 PRODUCT_API_RESPONSE=$(curl -s --location "$MEND_API_URL/orgs/$MEND_ORG_UUID/products?pageSize=10000&page=0" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN")
-NUM_PRODUCTS=$(echo $PRODUCT_API_RESPONSE | jq -r '.additionalData.totalItems' )
-PRODUCTS=$(echo $PRODUCT_API_RESPONSE | jq '.retVal')
+NUM_PRODUCTS=$(echo "$PRODUCT_API_RESPONSE" | jq -r '.additionalData.totalItems' )
+PRODUCTS=$(echo "$PRODUCT_API_RESPONSE" | jq '.retVal')
 
 
 # This output variable starts with nothing, and will get populated with data as we pull the alerts for each product.
 OUTPUT="[]"
 
 # Loop through each product in $PRODUCTS and get the uuid associated with it.
-for (( i=0; i<=$NUM_PRODUCTS-1; i++ ))
+for (( i=0; i<=NUM_PRODUCTS-1; i++ ))
 do
-        CURRENT_PRODUCT_TOKEN=$(echo $PRODUCTS | jq -r ".[$i].uuid" )
-        echo "Getting Malicious Packages for Product $(($i+1))/$NUM_PRODUCTS: $CURRENT_PRODUCT_TOKEN"
+        CURRENT_PRODUCT_TOKEN=$(echo "$PRODUCTS" | jq -r ".[$i].uuid" )
+        echo "Getting Malicious Packages for Product $((i+1))/$NUM_PRODUCTS: $CURRENT_PRODUCT_TOKEN"
 
         # Get all security alerts that have "MSC" in the name
-        CURRENT_OUTPUT=$(curl -s --location "$MEND_API_URL/products/$CURRENT_PRODUCT_TOKEN/alerts/security?pageSize=10000&page=0&search=vulnerabilityName%3ALIKE%3AMSC" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN" | jq '.retVal')
+        CURRENT_OUTPUT=$(curl -s --location "$MEND_API_URL/products/$CURRENT_PRODUCT_TOKEN/alerts/security?pageSize=10000&page=0&search=vulnerabilityName%3ALIKE%3AMSC" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN" | jq '.retVal' )
+
+        if [[ "$CURRENT_OUTPUT" =~ "errorMessage" ]]; then
+                ERROR_MESSAGE=$(echo "$CURRENT_OUTPUT" | jq '.errorMessage')
+                echo -e "ERROR: $ERROR_MESSAGE\nUnable to get malicious packages. Continuing..."
+                continue
+        fi
 
         # This takes the current output and merges it with what is already in $OUTPUT, allowing for one JSON object to get returned for easy parsing.
         OUTPUT=$(echo "$OUTPUT $CURRENT_OUTPUT" | jq -s add)
 done
 
 # Extract all the information we need for an alert
-OUTPUT=$(echo $OUTPUT | jq '[.[] | {productName: .product.name, projectName: .project.name, vulnId: .name, libraryName: .component.name, vulnScore: .vulnerability.vulnerabilityScoring }]')
+OUTPUT=$(echo "$OUTPUT" | jq '[.[] | {productName: .product.name, projectName: .project.name, vulnId: .name, libraryName: .component.name, vulnScore: .vulnerability.vulnerabilityScoring }]')
 echo -e "\nMalicious Packages: \n$OUTPUT"
 
 # $OUTPUT can now be used in any notification process such as an email, consume it in another alerting system.
