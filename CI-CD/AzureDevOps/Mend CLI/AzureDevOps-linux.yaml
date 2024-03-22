@@ -11,9 +11,9 @@
 
 # If you are NOT using a service user, and have multiple organizations, don't forget to set the organization in the scope parameter
 # The following values should be added as environment variables with email and userKey being secrets
-#    MEND_URL: the mend url that you login to - (https://saas.mend.io) for example
-#    MEND_EMAIL: the user email for the mend platform account you wish to scan with
-#    MEND_USER_KEY: the user key found under my profile for the user you wish to scan with
+#    MENDURL: the mend url that you login to - (https://saas.mend.io) for example
+#    MENDEMAIL: the user email for the mend platform account you wish to scan with
+#    MENDUSERKEY: the user key found under my profile for the user you wish to scan with
 
 name: 'mend-cli-scan'
 
@@ -27,7 +27,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-- name: MEND_URL
+- name: MENDURL
   value: https://saas.mend.io 
 # value: https://saas-eu.mend.io
 
@@ -55,8 +55,10 @@ steps:
     mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName)
 
   env:
+    ### Environment variables for the Mend CLI must be translated to ones with underscores.
+    MEND_URL: $(MENDURL)
     ### Authentication Environment Variable Secrets###
-    MEND_EMAIL: $(MEND_EMAIL)
-    MEND_USER_KEY: $(MEND_USER_KEY)
+    MEND_EMAIL: $(MENDEMAIL)
+    MEND_USER_KEY: $(MENDUSERKEY)
 
   displayName: 'Mend Unified CLI Scan'
