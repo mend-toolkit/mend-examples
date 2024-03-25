@@ -9,13 +9,15 @@
 # ******** Description ********
 # mend image will automatically scan an image for vulnerabilities with Operating System packages, Open Source vulnerabilities, and for secrets.
 #
+# Environment variables from Azure Key Vault must use letters, numbers, and hyphens only. Please reference this link for more information:
+# https://learn.microsoft.com/en-us/azure/key-vault/general/about-keys-secrets-certificates
 # If you are NOT using a service user and have multiple organizations, don't forget to set the organization using the scope parameter
 # The following values should be added as environment variables with email and userkey being secrets
-# MENDURL: the mend url that you login to - (https://saas.mend.io) for example
-# MENDEMAIL: the user email for the mend platform account that you wish to scan with
-# MENDUSERKEY: the user key found under my profile for the user you wish to scan with
-# IMAGENAME: The name/repository where the image should be stored/pulled from
-# IMAGETAG: The tag for the image that you have built
+# MEND_URL: the mend url that you login to - (https://saas.mend.io) for example
+# MENDEMAIL: the user email for the mend platform account that you wish to scan with. This should be stored as a secret and then translated to MEND_EMAIL at runtime.
+# MENDUSERKEY: the user key found under my profile for the user you wish to scan with. This should be stored as a secret and then translated to MEND_USER_KEY at runtime.
+# IMAGE_NAME: The name/repository where the image should be stored/pulled from
+# IMAGE_TAG: The tag for the image that you have built
 
 name: 'mend-image-scan'
 
@@ -31,9 +33,9 @@ pool:
 variables:
   - name: MENDURL
     value: https://saas.mend.io
-  - name: IMAGENAME
+  - name: IMAGE_NAME
     value: my-image
-  - name: IMAGETAG
+  - name: IMAGE_TAG
     value: $(Build.BuildId)
 
 stages:
@@ -48,20 +50,17 @@ stages:
     - task: Docker@2
       displayName: Build an image
       inputs:
-        repository: $(IMAGENAME)
+        repository: $(IMAGE_NAME)
         command: build
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: $(IMAGETAG)
+        tags: $(IMAGE_TAG)
     - script: |
         echo Downloading Mend CLI
         curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
         
         echo Run Mend Image Analysis
-        mend image $(IMAGENAME):$(IMAGETAG) --local-pull 
+        mend image $(IMAGE_NAME):$(IMAGE_TAG) --local-pull 
       env:
-        ### Environment variables for the Mend CLI must be translated to ones with underscores.
-        MEND_URL: $(MENDURL)
         ### Authentication Environment Variable Secrets ###
         MEND_EMAIL: $(MENDEMAIL)
         MEND_USER_KEY: $(MENDUSERKEY)
-
