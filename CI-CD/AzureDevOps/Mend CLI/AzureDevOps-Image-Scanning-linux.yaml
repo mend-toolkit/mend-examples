@@ -31,7 +31,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  - name: MENDURL
+  - name: MEND_URL
     value: https://saas.mend.io
   - name: IMAGE_NAME
     value: my-image
