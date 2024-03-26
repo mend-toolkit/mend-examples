@@ -9,11 +9,13 @@
 # ******** Description ********
 # mend image will automatically scan an image for vulnerabilities with Operating System packages, Open Source vulnerabilities, and for secrets.
 #
+# Environment variables from Azure Key Vault must use letters, numbers, and hyphens only. Please reference this link for more information:
+# https://learn.microsoft.com/en-us/azure/key-vault/general/about-keys-secrets-certificates
 # If you are NOT using a service user and have multiple organizations, don't forget to set the organization using the scope parameter
 # The following values should be added as environment variables with email and userkey being secrets
 # MEND_URL: the mend url that you login to - (https://saas.mend.io) for example
-# MEND_EMAIL: the user email for the mend platform account that you wish to scan with
-# MEND_USER_KEY: the user key found under my profile for the user you wish to scan with
+# MENDEMAIL: the user email for the mend platform account that you wish to scan with. This should be stored as a secret and then translated to MEND_EMAIL at runtime.
+# MENDUSERKEY: the user key found under my profile for the user you wish to scan with. This should be stored as a secret and then translated to MEND_USER_KEY at runtime.
 # IMAGE_NAME: The name/repository where the image should be stored/pulled from
 # IMAGE_TAG: The tag for the image that you have built
 
@@ -61,6 +63,6 @@ stages:
           ./mend.exe image $(IMAGE_NAME):$(IMAGE_TAG) --local-pull 
       env:
         ### Authentication Environment Variable Secrets ###
-        MEND_EMAIL: $(MEND_EMAIL)
-        MEND_USER_KEY: $(MEND_USER_KEY)
+        MEND_EMAIL: $(MENDEMAIL)
+        MEND_USER_KEY: $(MENDUSERKEY)
 

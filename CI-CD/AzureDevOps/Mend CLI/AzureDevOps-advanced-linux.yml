@@ -10,11 +10,13 @@
 # mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
 # mend image will automatically scan an image for vulnerabilities with Operating System packages, Open Source vulnerabilities, and for secrets.
 
+# Environment variables from Azure Key Vault must use letters, numbers, and hyphens only. Please reference this link for more information:
+# https://learn.microsoft.com/en-us/azure/key-vault/general/about-keys-secrets-certificates
 # If you are NOT using a service user, and have multiple organizations, don't forget to set the organization in the scope parameter
 # The following values should be added as environment variables with email and userKey being secrets
-#    MEND_URL: the mend url that you login to - (https://saas.mend.io) for example
-#    MEND_EMAIL: the user email for the mend platform account you wish to scan with
-#    MEND_USER_KEY: the user key found under my profile for the user you wish to scan with
+# MEND_URL: the mend url that you login to - (https://saas.mend.io) for example
+# MENDEMAIL: the user email for the mend platform account that you wish to scan with. This should be stored as a secret and then translated to MEND_EMAIL at runtime.
+# MENDUSERKEY: the user key found under my profile for the user you wish to scan with. This should be stored as a secret and then translated to MEND_USER_KEY at runtime.
 
 name: 'mend-cli-scan'
 
@@ -97,8 +99,8 @@ jobs:
 
       env:
       ### Authentication Environment Variables ###
-        MEND_EMAIL: $(MEND_EMAIL)
-        MEND_USER_KEY: $(MEND_USER_KEY)
+        MEND_EMAIL: $(MENDEMAIL)
+        MEND_USER_KEY: $(MENDUSERKEY)
       ### SAST Thresholds
         MEND_SAST_THRESHOLD_HIGH: 1
       displayName: 'Mend Unified CLI Scan'
@@ -204,8 +206,8 @@ jobs:
 
       env:
         ### Authentication Environment Variables ###
-        MEND_EMAIL: $(MEND_EMAIL)
-        MEND_USER_KEY: $(MEND_USER_KEY)
+        MEND_EMAIL: $(MENDEMAIL)
+        MEND_USER_KEY: $(MENDUSERKEY)
         ### SAST Thresholds
         MEND_SAST_THRESHOLD_HIGH: 1
       displayName: 'Mend Unified CLI Scan'
@@ -246,8 +248,8 @@ jobs:
         mv *results* $(System.DefaultWorkingDirectory)/logs/
       env:
       ### Authentication Environment Variables ###
-        MEND_EMAIL: $(MEND_EMAIL)
-        MEND_USER_KEY: $(MEND_USER_KEY)
+        MEND_EMAIL: $(MENDEMAIL)
+        MEND_USER_KEY: $(MENDUSERKEY)
       ### SAST Thresholds
         MEND_SAST_THRESHOLD_ONLY_NEW: true
       displayName: 'Mend Unified CLI Scan'
