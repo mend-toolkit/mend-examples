@@ -1,6 +1,10 @@
 // ******** Mend Unified CLI Template for Jenkins ********
 // You may wish to alter this file to override the build tool and the Mend scanning technologies
 
+//This pipeline utilizes shared libraries to make it easier to implement Mend into several pipelines.
+//For more information on shared libraries, please check the official Jenkins documentation:
+// 📚 https://www.jenkins.io/doc/book/pipeline/shared-libraries/
+
 // For more configeration options, please check the technical documentation portal:
 // 📚 https://docs.mend.io/bundle/cli/page/scan_with_mend_s_unified_cli.html
 
@@ -14,7 +18,8 @@
 //    MEND_EMAIL: the user email for the mend platform account you wish to scan with
 //    MEND_USER_KEY: the user key found under my profile for the user you wish to scan with
 
-
+//update with the name of your shared library
+@Library("my-shared-library") _
 pipeline {
     agent any
 
@@ -50,62 +55,26 @@ pipeline {
             }
         }
 
+
         stage('Download Mend CLI') {
             steps {
-                script {
-                    echo 'Downloading Mend CLI'
-                    sh 'curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend'
-                }
+               DownloadMendCLI()
             }
         }
-
-        stage('Run Mend Deps') {
+        
+        stage('Run Mend SCA') {
             steps {
-                echo 'Run Mend dependencies scan'
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                sh '''
-                export repo=$(basename -s .git $(git config --get remote.origin.url))
-                export branch=$(git rev-parse --abbrev-ref HEAD)
-                ./mend dep -u -s *//${JOB_NAME}//${repo}_${branch} --fail-policy --non-interactive --export-results dep-results.txt
-                '''
-                archiveArtifacts artifacts: "dep-results.txt", fingerprint: true
-                }
+               MendSCAScan()
             }
         }
-
-        stage('Generate Mend Dependency Reports') {
+        stage('Run SCA Reports') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                sh '''
-                WS_PROJECTTOKEN=$(grep -oP "(?<=token=)[^&]+" ${PWD}/dep-results.txt)
-                if [ -z "$WS_PROJECTTOKEN" ];
-                then
-                    echo " No project token found, reports will not be generated" >&2
-                else
-                    echo "Creating Project Risk Report"
-                    curl -o ${PWD}/riskreport.pdf -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json"  -d '{"requestType":"getProjectRiskReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
-                    echo "Creating Project Inventory Report"
-                    curl -o ${PWD}/inventoryreport.xlsx -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json"  -d '{"requestType":"getProjectInventoryReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
-                    echo "Creating Project Due Diligence Report"
-                    curl -o ${PWD}/duediligencereport.xlsx -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json"  -d '{"requestType":"getProjectDueDiligenceReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
-                fi
-                '''
-                archiveArtifacts artifacts: "riskreport.pdf, inventoryreport.xlsx, duediligencereport.xlsx, spdxreport.json", fingerprint: true
-                }
+               GenerateSCAReports()
             }
         }
-
-
-        stage('Run Mend Code') {
+        stage('Run SAST Scan') {
             steps {
-                echo 'Start Mend Code Scan'
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                sh '''
-                export repo=$(basename -s .git $(git config --get remote.origin.url))
-                export branch=$(git rev-parse --abbrev-ref HEAD)
-                ./mend code --non-interactive -s *//${JOB_NAME}//${repo}_${branch}
-                '''
-                }
+               MendSASTScan()
             }
         }
     }
