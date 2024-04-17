@@ -1,7 +1,6 @@
 # ******** Mend Unified CLI Template for Azure DevOps ********
 #
 # You may wish to alter this file to override the build tool and Mend scanning technologies.
-# NOTE: Currently the Mend Platform does not support image scanning. Results can be viewed in the previous Mend UI by clicking the "Grid" next to the mend logo, and selecting "Cloud Native".
 #
 # For more configuration options, please check the technical documentation portal:
 # 📚 https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html
