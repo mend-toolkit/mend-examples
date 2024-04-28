@@ -95,7 +95,9 @@ export graylog_root_password='the password you would like to use to login to gra
 sudo sh -c 'echo "vm.max_map_count=262144" >> /etc/sysctl.conf'
 sudo sysctl -p
 ```
-- To add the [dynamic tool installation mechanism](https://docs.mend.io/bundle/integrations/page/dynamic_tool_installation_mechanism.html) you must manually edit the Dockerfilefull found in ```~/mend/$SCM/$VERSION/wss-scanner/docker/Dockerfilefull```
+- To add the [dynamic tool installation mechanism](https://docs.mend.io/bundle/integrations/page/dynamic_tool_installation_mechanism.html) you must perform the following
+  - Manually edit the Dockerfilefull found in ```~/mend/$SCM/$VERSION/wss-scanner/docker/Dockerfilefull``` as shown in the documentation
+  - Edit the .env with the necessary groups or organizations needed for RUNINSTALL_MATCH variable
 - Run docker compose in detached mode for your desired setup. Options defined -
   - SCA only ```docker compose up -d```
   - SCA and SAST ```docker compose -f docker-compose-sast.yaml up -d```
