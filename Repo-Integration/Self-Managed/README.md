@@ -23,7 +23,7 @@ When used, these scripts will download the latest [repository integration](https
 1) Provision a new EC2 instance with the following characteristics:
    - AMI: Ubuntu Server 22.04 LTS (HVM)
    - Type: r4.xlarge or larger
-   - Storage: 60GiB (gp2) or higher
+   - Storage: 200GiB (gp2) or higher
    - Security group: See [here](https://docs.mend.io/bundle/integrations/page/advanced_technical_information.html#Required-Open-Ports) for integration requirements
 2) Launch and remote into instance (ssh or console)
 3) Install Docker ([using the apt repository](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository))
@@ -95,7 +95,10 @@ export graylog_root_password='the password you would like to use to login to gra
 sudo sh -c 'echo "vm.max_map_count=262144" >> /etc/sysctl.conf'
 sudo sysctl -p
 ```
-
+- To add the [dynamic tool installation mechanism](https://docs.mend.io/bundle/integrations/page/dynamic_tool_installation_mechanism.html) you must perform the following
+  - Manually edit the Dockerfilefull found in ```~/mend/$SCM/$VERSION/wss-scanner/docker/Dockerfilefull``` as shown in the documentation
+  - Edit the .env with the necessary groups or organizations needed for ```RUNINSTALL_MATCH``` variable
+  - If you are not configuring AWS Cloudwatch it is recommended to add ```RUNINSTALL_DEBUG=true```
 - Run docker compose in detached mode for your desired setup. Options defined -
   - SCA only ```docker compose up -d```
   - SCA and SAST ```docker compose -f docker-compose-sast.yaml up -d```
