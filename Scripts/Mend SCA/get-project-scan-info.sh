@@ -12,7 +12,7 @@
 # This script scours a Mend Organization for all projects that have been scanned,
 # and then gathers information concerning the version of the scanner. This script
 # should not be used in a pipeline with a Unified Agent scan as it gathers information
-# for all projects in an organization.
+# for all projects in an organization. It then outputs the results to an output.json file.
 #
 # NOTE: If the last scan date and/or plugin name/version show as null, then the
 # last scan date was too long ago and Mend no longer stores this information. This
@@ -24,6 +24,14 @@
 # MEND_ORG_UUID - (optional)
 # MEND_EMAIL - Administrator's email address
 # MEND_USER_KEY (admin assignment is required)
+
+# Examples:
+# ./get-project-scan-info.sh output.json
+
+if [ -z $1 ]; then
+    echo "Please specify the file that you would like this script to output to."
+    exit -1
+fi
 
 MEND_API_URL="$(echo "${MEND_URL}" | sed -E 's/(saas|app)(.*)/api-\1\2\/api\/v2.0/g')"
 
@@ -88,7 +96,9 @@ while ! $LAST_PAGE; do
     OUTPUT=$(echo $OUTPUT | jq ".projectInfo |= . + $PROJECT_INFO")
 done
 
-echo -e "\nProject Vitals: \n$OUTPUT"
+echo $OUTPUT | jq '.'  > $1
+
+echo -e "\nProject vitals have been written to: $1"
 
 # $OUTPUT can now be used in any process that can consume JSON. The format of $OUTPUT will be:
 # {
