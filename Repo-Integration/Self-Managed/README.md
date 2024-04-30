@@ -97,7 +97,8 @@ sudo sysctl -p
 ```
 - To add the [dynamic tool installation mechanism](https://docs.mend.io/bundle/integrations/page/dynamic_tool_installation_mechanism.html) you must perform the following
   - Manually edit the Dockerfilefull found in ```~/mend/$SCM/$VERSION/wss-scanner/docker/Dockerfilefull``` as shown in the documentation
-  - Edit the .env with the necessary groups or organizations needed for RUNINSTALL_MATCH variable
+  - Edit the .env with the necessary groups or organizations needed for ```RUNINSTALL_MATCH``` variable
+  - If you are not configuring AWS Cloudwatch it is recommended to add ```RUNINSTALL_DEBUG=true```
 - Run docker compose in detached mode for your desired setup. Options defined -
   - SCA only ```docker compose up -d```
   - SCA and SAST ```docker compose -f docker-compose-sast.yaml up -d```
