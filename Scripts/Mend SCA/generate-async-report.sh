@@ -111,13 +111,13 @@ elif [[ "$MEND_REPORTSCOPE" = "Project" ]] ; then
 fi
 
 # Generate Report
-reqBody='"requestType":"generate'$MEND_REPORTSCOPE'ReportAsync","'$tokenScope'Token":"'$token'","userKey":"'$MEND_USER_KEY'","reportType":"'$reportType'", "standard":"'$MEND_STANDARD'"'
+reqBody='"requestType":"generate'$MEND_REPORTSCOPE'ReportAsync","'$tokenScope'Token":"'$token'","userKey":"'$MEND_USER_KEY'","reportType":"'$MEND_REPORTTYPE'", "standard":"'$MEND_STANDARD'"'
 [[ -n $MEND_REPORTFORMAT ]] && reqBody="$reqBody"',"format":"'$MEND_REPORTFORMAT'"'
 [[ -n $MEND_REPORTFILTER ]] && reqBody="$reqBody"',"filter":'"$MEND_REPORTFILTER"
 reqBody='{'"$reqBody"'}'
 resGenerate=$(curl -s -X POST -H 'Content-Type:application/json' --data-raw "$reqBody" $MEND_API_URL)
 #TODO: Add error handling
-echo "Report generation call sent for MEND_REPORTTYPE=$reportType and MEND_REPORTSCOPE=$MEND_REPORTSCOPE"
+echo "Report generation call sent for MEND_REPORTTYPE=$MEND_REPORTTYPE and MEND_REPORTSCOPE=$MEND_REPORTSCOPE"
 procId="$(echo "$resGenerate" | jq -r '.asyncProcessStatus.uuid')"
 contextType="$(echo "$resGenerate" | jq -r '.asyncProcessStatus.contextType')"
 processType="$(echo "$resGenerate" | jq -r '.asyncProcessStatus.processType')"
