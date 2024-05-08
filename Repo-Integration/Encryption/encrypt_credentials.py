@@ -38,7 +38,6 @@ export REPOSITORY="<your repository name>"
 export SECRET_VALUE="<your credential>"
 """
 
-
 PUBLIC_KEY = """-----BEGIN PGP PUBLIC KEY BLOCK-----
 
 mQENBGE7rc8BCACofJTBvhmvXEU5hXV7FR/J1Wk9c8XheTp0QLOpBNMT6Vi07dkG
@@ -125,6 +124,9 @@ ssLaqgsTBEsskys=
 -----END PGP PUBLIC KEY BLOCK-----"""
 
 
+# Parse Arguments provided to the utility. Order of precedence:
+# 1. Command Line Flags
+# 2. Environment Variables
 def parse_args() -> Namespace:
     global PUBLIC_KEY
     global RENOVATE_PUBLIC_KEY
@@ -156,6 +158,7 @@ def parse_args() -> Namespace:
         help="Secret Value (Environment Variable: SECRET_VALUE)",
     )
 
+    # A mutually exclusive group means that its members can have either none, or one of the parameters, but not both.
     key_group = parser.add_mutually_exclusive_group()
     key_group.add_argument(
         "-k",
@@ -178,9 +181,11 @@ def parse_args() -> Namespace:
 
     arguments = parser.parse_args()
 
+    # If there are flags set concerning the public key, parse them accordingly and then set information to the PUBLIC_KEY global.
+    # If the public_key_file is set, then read the file and set the information in PUBLIC_KEY global variable.
     if arguments.public_key_file:
         try:
-            with open(arguments.public_key, "r") as pubkey_file:
+            with open(arguments.public_key_file, "r") as pubkey_file:
                 PUBLIC_KEY = pubkey_file.read()
         except FileNotFoundError as e:
             print(f"File: {e.filename} not found. Please specify a valid key file")
@@ -195,10 +200,20 @@ def parse_args() -> Namespace:
 def encrypt_value(value: str) -> str:
     global PUBLIC_KEY
 
+    # Requires the value that needs to be encrypted. This value should be in JSON format like:
+    # {"o":"<organization>","r":"<repository>","v":"secret_value"}
+    # NOTE: the lack of whitespace is important
+
     message = pgpy.PGPMessage.new(value, compression=CompressionAlgorithm.Uncompressed)
     pubkey = PGPKey.from_blob(PUBLIC_KEY)
 
     encrypted_message = ""
+
+    # The PGPKey.from_blob method is designed very weird, in the fact that it can return one of two types:
+    # 1. PGPKey
+    # 2. Tuple[PGPKey, Unknown]
+    # Therefore, we have to check which type it returned.
+    # See: https://www.reddit.com/r/learnpython/comments/16lst2m/is_this_really_a_pythonic_way_of_returning_objects/
 
     if isinstance(pubkey, PGPKey):
         encrypted_message = str(pubkey.encrypt(message))
@@ -206,6 +221,7 @@ def encrypt_value(value: str) -> str:
         pubkey = pubkey[0]
         encrypted_message = str(pubkey.encrypt(message))
 
+    # Format the message in a way that can be copied and pasted properly into the configuration file.
     encrypted_message = encrypted_message.split("\n")
     encrypted_message = encrypted_message[1:-1]
     encrypted_message = "".join(encrypted_message)
@@ -221,6 +237,7 @@ def main():
     repository = arguments.repository
     secret_key = arguments.secret_value
 
+    # Create the Input Value. It needs to be in JSON format without whitespace.
     input = {"o": organization, "r": repository, "v": secret_key}
     inputString = json.dumps(input, separators=(",", ":"))
 
@@ -230,6 +247,8 @@ def main():
 
 
 if __name__ == "__main__":
+    # The PGPy library throws warnings when encrypting for unrelated encryption algorithms.
+    # This setting filters out those warnings.
     warnings.filterwarnings(
         "ignore",
         ".*deprecated.*",
