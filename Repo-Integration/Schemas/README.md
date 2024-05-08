@@ -11,7 +11,7 @@ Two reference the schema, the configuration file should include a ``$schema`` pr
 For example:  
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Repo-Integration/Schemas/ghc_integration_schema.json",
+  "$schema": "https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Repo-Integration/Schemas/ghc-integration-schema.json",
   // Your configuration properties here
 }
 ```
