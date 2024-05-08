@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema",
-  "$id": "https://raw.githubusercontent.com/kyallanum-MND/mend-integration-schemas/main/ghc-integration-schema.json",
+  "$id": "https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Repo-Integration/Schemas/ghc-integration-schema.json",
   "title": "Mend for Github.com Integration .whitesource file schema",
   "description": "The schema used for Mend for Github Enterprise .whitesource files and repo-config.json",
   "type": "object",
