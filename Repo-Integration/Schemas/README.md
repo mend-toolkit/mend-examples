@@ -1,5 +1,5 @@
 # mend-integration-schemas
-This document describes how to reference the [Mend Repository Integrations JSON schema](https://githubusercontent.com/mend-toolkit/mend-examples/main/Repo-Integration/Schemas/ghc_integration_schema.json) in your ``.whitesource`` or ``repo-config.json`` files. Referencing the schema enables IDE validation using the VSCode JSON Language Service.
+This document describes how to reference the [Mend Repository Integrations JSON schema](https://githubusercontent.com/mend-toolkit/mend-examples/main/Repo-Integration/Schemas/ghc-integration-schema.json) in your ``.whitesource`` or ``repo-config.json`` files. Referencing the schema enables IDE validation using the VSCode JSON Language Service.
 
 ### Prerequisites
 - A ``.whitesource`` or ``repo-config.json`` file for your Mend integration configuration.
