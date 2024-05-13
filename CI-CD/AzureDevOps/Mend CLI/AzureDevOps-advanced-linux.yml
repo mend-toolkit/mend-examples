@@ -252,6 +252,11 @@ jobs:
         MEND_USER_KEY: $(MENDUSERKEY)
       ### SAST Thresholds
         MEND_SAST_THRESHOLD_ONLY_NEW: true
+        # Set diff thresholds from the base scan
+        # MEND_SAST_THRESHOLD_HIGH: 1
+        # MEND_SAST_THRESHOLD_MEDIUM: 1
+        # MEND_SAST_THRESHOLD_LOW: 1
+        
       displayName: 'Mend Unified CLI Scan'
 
     ### Publish logs and sarif results ###

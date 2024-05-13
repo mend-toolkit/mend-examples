@@ -25,8 +25,13 @@ pipeline {
 
     environment {
         MEND_SAST_THRESHOLD_ONLY_NEW = "true"
+        // Set diff thresholds from the base scan
+        // MEND_SAST_THRESHOLD_HIGH = 1
+        // MEND_SAST_THRESHOLD_MEDIUM = 1
+        // MEND_SAST_THRESHOLD_LOW = 1
+
         // update with the Server URL found on the integrate tab
-        MEND_URL = "https://saas.mend.io"
+        MEND_URL = 'https://saas.mend.io'
         
     }
 
