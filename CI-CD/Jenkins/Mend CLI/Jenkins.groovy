@@ -32,7 +32,6 @@ pipeline {
 
         // update with the Server URL found on the integrate tab
         MEND_URL = 'https://saas.mend.io'
-        
     }
 
     tools {
