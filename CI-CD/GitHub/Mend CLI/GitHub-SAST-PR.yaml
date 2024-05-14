@@ -1,0 +1,41 @@
+# ******** Mend Unified CLI Template for Github Actions ********
+#
+# You may wish to alter this file to override the build tool and Mend scanning technologies.
+#
+# For more configuration options, please check the technical documentation portal:
+# 📚 https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html
+#
+# ******** Description ********
+# mend dep will automatically use package managers and file system scanning to detect open source components.
+# mend code will automatically detect languages and frameworks used in your projects to scan for code weaknesses.
+
+# If you are NOT using a service user, and have multiple organizations, don't forget to call the scope -s parameter to set the organization
+
+name: Mend CLI SAST PR Scan
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Mend CLI Scan
+      env:
+        MEND_EMAIL: ${{secrets.MEND_EMAIL}}
+        MEND_USER_KEY: ${{secrets.MEND_USER_KEY}}
+        MEND_URL: https://saas.mend.io
+        MEND_SAST_THRESHOLD_ONLY_NEW: true
+        # Set diff thresholds from the base scan
+        # MEND_SAST_THRESHOLD_HIGH: 1
+        # MEND_SAST_THRESHOLD_MEDIUM: 1
+        # MEND_SAST_THRESHOLD_LOW: 1
+      run: |
+        echo Downloading Mend CLI
+        curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+        echo Run Mend code scan
+        mend code -s "*//*//${{github.event.repository.name}}_${{github.ref_name}}_{{github.head_ref}}"
