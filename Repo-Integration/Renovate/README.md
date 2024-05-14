@@ -6,17 +6,18 @@ To maintain these files locally, please refer to the [Renovate preset documentat
 - Copy [smart-merge.json](./smart-merge.json) into the root folder of your whitesource-config repository
 - Update the repo-config.json ```remediateSettings``` section with the following
 ```json
-  "remediateSettings": {
-    "workflowRules": {
-      "enabled": false
-    },
-    "enableRenovate": true,
-    "extends": [
-       "config:recommended",
-       "mergeConfidence:all-badges",
-       "local>whitesource-config/whitesource-config:smart-merge"
-      ]
-  }
+{
+    "remediateSettings": {
+        "workflowRules": {
+            "enabled": false
+        },
+        "enableRenovate": true,
+        "extends": [
+            "config:recommended",
+            "mergeConfidence:all-badges",
+            "local>whitesource-config/whitesource-config:smart-merge"
+        ]
+    }
 }
 ```
 
