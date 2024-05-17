@@ -31,7 +31,7 @@ while [[ $ready = "false" ]] ; do
 	resProcess="$(curl -s -X POST -H "Content-Type: application/json" -d '{"requestType":"getRequestState", "userKey": "'$WS_USERKEY'", "orgToken":"'$WS_APIKEY'", "requestToken":"'$REQUEST_TOKEN'"}' $WS_API_URL)"
 	repStatus="$(echo "$resProcess" | jq -r '.requestState')"
 
-  if [[ $repStatus = "FINISHED" || $repStatus = "UPDATED" ]] ; then
+  if [[ $repStatus = "FINISHED" ]] ; then
 		ready=true
 		echo "Project information has been uploaded successfullly\!"
   elif [[ $repStatus = "IN_PROGRESS" ]] ; then
