@@ -16,48 +16,10 @@ The following scripts are designed to be used with the Unified Agent. Currently,
 - [Display Vulnerabilities Affecting a Project](#display-vulnerabilities-affecting-a-project)
 - [Display Policy Violations Following a Scan](#display-policy-violations-following-a-scan)
 - [Export a Product's Last Scan Date](#export-a-products-last-scan-date)
+- [Reports Within a Pipeline for UA](#reports-within-a-pipeline-for-ua)
 
 <hr/>
 
-## Reports Within a Pipeline
-
-Any report can also be published as a part of the pipeline.  
-Add the following snippet after calling the Unified Agent in any pipeline file to save reports from the scanned project to the `./whitesource` logs folder.  
-Then use your pipeline's [publish feature](../../CI-CD/README.md#publishing-mends-logs-from-a-pipeline) to save the `whitesource` log folder as an artifact.  
-
-<br>
-
-**Prerequisites:**  
-
-* `jq` and `awk` must be installed
-* ENV variables must be set
-  * WS_GENERATEPROJECTDETAILSJSON: true
-  * WS_USERKEY
-  * WS_WSS_URL
-
-<br>
-
-**Execution:**  
-
-```
-export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
-export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
-
-## Risk Report
-curl -o ./whitesource/riskreport.pdf -X POST "${WS_URL}/api/v1.4" -H "Content-Type: application/json" \
--d '{"requestType":"getProjectRiskReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
-
-## Inventory Report
-curl -o ./whitesource/inventoryreport.xlsx -X POST "${WS_URL}/api/v1.4" -H "Content-Type: application/json" \
--d '{"requestType":"getProjectInventoryReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
-
-## DueDiligence Report
-curl -o ./whitesource/duediligencereport.xlsx -X POST "${WS_URL}/api/v1.4" -H "Content-Type: application/json" \
--d '{"requestType":"getProjectDueDiligenceReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
-```
-
-<br>
-<hr>
 
 ## [SBOM Report Generation](https://github.com/mend-toolkit/Mend-SBOM-Export-CLI)
 
@@ -198,6 +160,7 @@ This script parses the `scanProjectDetails.json` file to get the `name` and `pro
 
 **Prerequisites:**  
 
+* Check that the project state is [finished](check-project-state.sh)
 * `jq` and `curl` must be installed
 * ENV variables must be set
   * `WS_GENERATEPROJECTDETAILSJSON: true`
@@ -253,6 +216,7 @@ Every policy check overwrites this file, so this list is always specific to the 
 
 **Prerequisites:**  
 
+* Check that the project state is [finished](check-project-state.sh)
 * `jq` must be installed
 * ENV variables must be set
   * `WS_CHECKPOLICIES: true`
@@ -316,6 +280,46 @@ Rejected Libraries:
   bsh-core-2.0b4.jar  (/build/gl/easybuggy/target/easybuggy-1-SNAPSHOT/WEB-INF/lib/bsh-core-2.0b4.jar)
   javassist-3.12.1.GA.jar  (/build/gl/easybuggy/target/easybuggy-1-SNAPSHOT/WEB-INF/lib/javassist-3.12.1.GA.jar)
 
+```
+
+<br>
+<hr>
+
+## Reports Within a Pipeline for UA
+
+Any report can also be published as a part of the pipeline.  
+Add the following snippet after calling the Unified Agent in any pipeline file to save reports from the scanned project to the `./whitesource` logs folder.  
+Then use your pipeline's [publish feature](../../CI-CD/README.md#publishing-mends-logs-from-a-pipeline) to save the `whitesource` log folder as an artifact.  
+
+<br>
+
+**Prerequisites:**  
+* Check that the project state is [finished](check-project-state.sh)
+* `jq` and `awk` must be installed
+* ENV variables must be set
+  * WS_GENERATEPROJECTDETAILSJSON: true
+  * WS_USERKEY
+  * WS_WSS_URL
+
+<br>
+
+**Execution:**  
+
+```
+export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
+export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
+
+## Risk Report
+curl -o ./whitesource/riskreport.pdf -X POST "${WS_URL}/api/v1.4" -H "Content-Type: application/json" \
+-d '{"requestType":"getProjectRiskReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+
+## Inventory Report
+curl -o ./whitesource/inventoryreport.xlsx -X POST "${WS_URL}/api/v1.4" -H "Content-Type: application/json" \
+-d '{"requestType":"getProjectInventoryReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+
+## DueDiligence Report
+curl -o ./whitesource/duediligencereport.xlsx -X POST "${WS_URL}/api/v1.4" -H "Content-Type: application/json" \
+-d '{"requestType":"getProjectDueDiligenceReport","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
 ```
 
 <br>
