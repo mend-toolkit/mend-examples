@@ -33,6 +33,24 @@ optional arguments:
                         Whether to use the Renovate Public key for renovate.json files (default: False)
 ```
 
+Examples:  
+
+Create encrypted credentials for the self-hosted repository integration
+```
+python3 encrypt_credentials.py -o "<Organization Name>" -r "<Repository Name>" -v "<Secret Value>"
+```
+
+Create encrypted credentials for a self-hosted integration
+```
+python3 encrypt_credentials.py -o "<Organization Name>" -r "<Repository Name>" -v "<Secret Value>" -k "./secret_key.pem"
+```
+
+Create encrypted credentials for Renovate-specific configurations in a ``renovate.json``
+```
+python3 encrypt_credentials.py -o "<Organization Name>" -r "<Repository Name>" -v "<Secret Value>" -rk
+```
+
+<hr />
 Output:
 
 The script outputs the encrypted credentials in the following format:
