@@ -1,0 +1,113 @@
+# File: mend-scan-template.yml
+
+parameters:
+- name: appName
+  default: ''
+- name: projectName
+  default: ''
+- name: scanTypeList
+  type: string
+  default: "SCA,SAST"
+  ### Allowed values:
+  ### Comma-separated list containing any of: SCA,SAST,IMAGE,ALL
+- name: imagesToScan
+  default: ''
+- name: postScanSCAReports
+  default: ''
+
+steps:
+- script: |
+
+    ### Check and install CLI
+    mend -h > /dev/null 2>&1
+    if [ $? -eq 127 ]; then
+      echo "Downloading Mend CLI"
+      curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+    fi
+
+    WS_SCAN_TYPES="${{ parameters.scanTypeList }}"
+
+    ### Mend SCA Scan #######
+    if [[ "$WS_SCAN_TYPES" == *"SCA"* || "$WS_SCAN_TYPES" == *"ALL"* ]];
+    then
+      echo Running Mend SCA scan
+      mend dep -u -s *//${{ parameters.appName }}//${{ parameters.projectName }} --fail-policy --non-interactive --export-results dep-results.txt
+      export dep_exit=$?
+      if [[ "$dep_exit" == "9" ]]; then
+        echo "##vso[task.logissue type=warning;] Dependency scan policy violation"
+        echo "##vso[task.complete result=SucceededWithIssues;]"
+      else
+        echo "No policy violations found in dependencies scan"
+      fi
+      echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/dep-results.txt"
+    fi
+    #########################
+
+    ### Mend SAST Scan ######
+    if [[ "$WS_SCAN_TYPES" == *"SAST"* || "$WS_SCAN_TYPES" == *"ALL"* ]];
+    then
+      echo Running Mend SAST scan
+      mend code -s *//${{ parameters.appName }}//${{ parameters.projectName }} -r --formats sarif --filename code-results --non-interactive
+      export code_exit=$?
+      if [[ "$code_exit" == "9" ]]; then
+        echo "##vso[task.logissue type=warning;] Code scan threshold violation"
+        echo "##vso[task.complete result=SucceededWithIssues;]"
+      else
+        echo "No policy violations found in code scan"
+      fi
+      echo "##vso[task.setvariable variable=publishLogs]Yes"
+    fi
+    #########################
+
+    ### Mend IMAGE Scan ######
+    if [[ "$WS_SCAN_TYPES" == *"IMAGE"* || "$WS_SCAN_TYPES" == *"ALL"* ]];
+    then
+      echo Running Mend Image scan
+      echo "Showing images that will be scanned"
+      cat ${{ parameters.imagesToScan }}
+      file="${{ parameters.imagesToScan }}"
+      while IFS= read -r line
+      do
+        slashline=$(echo "$line" | sed 's/\//-/g')
+        escline=$(echo "$slashline" | sed 's/:/_/')
+        echo "Scanning the image named $line with friendly name of $escline"
+        mend image $line -s *//${{ parameters.appName }}//${{ parameters.projectName }} --filter critical --fail-policy > $escline-results.txt
+        image_exit=$?
+        if [[ "$image_exit" == "9" ]]; then
+          echo "##vso[task.logissue type=warning;] Image scan policy violation in $escline"
+          echo "##vso[task.complete result=SucceededWithIssues;]"
+        else
+          echo "No policy violations found in $line scan"
+        fi
+        cat $escline-results.txt
+        echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/${escline}-results.txt"
+      done < "$file"
+    fi
+    #########################
+
+    ### Moving Mend logs ###
+    mv ~/.mend/logs $(System.DefaultWorkingDirectory)
+    mv *results* $(System.DefaultWorkingDirectory)/logs/
+    #########################
+  env:
+  ### Authentication Environment Variables ###
+    MEND_EMAIL: $(MENDEMAIL)
+    MEND_USER_KEY: $(MENDUSERKEY)
+    ### SAST Thresholds
+    # e.g., MEND_SAST_THRESHOLD_HIGH: 1
+  displayName: 'Mend CLI Scan'
+
+### Generate Mend SCA post-scan reports
+- template: mend-reports-template.yml@templates
+  parameters:
+    reportTypeList: ${{ parameters.postScanSCAReports }}
+
+### Publish logs and sarif results ###
+- publish: $(System.DefaultWorkingDirectory)/logs
+  artifact: mend-logs-reports
+  condition: succeededOrFailed()
+  displayName: 'Publish Mend scan logs and reports'
+- publish: $(System.DefaultWorkingDirectory)/logs/code-results.sarif
+  artifact: CodeAnalysisLogs
+  condition: ${{ or(contains(parameters.scanTypeList, 'SAST'), contains(parameters.scanTypeList, 'ALL')) }}
+  displayName: 'Publish Mend SAST logs for SARIF SAST Scans Tab plugin'
