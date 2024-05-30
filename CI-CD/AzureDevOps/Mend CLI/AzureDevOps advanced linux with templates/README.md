@@ -3,7 +3,7 @@
 This pipeline is designed for demonstration purposes. You may modify it to fit your specific scanning and pipeline requirements. 
 
 This example takes advantage of Azure DevOps pipeline templates, making it easier to use, read, and reuse across different pipelines.
-The templates (`*-template.yml`) need to be placed in a location accessible to all pipelines requiring their use. In this sample, a repository in a global Azure DevOps project is used (`mend-resources/mend-pipeline-templates`). You may change it to a [different preferred method](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops&pivots=templates-includes#reference-template-paths).
+The templates (`mend-*-template.yml`) need to be placed in a location accessible to all pipelines requiring their use. In this sample, a repository in a global Azure DevOps project is used (`mend-resources/mend-pipeline-templates`). You may change it to a [different preferred method](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/templates?view=azure-devops&pivots=templates-includes#reference-template-paths).
 
 The template (`mend-scan-template.yml`) uses the [Mend CLI](https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html) to run:
 * **Software Composition Analysis (SCA)** scan using package managers (and file system scanning [optional]) to detect open-source components
