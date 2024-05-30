@@ -1,0 +1,121 @@
+# ******** Mend CLI template-based pipeline for Azure DevOps ********
+#
+# This is a sample designed for demonstration purposes. You may modify it to fit your specific scanning and pipeline requirements.
+#
+# ******** Description ********
+# This pipeline sample takes advantage of Azure DevOps templates. This makes it easier to use, read, and reuse across different pipelines.
+# The templates ('*-templates.yml') need to be placed in a location accessible to all pipelines requiring to use of them. In this sample, a repository in a global Azure DevOps project 
+# is used. You may change it to a different preferred method.
+#
+# Running the Mend scans and generating post-scan SCA reports is done in a single step via the template (make sure it is run AFTER the package manager(s) build step(s)):
+#  - template: mend-scan-template.yml@templates
+#      parameters:
+#        appName: <Name of of the Mend application where results wil be uplodaed to>
+#        projectName: <Name of of the Mend project where results wil be uplodaed to>
+#        scanTypeList: <Comma-separated list containing any of: SCA,SAST,IMAGE,ALL (Default: "SCA,SAST")>
+#        postScanSCAReports: Comma-separated list containing any of: SBOM,RISK,INVENTORY,DUE_DILIGENCE,ALL (Default: "")>
+#        imagesToScan: <File name containing a list of images to scan>
+#
+# During scanning (for SCA,SAST,IMAGE respectively): 
+# mend dep will automatically use package managers (and file system scanning [optional]) to detect open-source components
+# mend code will automatically detect languages and frameworks used in your projects and report code weaknesses
+# mend image will automatically detect secrets and vulnerabilities in image layers (Operating System and application open-source packages) 
+# 
+# For more configuration options, please check our documentation:
+# 📚 https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html
+#
+# Environment variables from Azure Key Vault must use letters, numbers, and hyphens only. Please reference this link for more information:
+# https://learn.microsoft.com/en-us/azure/key-vault/general/about-keys-secrets-certificates
+# If you are NOT using a service user, and have multiple organizations, don't forget to set the organization in the scope parameter
+# The following values should be added as environment variables with email and userKey being secrets
+# MEND_URL: the mend url that you login to - (https://saas.mend.io) for example
+# MENDEMAIL: the user email for the mend platform account that you wish to scan with. This should be stored as a secret and then translated to MEND_EMAIL at runtime.
+# MENDUSERKEY: the user key found under my profile for the user you wish to scan with. This should be stored as a secret and then translated to MEND_USER_KEY at runtime.
+
+name: 'mend-cli-scan'
+
+# Define your own pipeline trigger here:
+# Below is defined a trigger for scanning on a push to the main branch and scanning on a push to release branches.  This is considered an ideal time to scan so that an SBOM can be created for software releases and inventory is managed for released software.
+trigger:
+- main
+- v*
+
+# Define templates location
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: mend-resources/mend-pipeline-templates
+
+pool:
+  vmImage: ubuntu-latest
+  
+variables:
+- name: MEND_URL
+  value: https://app.mend.io 
+
+jobs:
+- job: BuildOnMain
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  steps:
+    ### Build the application with your required package manager.  The below example is for dotnet: ###
+    - script: |
+        SLN=$(find ./ -type f -wholename "*.sln" | head -n 1)
+        echo "${SLN} is the solution that will be built"
+        dotnet restore ${SLN} --use-lock-file
+      displayName: 'dotnet build'
+    ### The mend scan template should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+
+    ### Run a Mend Scan & Generate Mend SCA post-scan reports
+    - template: mend-scan-template.yml@templates
+      parameters:
+        appName: $(System.TeamProject)
+        projectName: $(Build.Repository.Name)_$(Build.SourceBranchName)
+        scanTypeList: "SCA,SAST"
+        postScanSCAReports: "RISK"
+
+- job: BuildOnRelease
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/v'))
+  steps:
+    ### Build the application with your required package manager.  The below example is for dotnet: ###
+    - script: |
+        SLN=$(find ./ -type f -wholename "*.sln" | head -n 1)
+        echo "${SLN} is the solution that will be built"
+        dotnet restore ${SLN} --use-lock-file
+      displayName: 'dotnet build'
+    ### Build the image ###
+    - script: |
+        docker compose version
+        docker compose build
+        docker compose config --images > imagestoscan.txt
+      env:
+        TAG: $(Build.SourceBranchName)
+      displayName: 'Docker Compose Build'
+    ### The mend scan template should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+
+    ### Run a Mend Scan & Generate Mend SCA post-scan reports
+    - template: mend-scan-template.yml@templates
+      parameters:
+        appName: $(System.TeamProject)
+        projectName: $(Build.Repository.Name)_$(Build.SourceBranchName)
+        scanTypeList: "ALL"
+        imagesToScan: imagestoscan.txt
+        postScanSCAReports: "ALL"
+
+- job: BuildOnPullRequest
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+  steps:
+    ### Build the application with your required package manager.  The below example is for dotnet: ###
+    - script: |
+        SLN=$(find ./ -type f -wholename "*.sln" | head -n 1)
+        echo "${SLN} is the solution that will be built"
+        dotnet restore ${SLN} --use-lock-file
+      displayName: 'dotnet build'
+    ### The mend scan template should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+
+    ### Run a Mend Scan & Generate Mend SCA post-scan reports
+    - template: mend-scan-template.yml@templates
+      parameters:
+        appName: $(System.TeamProject)
+        projectName: $(Build.Repository.Name)_$(Build.SourceBranchName)
+        scanTypeList: "SCA,SAST"
