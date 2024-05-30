@@ -4,7 +4,7 @@
 #
 # ******** Description ********
 # This pipeline sample takes advantage of Azure DevOps templates. This makes it easier to use, read, and reuse across different pipelines.
-# The templates ('*-templates.yml') need to be placed in a location accessible to all pipelines requiring to use of them. In this sample, a repository in a global Azure DevOps project 
+# The templates ('mend-*-template.yml') need to be placed in a location accessible to all pipelines requiring to use of them. In this sample, a repository in a global Azure DevOps project 
 # is used. You may change it to a different preferred method.
 #
 # Running the Mend scans and generating post-scan SCA reports is done in a single step via the template (make sure it is run AFTER the package manager(s) build step(s)):
