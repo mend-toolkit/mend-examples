@@ -50,11 +50,11 @@ steps:
     
     ### Run a Mend Software Composition Analysis Scan
     echo Run Mend dependencies scan
-    mend dep -u -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName)
+    mend dep -u -s "*//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName)"
     
     ### Run a Mend Static Application Security Analysis Scan
     echo Start Mend code scan
-    mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName)
+    mend code -s "*//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName)"
 
   env:
     ### Authentication Environment Variable Secrets###

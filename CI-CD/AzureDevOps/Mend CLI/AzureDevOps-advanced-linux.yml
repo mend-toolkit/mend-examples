@@ -236,12 +236,12 @@ jobs:
 
         ### Run a Mend Software Composition Analysis Scan
         echo Run Mend dependencies scan
-        mend dep -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) --non-interactive --export-results dep-results.txt
+        mend dep -s "*//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName)" --non-interactive --export-results dep-results.txt
         echo "##vso[task.uploadsummary]$(System.DefaultWorkingDirectory)/dep-results.txt"
 
         ### Run a Mend Static Application Security Analysis Scan
         echo Start Mend code scan
-        mend code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName) -r --formats sarif --filename code-results --non-interactive
+        mend code -s "*//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName)" -r --formats sarif --filename code-results --non-interactive
 
         ### Logs Folder Cleanup ###
         mv ~/.mend/logs $(System.DefaultWorkingDirectory)
