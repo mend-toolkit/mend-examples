@@ -1,0 +1,61 @@
+# File: mend-reports-template.yml
+
+parameters:
+  reportTypeList:
+    type: string
+    default: ''
+    ### Allowed values:
+    ### Comma-separated list containing any of: SBOM,RISK,INVENTORY,DUE_DILIGENCE,ALL
+
+steps:
+- script: |
+
+    ### Generate Mend reports ###
+    ### Obtain project token ###
+    export WS_PROJECTTOKEN=$(grep -oP "(?<=token=)[^&]+" $(System.DefaultWorkingDirectory)/logs/dep-results.txt)
+    echo "FOUND TOKEN: $WS_PROJECTTOKEN"
+    if [ -z "$WS_PROJECTTOKEN" ];
+    then
+      echo "##vso[task.logissue type=warning;] No project token found, reports will not be generated"
+    else
+      export REPORT_TYPES="${{ parameters.reportTypeList }}"
+
+      ### Run SBOM generator ###
+      ### Requires admin priviledges ###
+      if [[ "$REPORT_TYPES" == *"SBOM"* || "$REPORT_TYPES" == *"ALL"* ]];
+      then
+        echo "Generating SBOM report"
+        pip install mend-sbom-export-cli
+        sbom_export_cli --user-key $MEND_USER_KEY --service $MEND_EMAIL --url $MEND_URL --project $WS_PROJECTTOKEN --out $(System.DefaultWorkingDirectory)/logs
+      fi
+
+      ### Dependency Reports (SCA) ###
+      ### Risk Report
+      if [[ "$REPORT_TYPES" == *"RISK"* || "$REPORT_TYPES" == *"ALL"* ]];
+      then
+        echo "Generating Risk report"
+        curl -o $(System.DefaultWorkingDirectory)/logs/riskreport.pdf -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
+        -d '{"requestType":"getProjectRiskReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+      fi
+
+      ### Inventory Report
+      if [[ "$REPORT_TYPES" == *"INVENTORY"* || "$REPORT_TYPES" == *"ALL"* ]];
+      then
+        echo "Generating Inventory report"
+        curl -o $(System.DefaultWorkingDirectory)/logs/inventoryreport.xlsx -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
+        -d '{"requestType":"getProjectInventoryReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+      fi
+
+      ### Due Diligence Report
+      if [[ "$REPORT_TYPES" == *"DUE_DILIGENCE"* || "$REPORT_TYPES" == *"ALL"* ]];
+      then
+        echo "Generating Due Diligence report"
+        curl -o $(System.DefaultWorkingDirectory)/logs/duediligencereport.xlsx -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
+        -d '{"requestType":"getProjectDueDiligenceReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+      fi
+    fi
+  env:
+  ### Authentication Environment Variables ###
+    MEND_EMAIL: $(MENDEMAIL)
+    MEND_USER_KEY: $(MENDUSERKEY)
+  displayName: 'Generating post-scan Mend SCA reports'
