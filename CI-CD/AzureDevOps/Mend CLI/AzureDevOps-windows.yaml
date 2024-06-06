@@ -50,10 +50,10 @@ steps:
       Invoke-WebRequest -Uri "https://downloads.mend.io/cli/windows_amd64/mend.exe" -OutFile "mend.exe"
       ### Run a Mend Software Composition Analysis Scan
       echo "Run Mend dependencies scan"
-      ./mend.exe dep -u -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName)
+      ./mend.exe dep -u -s "*//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName)"
       ### Run a Mend Static Application Security Analysis Scan
       echo "Run Mend code scan"
-      ./mend.exe code -s *//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName)
+      ./mend.exe code -s "*//$(System.TeamProject)//$(Build.Repository.Name)_$(Build.SourceBranchName)"
 
   env:
     ### Authentication Environment Variable Secrets ###
