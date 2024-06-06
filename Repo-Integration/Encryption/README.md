@@ -13,6 +13,17 @@ Typically, users can encrypt credentials through the following methods:
 
 This script provides an alternative to these methods for encryption.
 
+Requirements:
+```
+Python 3.9+
+```
+
+Installation steps:
+```
+pip install -r pgpy==0.6.0
+```
+
+
 Usage:
 ```
 usage: encrypt_credentials.py [-h] -o ORGANIZATION [-r REPOSITORY] -v SECRET_VALUE [-k PUBLIC_KEY_FILE | -rk | --renovate-key | --no-renovate-key]
