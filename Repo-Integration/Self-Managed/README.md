@@ -46,8 +46,8 @@ When used, these scripts will download the latest [repository integration](https
    ```
    - Setup up Docker for use as [non-root user](https://docs.docker.com/engine/install/linux-postinstall)
    ```shell
-   sudo usermod -aG docker $USER
    newgrp docker
+   sudo usermod -aG docker $USER
    ```
    - Ensure docker & docker compose work as the current user with ```docker version && docker compose version``` 
    - Continue with the steps below
@@ -95,6 +95,8 @@ export graylog_root_password='the password you would like to use to login to gra
 sudo sh -c 'echo "vm.max_map_count=262144" >> /etc/sysctl.conf'
 sudo sysctl -p
 ```
+
+- Upon the first setup of the compose, graylog continaer will start with `waiting` state, navigate to: `http://{YOUR_IP}:9000`, login and perform the inital setup of the CA.
 - To add the [dynamic tool installation mechanism](https://docs.mend.io/bundle/integrations/page/dynamic_tool_installation_mechanism.html) you must perform the following
   - Manually edit the Dockerfilefull found in ```~/mend/$SCM/$VERSION/wss-scanner/docker/Dockerfilefull``` as shown in the documentation
   - Edit the .env with the necessary groups or organizations needed for ```RUNINSTALL_MATCH``` variable
