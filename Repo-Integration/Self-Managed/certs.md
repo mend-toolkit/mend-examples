@@ -14,7 +14,7 @@ Use the following instructions to enable Mend.io self-hosted repo integration to
        * https://www.linux.org/docs/man8/update-ca-trust.html
    * On Debian-based distros (Ubuntu, etc):
      * ```update-ca-certificates``` (system)
-     * ```update-java-ca-certificates``` (java keystore - [Download link](https://raw.githubusercontent.com/mend-toolkit/mend-examples/6c0461b1ca3431aea0c656606ecbf2a059d04af8/Repo-Integration/Binaries/update-java-ca-certificates/update-java-ca-certificates) and [Instructions](#appendix-update-java-ca-certificates-usage))
+     * ```update-java-ca-certificates``` (java keystore - [Download link](https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Repo-Integration/Binaries/update-java-ca-certificates/update-java-ca-certificates) and [Instructions](#appendix-update-java-ca-certificates-usage))
 3. Add cert volume mappings and environment variable to docker-compose.yaml or helm charts (see next section).
 
 
