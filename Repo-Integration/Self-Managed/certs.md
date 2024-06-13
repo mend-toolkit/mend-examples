@@ -14,8 +14,9 @@ Use the following instructions to enable Mend.io self-hosted repo integration to
        * https://www.linux.org/docs/man8/update-ca-trust.html
    * On Debian-based distros (Ubuntu, etc):
      * ```update-ca-certificates``` (system)
-     * ```update-java-ca-certificates``` (java keystore) - contact Mend for CLI utility
+     * ```update-java-ca-certificates``` (java keystore - [Download link](https://raw.githubusercontent.com/mend-toolkit/mend-examples/6c0461b1ca3431aea0c656606ecbf2a059d04af8/Repo-Integration/Binaries/update-java-ca-certificates/update-java-ca-certificates) and [Instructions](#appendix-update-java-ca-certificates-usage))
 3. Add cert volume mappings and environment variable to docker-compose.yaml or helm charts (see next section).
+
 
 ## Container Configurations
 
@@ -117,3 +118,17 @@ Example docker-compose.yaml snippet:
     # ...
 ```
 
+#### Appendix: update-java-ca-certificates usage
+
+This utility is created by: https://github.com/swisscom/update-java-ca-certificates.
+The purpose of this utility is to create a keystore at /etc/ssl/java/cacerts without the need for Java. Here are the following steps to run this:
+
+1. Make sure you have added the certificate to the /usr/local/share/ca-certificates  directory and run: ``sudo update-ca-certificates``
+2. The certificate should now be added to your /etc/ssl/certs directory. To confirm you can run: ``ls -al /etc/ssl/certs | grep <your_cert_name>``
+3. Run the update-java-ca-certificates utility with super user privileges: 
+
+```shell
+if [ ! -d "/etc/ssl/java/" ]; then
+  mkdir -p /etc/ssl/java
+sudo update-java-ca-certificates -c /etc/ssl/certs/ca-certificates.crt /etc/ssl/java/cacerts
+```
