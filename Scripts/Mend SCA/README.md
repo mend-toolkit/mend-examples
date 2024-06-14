@@ -17,6 +17,7 @@ The following scripts are designed to be used with the Unified Agent. Currently,
 - [Display Policy Violations Following a Scan](#display-policy-violations-following-a-scan)
 - [Export a Product's Last Scan Date](#export-a-products-last-scan-date)
 - [Reports Within a Pipeline for UA](#reports-within-a-pipeline-for-ua)
+- [Feature Branch Scan](#feature-branch-scan)
 
 <hr/>
 
@@ -324,3 +325,29 @@ curl -o ./whitesource/duediligencereport.xlsx -X POST "${WS_URL}/api/v1.4" -H "C
 
 <br>
 <hr>
+
+## Feature Branch Scan
+
+The Unified Agent always uploads a project/scan to the user interface unlike the Mend CLI which has the ability to scan and provide rich output without creating a new project.  To replicate this feature the following must be performed with the UA.  This most commonly used when scanning feature branches or pull requests as these scans should not be retained in the user interface for long periods of time.
+
+**Prerequisites:**  
+* Check that the project state is [finished](check-project-state.sh)
+* `jq` and `awk` must be installed
+* ENV variables must be set
+  * WS_GENERATEPROJECTDETAILSJSON: true
+  * WS_USERKEY
+  * WS_WSS_URL
+
+
+<br>
+
+**Execution:**  
+
+```
+export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
+export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
+
+curl -X POST "${WS_URL}/api/v1.4" -H "Content-Type: application/json" \
+-d '{"requestType":"deleteProject","userKey":"'${WS_USERKEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+
+```
