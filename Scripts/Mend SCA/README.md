@@ -17,6 +17,7 @@ The following scripts are designed to be used with the Unified Agent. Currently,
 - [Display Policy Violations Following a Scan](#display-policy-violations-following-a-scan)
 - [Export a Product's Last Scan Date](#export-a-products-last-scan-date)
 - [Reports Within a Pipeline for UA](#reports-within-a-pipeline-for-ua)
+- [Feature Branch Scan](#feature-branch-scan)
 
 <hr/>
 
@@ -118,6 +119,11 @@ chmod +x ./get-malicious-packages.sh && ./get-malicious-packages.sh
 # Unified Agent Only Scripts
 
 **All scripts & snippets besides [Cache Unified Agent](#cache-the-latest-version-of-the-unified-agent) in this section that are utilized in a pipeline should call [check-project-state.sh](check-project-state.sh) before running to ensure that the scan has completed.**
+
+It is also assumed that the following environment variables are set when running the Unified Agent as they are required to perform a scan
+- WS_APIKEY
+- WS_PRODUCTNAME
+- WS_PROJECTNAME
 
 ## Cache the Latest Version of the Unified Agent
 
@@ -324,3 +330,30 @@ curl -o ./whitesource/duediligencereport.xlsx -X POST "${WS_URL}/api/v1.4" -H "C
 
 <br>
 <hr>
+
+## Feature Branch Scan
+
+The Unified Agent always uploads a project/scan to the user interface unlike the Mend CLI which has the ability to scan and provide rich output without creating a new project.  To replicate this feature the following should be performed with the UA.  This is most commonly used when scanning feature branches or pull requests as these scans should not be retained in the user interface for long periods of time.
+
+**Prerequisites:**  
+* Check that the project state is [finished](check-project-state.sh)
+* `jq` and `awk` must be installed
+* ENV variables must be set
+  * MEND_EMAIL
+    * Should be the email for the userKey used below
+  * WS_GENERATEPROJECTDETAILSJSON=true
+  * WS_USERKEY
+  * WS_WSS_URL
+  * WS_GENERATESCANREPORT=true
+    * alternatively, a risk report could be generated as shown in [Reports Within a Pipeline for UA](#reports-within-a-pipeline-for-ua)
+
+
+<br>
+
+**Execution:**  
+
+```
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/delete-ua-proj.sh
+chmod +x ./delete-ua-proj.sh && ./delete-ua-proj.sh
+
+```
