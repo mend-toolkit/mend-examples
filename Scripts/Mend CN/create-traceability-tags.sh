@@ -48,3 +48,4 @@ find . -name Dockerfile -type f -print | while read -r dockerfile_path; do
 done
 
 echo "Finished processing Dockerfiles"
+echo "It is recommended to commit these changes to your repository for future scans"
