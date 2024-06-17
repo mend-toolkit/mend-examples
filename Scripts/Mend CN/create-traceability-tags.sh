@@ -5,9 +5,9 @@
 # Users should edit this file to change any behavior with the labels that is needed.
 #
 # ******** Description ********
-# This script should be run at the root of a repository to add labels required for traceability in 
-# Mend Container Image scanning. This script can be added into any pipeline to automatically add 
-# this information before building a container and running a scan.
+# This script should be run at the root of a repository to add labels to Dockerfiles required for
+# traceability in Mend Container Image scanning. This script can be added into any pipeline 
+# to automatically add this information before building a container and running a scan.
 #
 # Requirements:
 # sed
