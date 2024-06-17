@@ -53,7 +53,7 @@ The [pending-task-cleanup.sh](pending-task-cleanup.sh) script is designed to be 
 export MEND_URL=https://saas.mend.io
 export WS_APIKEY=x
 export MEND_USER_KEY=x
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/pending-task-cleanup.sh 
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/SCA/pending-task-cleanup.sh 
 chmod +x ./pending-task-cleanup.sh && ./pending-task-cleanup.sh
 ```
 
@@ -80,7 +80,7 @@ The [get-library-ages.py](get-library-ages.py) script can be added to the CI/CD 
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/get-library-ages.py
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/SCA/get-library-ages.py
 python3 ./get-library-ages.py
 ```
 
@@ -110,7 +110,7 @@ The [get-malicious-packages.sh](get-malicious-packages.sh) script can be added t
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/get-malicious-packages.sh
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/SCA/get-malicious-packages.sh
 chmod +x ./get-malicious-packages.sh && ./get-malicious-packages.sh
 ```
 
@@ -139,7 +139,7 @@ Role permissions are visible in the API documentation for [addGroupRoles](https:
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/group-permissions.sh
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/SCA/group-permissions.sh
 chmod +x ./group-permissions.sh && ./group-permissions.sh my-group-name role-permissions
 ```
 
@@ -174,7 +174,7 @@ The [cache-ua.sh](cache-ua.sh) script can be added to the CI/CD pipeline on a st
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/cache-ua.sh
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/SCA/cache-ua.sh
 chmod +x ./cache-ua.sh && ./cache-ua.sh
 ```
 
@@ -383,7 +383,7 @@ The Unified Agent always uploads a project/scan to the user interface unlike the
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/delete-ua-proj.sh
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/SCA/delete-ua-proj.sh
 chmod +x ./delete-ua-proj.sh && ./delete-ua-proj.sh
 
 ```
