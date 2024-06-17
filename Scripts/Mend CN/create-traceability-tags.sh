@@ -6,7 +6,7 @@
 #
 # ******** Description ********
 # This script should be run at the root of a repository to add labels to Dockerfiles required for
-# traceability in Mend Container Image scanning. This script can be added into any pipeline 
+# traceability in Mend Container Image scanning. This script can be added into any pipeline
 # to automatically add this information before building a container and running a scan.
 #
 # Requirements:
@@ -34,6 +34,8 @@ check_and_add_labels() {
     echo "OCI Label already exist in $dockerfile_path"
   else
     source_url=$(git config --get remote.origin.url 2>/dev/null)
+    source_url=${source_url%\.git}
+
     sed -i "1i LABEL org.opencontainers.image.source=$source_url" "$dockerfile_path"
   fi
 
