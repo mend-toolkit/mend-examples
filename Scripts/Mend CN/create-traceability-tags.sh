@@ -10,7 +10,7 @@
 # to automatically add this information before building a container and running a scan.
 #
 # Requirements:
-# sed
+# apt-get install sed git
 
 # Function to check for and add labels
 check_and_add_labels() {
