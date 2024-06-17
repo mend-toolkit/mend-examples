@@ -12,6 +12,7 @@
 # MEND_ORG_UUID - optional for selecting a different organization
 
 group_name=$1
+group_role=$2
 
 
 
@@ -66,12 +67,18 @@ function find_group() {
 }
 
 function set_permissions() {
-    ## TODO - Replace USER with variable for differnt role types instead of hard coding USER role at organization level
     GROUP_UUID=$(echo "$GROUPS_RESPONSE" | jq --arg name_to_find $group_name -r '.retVal[] | select(.name == $name_to_find) .uuid')
-    echo "Add org member permissions to group $group_name with uuid of $GROUP_UUID"
-    ADDROLE_BODY="{\"contextType\": \"orgs\", \"contextToken\": \"$MEND_ORG_UUID\", \"role\": \"USER\"}"
-    echo $ADDROLE_BODY
+    if [ -z "$group_role" ]; then
+        echo "group_role not set, USER role will be used by default, set a desired role other than USER as the 2nd variable"
+        echo "https://docs.mend.io/bundle/mend-api-2-0/page/index.html#tag/User-Management-Groups/operation/addGroupRoles"
+        group_role="USER"
+        
+    fi
+
+    echo "Adding organization level $group_role permissions to group $group_name with uuid of $GROUP_UUID"
+    ADDROLE_BODY="{\"contextType\": \"orgs\", \"contextToken\": \"$MEND_ORG_UUID\", \"role\": \"$group_role\"}"
     curl -s --location "$MEND_API_URL/orgs/$MEND_ORG_UUID/groups/$GROUP_UUID/roles" --header "Content-Type: application/json" --header "Authorization: Bearer $JWT_TOKEN" -d "${ADDROLE_BODY}"
+
     
 }
 
