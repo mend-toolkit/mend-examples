@@ -8,6 +8,7 @@ This folder contains scripts for use with the Mend SCA platform and Unified agen
 - [Get all Users that are part of Organizations which are a part of a Global Organization](#get-all-users-that-are-part-of-organizations-which-are-a-part-of-a-global-organization)
 - [Get all libraries where the used version is older than X days](#get-all-libraries-where-the-used-version-is-older-than-x-days)
 - [Get all malicious packages in an organization](#get-all-malicious-packages-in-an-organization)
+- [Group Permissions](#group-permissions)
 
 ### Unified Agent Scripts  
 The following scripts are designed to be used with the Unified Agent. Currently, it is recommended to use the Mend CLI for scanning purposes. However, these scripts can be used to bridge the gap between the Mend Unified Agent and the CLI in cases where the Unified Agent is required.
@@ -52,7 +53,7 @@ The [pending-task-cleanup.sh](pending-task-cleanup.sh) script is designed to be 
 export MEND_URL=https://saas.mend.io
 export WS_APIKEY=x
 export MEND_USER_KEY=x
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/pending-task-cleanup.sh 
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Mend%20SCA/pending-task-cleanup.sh 
 chmod +x ./pending-task-cleanup.sh && ./pending-task-cleanup.sh
 ```
 
@@ -79,7 +80,7 @@ The [get-library-ages.py](get-library-ages.py) script can be added to the CI/CD 
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/get-library-ages.py
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Mend%20SCA/get-library-ages.py
 python3 ./get-library-ages.py
 ```
 
@@ -109,8 +110,37 @@ The [get-malicious-packages.sh](get-malicious-packages.sh) script can be added t
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/get-malicious-packages.sh
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Mend%20SCA/get-malicious-packages.sh
 chmod +x ./get-malicious-packages.sh && ./get-malicious-packages.sh
+```
+
+<br>
+<hr>
+
+## Group Permissions
+
+[group-permissions.sh](group-permissions.sh)  
+
+This script allows an admin to update organization groups with specific permissions.  The default will update an organization group to have read only(user) permissions.
+Role permissions are visible in the API documentation for [addGroupRoles](https://docs.mend.io/bundle/mend-api-2-0/page/index.html#tag/User-Management-Groups/operation/addGroupRoles)
+
+<br>
+
+**Prerequisites:**  
+
+* ``sudo apt-get install jq curl``
+* ``export MEND_USER_KEY`` - An administrator's userkey
+* ``export MEND_EMAIL`` - The administrator's email
+* ``export MEND_ORG_UUID`` - API Key for organization (optional)
+* ``export MEND_URL`` - e.g. https://saas.mend.io/
+
+<br>
+
+**Execution:**  
+
+```
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Mend%20SCA/group-permissions.sh
+chmod +x ./group-permissions.sh && ./group-permissions.sh my-group-name role-permissions
 ```
 
 <br>
@@ -144,7 +174,7 @@ The [cache-ua.sh](cache-ua.sh) script can be added to the CI/CD pipeline on a st
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/cache-ua.sh
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Mend%20SCA/cache-ua.sh
 chmod +x ./cache-ua.sh && ./cache-ua.sh
 ```
 
@@ -353,7 +383,7 @@ The Unified Agent always uploads a project/scan to the user interface unlike the
 **Execution:**  
 
 ```
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/delete-ua-proj.sh
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Mend%20SCA/delete-ua-proj.sh
 chmod +x ./delete-ua-proj.sh && ./delete-ua-proj.sh
 
 ```
