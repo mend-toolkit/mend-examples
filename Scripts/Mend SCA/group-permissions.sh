@@ -77,8 +77,11 @@ function set_permissions() {
 
     echo "Adding organization level $group_role permissions to group $group_name with uuid of $GROUP_UUID"
     ADDROLE_BODY="{\"contextType\": \"orgs\", \"contextToken\": \"$MEND_ORG_UUID\", \"role\": \"$group_role\"}"
-    curl -s --location "$MEND_API_URL/orgs/$MEND_ORG_UUID/groups/$GROUP_UUID/roles" --header "Content-Type: application/json" --header "Authorization: Bearer $JWT_TOKEN" -d "${ADDROLE_BODY}"
-
+    ADDROLE_RESPONSE=$(curl -s --location "$MEND_API_URL/orgs/$MEND_ORG_UUID/groups/$GROUP_UUID/roles" --header "Content-Type: application/json" --header "Authorization: Bearer $JWT_TOKEN" -d "${ADDROLE_BODY}")
+    ADDROLE_STATUS=$(echo $ADDROLE_RESPONSE | jq -re '.status')
+    if [[ $ADDROLE_STATUS -ne "null" ]]; then
+        echo $ADDROLE_RESPONSE | jq .
+    fi
     
 }
 
