@@ -53,7 +53,17 @@ function login() {
 
 function find_group() {
     GROUPS_RESPONSE=$(curl -s --location "$MEND_API_URL/orgs/$MEND_ORG_UUID/groups" --header "Content-Type: application/json" --header "Authorization: Bearer $JWT_TOKEN")
+    GROUPS_ERROR=$(echo "$GROUPS_RESPONSE" | jq '.retVal.errorMessage')
+    if [ -z "$GROUPS_ERROR" ]; then
+        list_groups
+    else
+        echo "Error getting list of organization groups - $GROUPS_ERROR"
+        exit 1
+    fi    
+    
+}
 
+function list_groups(){
     if [ -z "$group_name" ]; then
         echo "Please add a group name from the list when calling the script."
         echo "Example:  ./group-permissions.sh mygroupname"
@@ -62,8 +72,6 @@ function find_group() {
     else
         set_permissions
     fi
-    
-    
 }
 
 function set_permissions() {
@@ -78,10 +86,7 @@ function set_permissions() {
     echo "Adding organization level $group_role permissions to group $group_name with uuid of $GROUP_UUID"
     ADDROLE_BODY="{\"contextType\": \"orgs\", \"contextToken\": \"$MEND_ORG_UUID\", \"role\": \"$group_role\"}"
     ADDROLE_RESPONSE=$(curl -s --location "$MEND_API_URL/orgs/$MEND_ORG_UUID/groups/$GROUP_UUID/roles" --header "Content-Type: application/json" --header "Authorization: Bearer $JWT_TOKEN" -d "${ADDROLE_BODY}")
-    ADDROLE_STATUS=$(echo $ADDROLE_RESPONSE | jq -re '.status')
-    if [[ $ADDROLE_STATUS -ne "null" ]]; then
-        echo $ADDROLE_RESPONSE | jq .
-    fi
+    echo $ADDROLE_RESPONSE | jq .
     
 }
 
