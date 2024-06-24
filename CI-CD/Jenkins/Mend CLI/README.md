@@ -6,7 +6,6 @@ This example takes advantage of Jenkins Global Trusted Pipeline Libraries, makin
 
 The template (`jenkins.groovy`) uses the [Mend CLI](https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html) to run:
 * **Software Composition Analysis (SCA)** scan using package managers (and file system scanning [optional]) to detect open-source components with report creating of:
-    * SBOM report
     * Risk report
     * Inventory report
     * Due diligence report
