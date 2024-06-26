@@ -1,6 +1,6 @@
-# Jenkins Pipeline Tsing Trusted Libraries
+# Jenkins Pipeline Using Trusted Libraries
 
-this pipeline is designed for demonstration purposes. You may modify it to fit your specific scanning and pipeline requirements. 
+Rhis pipeline is designed for demonstration purposes. You may modify it to fit your specific scanning and pipeline requirements. 
 
 This example takes advantage of Jenkins Global Trusted Pipeline Libraries, making it easier to use, read, and reuse across different pipelines.
 
