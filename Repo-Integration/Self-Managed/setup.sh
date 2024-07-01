@@ -170,6 +170,7 @@ function port_check(){
         EXTERNAL_PORTS=(5678 9000)  # Replace with your desired ports
     else
         EXTERNAL_PORTS=(5678)
+    fi
 
     for PORT in "${EXTERNAL_PORTS[@]}"; do
 
