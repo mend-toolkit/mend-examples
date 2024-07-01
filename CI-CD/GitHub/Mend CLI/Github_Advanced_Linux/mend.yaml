@@ -1,0 +1,24 @@
+name: Mend
+
+on:
+  push:
+    branches: [ main ]
+
+
+jobs:
+
+  call-template:
+    uses: mend-examples/mend-toolkit/.github/workflows/mend-scan-template.yaml@scan-templates
+    with:
+      MEND_URL: "https://saas-eu.mend.io"
+      # MEND_URL: "https://saas.mend.io"
+      SCA: true
+      SAST: false
+      CN: false # TODO define template
+      SCA_Reports: 'ALL'
+      ### Allowed values:
+      ### Comma-separated list containing any of: SBOM,RISK,INVENTORY,DUE_DILIGENCE,ALL
+    secrets:
+      MEND_EMAIL: ${{ secrets.MEND_EMAIL }}
+      MEND_USER_KEY: ${{ secrets.MEND_USER_KEY }}
+      

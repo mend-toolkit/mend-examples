@@ -1,0 +1,126 @@
+name: Mend Scans Template
+
+on:
+  workflow_call:
+    inputs:
+      MEND_URL:
+        required: true
+        type: string
+      SCA:
+        required: true
+        type: boolean
+      SAST:
+        required: true
+        type: boolean
+      CN:
+        required: true
+        type: boolean
+      SCA_Reports:
+        required: true
+        type: string
+    secrets:
+      MEND_EMAIL:
+        required: true
+      MEND_USER_KEY:
+        required: true
+      
+        
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Add Mend URL
+        run:  |
+          echo "MEND_URL=${{ inputs.MEND_URL }}" >> $GITHUB_ENV
+          echo "MEND_EMAIL"=${{ secrets.MEND_EMAIL }} >> $GITHUB_ENV
+          echo "MEND_USER_KEY"=${{ secrets.MEND_USER_KEY }} >> $GITHUB_ENV
+      
+      - name: Download Mend CLI
+        run: curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+        
+      - name: Run Mend SCA Scan
+        id: SCA
+        if: ${{ inputs.SCA }}
+        run: |
+           mend dep -u --fail-policy --export-results dep-results.txt
+           cp dep-results.txt ~/.mend/logs
+
+      - name: Check SCA results if failed
+        if: steps.SCA.outcome == 'failure'
+        run: echo -e "\033[0;31mDependency scan policy violation"
+
+      - name: Check SCA results if succeeded
+        if: steps.SCA.outcome == 'success'
+        run: echo -e "\033[0;32mNo policy violations found in dependencies scan"
+
+      - name: Run Mend SAST Scan
+        id: SAST
+        if: ${{ inputs.SAST }}
+        run: |
+           mend code -r --formats sarif --filename code-results --non-interactive
+           cp code-results.sarif ~/.mend/logs
+      
+      - name: Check SAST results
+        if: steps.SAST.outcome == 'failure'
+        run: echo -e "\033[0;31mCode scan threshold violation"
+
+      - name: Check SAST results
+        if: steps.SAST.outcome == 'success'
+        run: echo -e "\033[0;32mNo policy violations found in code scan"
+
+      - name: Generate SCA Reports
+        id: SCA_Reports
+        run: |
+          ### Generate Mend reports ###
+          ### Obtain project token ###
+          export WS_PROJECTTOKEN=$(grep -oP "(?<=token=)[^&]+" ~/.mend/logs/dep-results.txt)
+          echo "FOUND TOKEN: $WS_PROJECTTOKEN"
+          if [ -z "$WS_PROJECTTOKEN" ];
+          then
+            echo "No project token found, reports will not be generated"
+          else
+            export REPORT_TYPES="${{ inputs.SCA_Reports }}"
+      
+            ### Run SBOM generator ###
+            ### Requires admin priviledges ###
+            if [[ "$REPORT_TYPES" == *"SBOM"* || "$REPORT_TYPES" == *"ALL"* ]];
+            then
+              echo "Generating SBOM report"
+              pip install mend-sbom-export-cli
+              sbom_export_cli --user-key ${MEND_USER_KEY} --service ${MEND_EMAIL} --url ${MEND_URL} --project ${WS_PROJECTTOKEN} --out ~/.mend/logs
+            fi
+      
+            ### Dependency Reports (SCA) ###
+            ### Risk Report
+            if [[ "$REPORT_TYPES" == *"RISK"* || "$REPORT_TYPES" == *"ALL"* ]];
+            then
+              echo "Generating Risk report"
+              curl -o ~/.mend/logs/riskreport.pdf -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
+              -d '{"requestType":"getProjectRiskReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+            fi
+      
+            ### Inventory Report
+            if [[ "$REPORT_TYPES" == *"INVENTORY"* || "$REPORT_TYPES" == *"ALL"* ]];
+            then
+              echo "Generating Inventory report"
+              curl -o ~/.mend/logs/inventoryreport.xlsx -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
+              -d '{"requestType":"getProjectInventoryReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+            fi
+      
+            ### Due Diligence Report
+            if [[ "$REPORT_TYPES" == *"DUE_DILIGENCE"* || "$REPORT_TYPES" == *"ALL"* ]];
+            then
+              echo "Generating Due Diligence report"
+              curl -o ~/.mend/logs/duediligencereport.xlsx -X POST "${MEND_URL}/api/v1.4" -H "Content-Type: application/json" \
+              -d '{"requestType":"getProjectDueDiligenceReport","userKey":"'${MEND_USER_KEY}'","projectToken":"'${WS_PROJECTTOKEN}'"}'
+            fi
+          fi
+      - name: Publish Mend Folder
+        uses: actions/upload-artifact@v2
+        with:
+          name: "Mend CLI Logs"
+          path: ~/.mend/logs
+          retention-days: 5
