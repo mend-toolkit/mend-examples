@@ -166,7 +166,10 @@ function port_check(){
     PUBLIC_IP=$(curl -s http://checkip.amazonaws.com)
 
     # Define the array of externally facing ports to check
-    EXTERNAL_PORTS=(5678 9000)  # Replace with your desired ports
+    if [[ $USE_GRAYLOG == 1 ]]; then
+        EXTERNAL_PORTS=(5678 9000)  # Replace with your desired ports
+    else
+        EXTERNAL_PORTS=(5678)
 
     for PORT in "${EXTERNAL_PORTS[@]}"; do
 
@@ -209,11 +212,11 @@ function key_check(){
         exit
     fi
 
-    if [[ $USE_GRAYLOG -eq 0 ]]; then
-        if [ -z "${github_com_token}" ]; then
-            github_com_token=${GITHUB_COM_TOKEN}
-        fi
+    if [ -z "${github_com_token}" ]; then
+        github_com_token=${GITHUB_COM_TOKEN}
+    fi
 
+    if [[ $USE_GRAYLOG -eq 1 ]]; then
         if [ -z "${graylog_root_password}" ] && [ -z "${GRAYLOG_ROOT_PASSWORD}" ]; then
             echo "${red}Please set your Graylog Root Password by using the following command. This will be used to log in as admin after creating the instance:${end}"
             echo "${cyn}export GRAYLOG_ROOT_PASSWORD='replace-with-your-desired-password-inside-single-quotes'${end}"
