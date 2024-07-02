@@ -627,7 +627,7 @@
                 "config": {
                   "visualization": "line",
                   "column_limit": 15,
-                  "event_annotation": true,
+                  "event_annotation": false,
                   "row_limit": null,
                   "row_pivots": [
                     {
