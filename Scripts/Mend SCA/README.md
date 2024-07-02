@@ -9,6 +9,7 @@ This folder contains scripts for use with the Mend SCA platform and Unified agen
 - [Get all libraries where the used version is older than X days](#get-all-libraries-where-the-used-version-is-older-than-x-days)
 - [Get all malicious packages in an organization](#get-all-malicious-packages-in-an-organization)
 - [Group Permissions](#group-permissions)
+- [Scan Errors](#scan-errors)
 
 ### Unified Agent Scripts  
 The following scripts are designed to be used with the Unified Agent. Currently, it is recommended to use the Mend CLI for scanning purposes. However, these scripts can be used to bridge the gap between the Mend Unified Agent and the CLI in cases where the Unified Agent is required.
@@ -141,6 +142,34 @@ Role permissions are visible in the API documentation for [addGroupRoles](https:
 ```
 curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Mend%20SCA/group-permissions.sh
 chmod +x ./group-permissions.sh && ./group-permissions.sh my-group-name role-permissions
+```
+
+<br>
+<hr>
+
+## Scan Errors
+
+[scanerrors.sh](scanerrors.sh)  
+
+This script allows an admin to to find projects with scanError tags.  This is useful when troublehshotting hostRules within the Mend repository integration.
+
+<br>
+
+**Prerequisites:**  
+
+* ``sudo apt-get install jq curl``
+* ``export MEND_USER_KEY`` - An administrator's userkey
+* ``export MEND_EMAIL`` - The administrator's email
+* ``export MEND_ORG_UUID`` - API Key for organization (optional)
+* ``export MEND_URL`` - e.g. https://saas.mend.io/
+
+<br>
+
+**Execution:**  
+
+```
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Mend%20SCA/scanerrors.sh
+chmod +x ./scanerrors.sh && ./scanerrors.sh
 ```
 
 <br>
