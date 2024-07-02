@@ -44,7 +44,7 @@ services:
         options:
           syslog-address: "tcp://0.0.0.0:5140"
           tag: wss-${SCM}-app
-    
+
   scanner:
     build: 
       context: ${BASE_DIR}/${VERSION}/wss-scanner/docker

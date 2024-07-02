@@ -53,16 +53,16 @@ When used, these scripts will download the latest [repository integration](https
    - Continue with the steps below
     		
 ## Options
-`setup.sh` options: **ghe**, **gls**, **bb** *optional* **version**
+```
+Usage: setup.sh <scm> [-v <version>] [-g]
+-v      The version of the integration you would like to use. (Optional - Default: latest)
+-g      Specify to not use graylog when spinning up the integration.
 
-Options Defined:  
-**ghe** - GitHub Enterprise
-
-**gls** - GitLab (self-hosted)
-
-**bb** - Bitbucket Server
-
-**version** - If left blank, the latest version is installed. [Available versions](https://docs.mend.io/bundle/integrations/page/mend_developer_integrations_release_notes.html)
+Integration Options:
+        ghe - GitHub Enterprise
+        gls - GitLab Server
+        bb - BitBucket Server
+```
 
 For custom CA information, please see the [certificate readme](./certs.md)
 
@@ -77,9 +77,9 @@ cd mend-examples/Repo-Integration/Self-Managed
 chmod +x setup.sh
 ```
 - Add the following environment variables which will be copied to the .env file that is created by setup.sh
-  - Activation key which is obtained from the Mend User Interface Integration page
-  - Github.com personal access token which is important for Remediate and Renovate to prevent Gitbub rate-limiting imposed on non-authenticated requests
-  - Graylog root password which is the password used to login to the Graylog platform after the intial setup
+  - WS_KEY: Activation key which is obtained from the Mend User Interface Integration page
+  - GITHUB_COM_TOKEN: which is important for Remediate and Renovate to prevent Gitbub rate-limiting imposed on non-authenticated requests
+  - GRAYLOG_ROOT_PASSWORD: If using graylog, this is the password used to login to the Graylog platform after the intial setup
 
 ```shell
 export ws_key='your activation key between single quotes'
@@ -89,14 +89,19 @@ export graylog_root_password='the password you would like to use to login to gra
 
 - Run the setup.sh script for your appropriate source control management system as shown in options above
 
-- Run the following commands to increase your memory map count for graylog's elasticsearch.
+- If using graylog, run the following commands to increase your memory map count for graylog's elasticsearch.
 
 ```shell
 sudo sh -c 'echo "vm.max_map_count=262144" >> /etc/sysctl.conf'
 sudo sysctl -p
 ```
 
-- Upon the first setup of the compose, graylog continaer will start with `waiting` state, navigate to: `http://{YOUR_IP}:9000`, login and perform the inital setup of the CA.
+- If using graylog, follow these steps to make the docker engine API listen on TCP Port 2375.
+  - Use the command: ``find /etc/systemd -name "docker.service"`` to get the path of the docker.service file.
+  - Edit the file and add the following to the ExecStart command: ``-H tcp://0.0.0.0:2375`` (This is used to get container healthchecks)
+  - Run: ``sudo systemctl daemon-reload && sudo systemctl restart docker`` to restart docker.  
+
+- When first running ``docker compose up``, the graylog container will start with `waiting` state, navigate to: `http://{YOUR_IP}:9000`, login and perform the inital setup of the CA.
 - To add the [dynamic tool installation mechanism](https://docs.mend.io/bundle/integrations/page/dynamic_tool_installation_mechanism.html) you must perform the following
   - Manually edit the Dockerfilefull found in ```~/mend/$SCM/$VERSION/wss-scanner/docker/Dockerfilefull``` as shown in the documentation
   - Edit the .env with the necessary groups or organizations needed for ```RUNINSTALL_MATCH``` variable
@@ -119,6 +124,9 @@ sudo sysctl -p
 - Features of the Mend Graylog Content Pack  
   - An input for all of the repo integration logs  
     - Extractors that allow for easy parsing of the repo integration logs  
+  - Inputs for container stats (CPU/Memory usage)
+  - Pipelines to calculate CPU/Memory Usage
+  - Alerts for Controller stats + Scan Queue
   - Two inputs that send API requests periodically for the Scanner and Remediate containers healthcheck endpoints  
   - Dashboards for searching the integration containers individually  
   - Dashboards showing statistics pulled from the healthcheck API inputs  
@@ -127,7 +135,7 @@ sudo sysctl -p
 
 In the event that the integration needs to be stopped, please use the command: `docker compose -f <docker-compose.yaml file> down` to stop the integration. This will ensure that graylog stops gracefully and no data corruption occurs.
 
-## Basic Troubleshooting
+## Basic Troubleshooting for Graylog
 Removing Graylog volumes
 ```shell
 docker compose down
