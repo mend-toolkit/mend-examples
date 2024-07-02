@@ -151,7 +151,7 @@ chmod +x ./group-permissions.sh && ./group-permissions.sh my-group-name role-per
 
 [scanerrors.sh](scanerrors.sh)  
 
-This script allows an admin to to find projects with scanError tags.  This is useful when troublehshotting hostRules within the Mend repository integration.
+This script allows an admin to to find projects with scanError tags.  This is useful when troublehshooting [hostRules](https://docs.mend.io/bundle/wsk/page/hostrules_implementation_examples.html) within the Mend repository integration.
 
 <br>
 
