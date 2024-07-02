@@ -44,12 +44,11 @@ function login() {
 
     JWT_TOKEN=$(echo "$LOGIN_RESPONSE" | jq -r '.retVal.jwtToken')
     MEND_ORG_UUID=$(echo "$LOGIN_RESPONSE" | jq -r '.retVal.orgUuid')
-    MEND_ORG_NAME=$(echo "$LOGIN_RESPONSE" | jq -r '.retVal.orgName')
 }
 
 function find_scan_errors() {
     ORG_ENTITIES_RESPONSE=$(curl -s --location "$MEND_API_URL/orgs/$MEND_ORG_UUID/entities" --header "Content-Type: application/json" --header "Authorization: Bearer $JWT_TOKEN")
-    echo $ORG_ENTITIES_RESPONSE | jq '.retVal[].project | select(.tags[].key == "scanError") | {projectname: .name, scanError: (.tags[] | select(.key == "scanError")).value}' 
+    echo $ORG_ENTITIES_RESPONSE | jq '.retVal[] | select(.project.tags[]? | select(.key == "scanError")) | {projectname: .project.name, scanError: (.project.tags[] | select(.key == "scanError").value)}'
 }
 
 
