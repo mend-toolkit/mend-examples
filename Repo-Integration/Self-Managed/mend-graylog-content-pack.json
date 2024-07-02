@@ -4,9 +4,9 @@
   "rev": 6,
   "name": "Mend Repo Integration",
   "summary": "Dashboards and Inputs for the Mend Repo Integration",
-  "description": "This content pack includes the following dashboards:\n- Controller Search\n- Scanner Search\n- Remediate Search\n\nIt also includes the following healthchecks for the containers:\n- Controller Stats\n- Scanner Healthcheck\n- Remediate Healthcheck\n\nThis content pack also includes the following inputs:\n- Mend Repo Integration - Allows ingesting of logs from all repo integration containers.\n- Remediate Healthcheck - Periodically sends an API request to the Remediate healthcheck endpoint.\n- Scanner Healthcheck - Periodically sends an API request to the Scanner healthcheck endpoint.",
+  "description": "This content pack includes the following dashboards:\n- Controller Search\n- Scanner Search\n- Remediate Search\n\nIt also includes the following healthchecks for the containers:\n- Controller Stats\n- Scanner Healthcheck\n- Remediate Healthcheck\n\nThis content pack also includes the following inputs:\n- Mend Repo Integration \n- Remediate Healthcheck \n- Scanner Healthcheck \n- Container CPU/Memory Stats\n\nAlerts:\n- Controller CPU/Memory Alerts\n- Scan Queue High\n\nPipeline:\n- Creates an on-the-fly calculation for memory and cpu usage percentage.\n\n",
   "vendor": "Mend.io <ps@mend.io>",
-  "url": "https://github.com/mend-toolkit/mend-examples",
+  "url": "https://github.com/mend-toolkit/mend-examples/blob/main/Repo-Integration/Self-Managed/mend-graylog-content-pack.json",
   "parameters": [],
   "entities": [
     {
@@ -15,7 +15,1673 @@
         "name": "dashboard",
         "version": "2"
       },
-      "id": "418f3eb7-7a07-42af-a363-be7041ddff0d",
+      "id": "e2ed728c-01c2-459d-b2d5-cde84577ff18",
+      "data": {
+        "summary": {
+          "@type": "string",
+          "@value": "Health Checks for each component"
+        },
+        "search": {
+          "queries": [
+            {
+              "id": "5c8213f9-1d55-4a1e-81a4-442ea06417f6",
+              "timerange": {
+                "from": 300,
+                "type": "relative"
+              },
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "host:/wss-[a-z]{3}-app/ AND \"/payload/healthcheck\""
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "timeunit",
+                        "timeunit": "5m"
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "e1799701-2afb-46b1-a2da-66251af09952",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "source: /controller_stats.*/"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 28800,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [
+                    "c15a668c-c603-4607-b5ff-6e75d6553ccf"
+                  ],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "latest",
+                      "id": "Memory Usage",
+                      "field": "memory_usage_percentage"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "timeunit",
+                        "timeunit": "5m"
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "60bff19c-f5b8-47e1-8d66-00fb1e321edf",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "name": "events",
+                  "timerange": {
+                    "from": 28800,
+                    "type": "relative"
+                  },
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "source: /controller_stats.*/"
+                  },
+                  "streams": [
+                    "c15a668c-c603-4607-b5ff-6e75d6553ccf"
+                  ],
+                  "id": "ee8b646c-8758-4d9b-8e9b-4331d35d21f0",
+                  "type": "events",
+                  "filter": null,
+                  "filters": []
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "source: /controller_stats.*/"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 28800,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [
+                    "c15a668c-c603-4607-b5ff-6e75d6553ccf"
+                  ],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "latest",
+                      "id": "CPU Usage",
+                      "field": "cpu_usage_percentage"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "timeunit",
+                        "timeunit": "5m"
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "6996b50d-d91e-4590-9001-d7a73123a68c",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                }
+              ]
+            },
+            {
+              "id": "11f0d10b-ec64-4861-b650-780ed0e121a7",
+              "timerange": {
+                "from": 300,
+                "type": "relative"
+              },
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "source:\"scan_requests_in_queue\""
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 28800,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "avg",
+                      "id": "avg(pending_requests)",
+                      "field": "pending_requests"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "timeunit",
+                        "timeunit": "5m"
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "bfeb8f84-9794-4919-86b5-932572aee0a0",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "source:\"wss-scanner-healthcheck\" AND _exists_:scanner_version"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 28800,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "latest",
+                      "id": "Seconds Since Last Scan Request",
+                      "field": "seconds_since_last_scan_request_numerical"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "timeunit",
+                        "timeunit": "5m"
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "3df18c5b-d585-430e-9485-12bb693339f4",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "source: /scanner_stats.*/"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 28800,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [
+                    "c15a668c-c603-4607-b5ff-6e75d6553ccf"
+                  ],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "latest",
+                      "id": "Memory Usage",
+                      "field": "memory_usage_percentage"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "timeunit",
+                        "timeunit": "5m"
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "b03baef6-d6fd-4a7d-990f-037a9d0a59ac",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": true
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "source:\"wss-scanner-healthcheck\" AND _exists_:scanner_version"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 28800,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "latest",
+                      "id": "Last Seen",
+                      "field": "timestamp"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "scanner_version"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": true
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "0c4ce4a8-07bd-422f-814f-a3bd223b33fa",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "source: /scanner_stats.*/"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 28800,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [
+                    "c15a668c-c603-4607-b5ff-6e75d6553ccf"
+                  ],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "latest",
+                      "id": "CPU Usage",
+                      "field": "cpu_usage_percentage"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "e932242a-8d83-4ea1-b600-feb8eea5ddc4",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 20,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                }
+              ]
+            },
+            {
+              "id": "6651b868-5fbe-4a4f-8510-9595077aec50",
+              "timerange": {
+                "from": 300,
+                "type": "relative"
+              },
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "source:\"remediate-healthcheck\""
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 86400,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "timeunit",
+                        "timeunit": "5m"
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "f05b014a-c0fa-419b-b10d-1afdbce62db3",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "source: /remediate_stats/"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 28800,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [
+                    "c15a668c-c603-4607-b5ff-6e75d6553ccf"
+                  ],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "latest",
+                      "id": "Memory Usage",
+                      "field": "memory_usage_percentage"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "timeunit",
+                        "timeunit": "1m"
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "88d72712-8493-42d3-8568-3e8e971b001a",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "source: /remediate_stats/"
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 28800,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [
+                    "c15a668c-c603-4607-b5ff-6e75d6553ccf"
+                  ],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "latest",
+                      "id": "CPU Usage",
+                      "field": "cpu_usage_percentage"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": false,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "timeunit",
+                        "timeunit": "1m"
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "84bdd2d6-4f75-44db-a101-0dc2fa0435df",
+                  "filters": [],
+                  "column_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "source"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": false
+                    }
+                  ],
+                  "sort": []
+                }
+              ]
+            }
+          ],
+          "parameters": [],
+          "requires": {},
+          "owner": "admin",
+          "created_at": "2024-07-02T16:42:53.778Z"
+        },
+        "created_at": "2023-12-14T23:53:38.967Z",
+        "requires": {},
+        "state": {
+          "5c8213f9-1d55-4a1e-81a4-442ea06417f6": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "tab": {
+                "title": "Controller"
+              },
+              "widget": {
+                "0288fe92-1e4d-4336-af84-0308f187cd2c": "Health Check Responses over time"
+              }
+            },
+            "widgets": [
+              {
+                "id": "6d10f99d-5f2a-4e9b-b3cb-24369c224f7f",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 28800,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "source: /controller_stats.*/"
+                },
+                "streams": [
+                  "c15a668c-c603-4607-b5ff-6e75d6553ccf"
+                ],
+                "config": {
+                  "visualization": "line",
+                  "column_limit": 15,
+                  "event_annotation": true,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "timeunit",
+                          "value": 5,
+                          "unit": "minutes"
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "CPU Usage"
+                      },
+                      "function": "latest(cpu_usage_percentage)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "interpolation": "linear",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                }
+              },
+              {
+                "id": "ef263e70-bbe5-48f2-8481-afe34a91b7b4",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 28800,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "source: /controller_stats.*/"
+                },
+                "streams": [
+                  "c15a668c-c603-4607-b5ff-6e75d6553ccf"
+                ],
+                "config": {
+                  "visualization": "line",
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "timeunit",
+                          "value": 5,
+                          "unit": "minutes"
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Memory Usage"
+                      },
+                      "function": "latest(memory_usage_percentage)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "interpolation": "linear",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                }
+              },
+              {
+                "id": "0288fe92-1e4d-4336-af84-0308f187cd2c",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "host:/wss-[a-z]{3}-app/ AND \"/payload/healthcheck\""
+                },
+                "streams": [],
+                "config": {
+                  "visualization": "line",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "timeunit",
+                          "value": 5,
+                          "unit": "minutes"
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": null
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [],
+                  "visualization_config": {
+                    "interpolation": "linear",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                }
+              }
+            ],
+            "widget_mapping": {
+              "0288fe92-1e4d-4336-af84-0308f187cd2c": [
+                "e1799701-2afb-46b1-a2da-66251af09952"
+              ],
+              "ef263e70-bbe5-48f2-8481-afe34a91b7b4": [
+                "60bff19c-f5b8-47e1-8d66-00fb1e321edf"
+              ],
+              "6d10f99d-5f2a-4e9b-b3cb-24369c224f7f": [
+                "6996b50d-d91e-4590-9001-d7a73123a68c",
+                "ee8b646c-8758-4d9b-8e9b-4331d35d21f0"
+              ]
+            },
+            "positions": {
+              "ef263e70-bbe5-48f2-8481-afe34a91b7b4": {
+                "col": 5,
+                "row": 1,
+                "height": 4,
+                "width": 4
+              },
+              "0288fe92-1e4d-4336-af84-0308f187cd2c": {
+                "col": 1,
+                "row": 5,
+                "height": 3,
+                "width": "Infinity"
+              },
+              "6d10f99d-5f2a-4e9b-b3cb-24369c224f7f": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": 4
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          },
+          "11f0d10b-ec64-4861-b650-780ed0e121a7": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "tab": {
+                "title": "Scanner"
+              },
+              "widget": {
+                "27a452a3-c524-421a-ac04-2f42f79419ec": "Average Seconds Since Last Scan Request",
+                "e0568156-a33b-4a4f-b845-cafcc433b227": "Average Memory Usage over Time",
+                "2970bb38-6e3f-4249-aecf-bdbd5cd356e6": "Scanner Versions",
+                "7d55f11a-508b-45af-a21e-8dfde1ce9afa": "Average Requests in Queue"
+              }
+            },
+            "widgets": [
+              {
+                "id": "e0568156-a33b-4a4f-b845-cafcc433b227",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 28800,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "source: /scanner_stats.*/"
+                },
+                "streams": [
+                  "c15a668c-c603-4607-b5ff-6e75d6553ccf"
+                ],
+                "config": {
+                  "visualization": "line",
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "timeunit",
+                          "value": 5,
+                          "unit": "minutes"
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Memory Usage"
+                      },
+                      "function": "latest(memory_usage_percentage)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15,
+                        "skip_empty_values": true
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "interpolation": "linear",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                }
+              },
+              {
+                "id": "7d55f11a-508b-45af-a21e-8dfde1ce9afa",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 28800,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "source:\"scan_requests_in_queue\""
+                },
+                "streams": [],
+                "config": {
+                  "visualization": "line",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "timeunit",
+                          "value": 5,
+                          "unit": "minutes"
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": null
+                      },
+                      "function": "avg(pending_requests)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [],
+                  "visualization_config": {
+                    "interpolation": "linear",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                }
+              },
+              {
+                "id": "bc03b21f-5600-4cb7-ba13-2d9fbd71d054",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 28800,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "source: /scanner_stats.*/"
+                },
+                "streams": [
+                  "c15a668c-c603-4607-b5ff-6e75d6553ccf"
+                ],
+                "config": {
+                  "visualization": "line",
+                  "column_limit": 20,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "CPU Usage"
+                      },
+                      "function": "latest(cpu_usage_percentage)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 20
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "interpolation": "linear",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                }
+              },
+              {
+                "id": "2970bb38-6e3f-4249-aecf-bdbd5cd356e6",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 28800,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "source:\"wss-scanner-healthcheck\" AND _exists_:scanner_version"
+                },
+                "streams": [],
+                "config": {
+                  "visualization": "table",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 15,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "scanner_version"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15,
+                        "skip_empty_values": true
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Last Seen"
+                      },
+                      "function": "latest(timestamp)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [],
+                  "visualization_config": {
+                    "pinned_columns": []
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                }
+              },
+              {
+                "id": "27a452a3-c524-421a-ac04-2f42f79419ec",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 28800,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "source:\"wss-scanner-healthcheck\" AND _exists_:scanner_version"
+                },
+                "streams": [],
+                "config": {
+                  "visualization": "line",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "timeunit",
+                          "value": 5,
+                          "unit": "minutes"
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Seconds Since Last Scan Request"
+                      },
+                      "function": "latest(seconds_since_last_scan_request_numerical)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [],
+                  "visualization_config": {
+                    "interpolation": "linear",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                }
+              }
+            ],
+            "widget_mapping": {
+              "bc03b21f-5600-4cb7-ba13-2d9fbd71d054": [
+                "e932242a-8d83-4ea1-b600-feb8eea5ddc4"
+              ],
+              "e0568156-a33b-4a4f-b845-cafcc433b227": [
+                "b03baef6-d6fd-4a7d-990f-037a9d0a59ac"
+              ],
+              "2970bb38-6e3f-4249-aecf-bdbd5cd356e6": [
+                "0c4ce4a8-07bd-422f-814f-a3bd223b33fa"
+              ],
+              "7d55f11a-508b-45af-a21e-8dfde1ce9afa": [
+                "bfeb8f84-9794-4919-86b5-932572aee0a0"
+              ],
+              "27a452a3-c524-421a-ac04-2f42f79419ec": [
+                "3df18c5b-d585-430e-9485-12bb693339f4"
+              ]
+            },
+            "positions": {
+              "2970bb38-6e3f-4249-aecf-bdbd5cd356e6": {
+                "col": 9,
+                "row": 1,
+                "height": 4,
+                "width": 4
+              },
+              "7d55f11a-508b-45af-a21e-8dfde1ce9afa": {
+                "col": 5,
+                "row": 1,
+                "height": 4,
+                "width": 4
+              },
+              "e0568156-a33b-4a4f-b845-cafcc433b227": {
+                "col": 5,
+                "row": 5,
+                "height": 4,
+                "width": 4
+              },
+              "27a452a3-c524-421a-ac04-2f42f79419ec": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": 4
+              },
+              "bc03b21f-5600-4cb7-ba13-2d9fbd71d054": {
+                "col": 1,
+                "row": 5,
+                "height": 4,
+                "width": 4
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          },
+          "6651b868-5fbe-4a4f-8510-9595077aec50": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "tab": {
+                "title": "Remediate"
+              },
+              "widget": {
+                "837b710a-0df9-4b5e-a43e-ff43f943506a": "Healthcheck Requests over Time"
+              }
+            },
+            "widgets": [
+              {
+                "id": "6def942f-ea40-4f73-aebc-94b350b7c67f",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 28800,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "source: /remediate_stats/"
+                },
+                "streams": [
+                  "c15a668c-c603-4607-b5ff-6e75d6553ccf"
+                ],
+                "config": {
+                  "visualization": "line",
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "timeunit",
+                          "value": 1,
+                          "unit": "minutes"
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "CPU Usage"
+                      },
+                      "function": "latest(cpu_usage_percentage)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "interpolation": "linear",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                }
+              },
+              {
+                "id": "d647dab7-2a69-458b-821b-c784b9b13820",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 28800,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "source: /remediate_stats/"
+                },
+                "streams": [
+                  "c15a668c-c603-4607-b5ff-6e75d6553ccf"
+                ],
+                "config": {
+                  "visualization": "line",
+                  "column_limit": 15,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "timeunit",
+                          "value": 1,
+                          "unit": "minutes"
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Memory Usage"
+                      },
+                      "function": "latest(memory_usage_percentage)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [
+                    {
+                      "fields": [
+                        "source"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15
+                      }
+                    }
+                  ],
+                  "visualization_config": {
+                    "interpolation": "linear",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                }
+              },
+              {
+                "id": "837b710a-0df9-4b5e-a43e-ff43f943506a",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 86400,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "source:\"remediate-healthcheck\""
+                },
+                "streams": [],
+                "config": {
+                  "visualization": "line",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "timeunit",
+                          "value": 5,
+                          "unit": "minutes"
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": null
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [],
+                  "visualization_config": {
+                    "interpolation": "linear",
+                    "axis_type": "linear"
+                  },
+                  "formatting_settings": null,
+                  "sort": []
+                }
+              }
+            ],
+            "widget_mapping": {
+              "837b710a-0df9-4b5e-a43e-ff43f943506a": [
+                "f05b014a-c0fa-419b-b10d-1afdbce62db3"
+              ],
+              "6def942f-ea40-4f73-aebc-94b350b7c67f": [
+                "84bdd2d6-4f75-44db-a101-0dc2fa0435df"
+              ],
+              "d647dab7-2a69-458b-821b-c784b9b13820": [
+                "88d72712-8493-42d3-8568-3e8e971b001a"
+              ]
+            },
+            "positions": {
+              "837b710a-0df9-4b5e-a43e-ff43f943506a": {
+                "col": 1,
+                "row": 1,
+                "height": 4,
+                "width": 4
+              },
+              "6def942f-ea40-4f73-aebc-94b350b7c67f": {
+                "col": 5,
+                "row": 1,
+                "height": 4,
+                "width": 4
+              },
+              "d647dab7-2a69-458b-821b-c784b9b13820": {
+                "col": 9,
+                "row": 1,
+                "height": 4,
+                "width": 4
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          }
+        },
+        "properties": [],
+        "owner": "admin",
+        "title": {
+          "@type": "string",
+          "@value": "Healthchecks"
+        },
+        "type": "DASHBOARD",
+        "description": {
+          "@type": "string",
+          "@value": ""
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.8+8e06d22"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "dashboard",
+        "version": "2"
+      },
+      "id": "a376b20d-8d97-4c51-a0b5-32bcbe4cc4cd",
+      "data": {
+        "summary": {
+          "@type": "string",
+          "@value": "Remediate Search"
+        },
+        "search": {
+          "queries": [
+            {
+              "id": "3b485139-9f69-40e9-a7e8-11d303f35ec9",
+              "timerange": {
+                "from": 300,
+                "type": "relative"
+              },
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "host:\"remediate-server\""
+                  },
+                  "name": null,
+                  "timerange": {
+                    "from": 28800,
+                    "type": "relative"
+                  },
+                  "offset": 0,
+                  "streams": [],
+                  "filter": null,
+                  "decorators": [],
+                  "type": "messages",
+                  "id": "3dee2603-287d-45b9-90d4-d93687fa93c3",
+                  "limit": 150,
+                  "filters": []
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": "host:\"remediate-server\""
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 28800,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "count()",
+                      "field": null
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "time",
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "interval": {
+                        "type": "auto",
+                        "scaling": 1
+                      }
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "f98e651d-5bc9-4828-913b-3ef3d7aa028b",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                }
+              ]
+            }
+          ],
+          "parameters": [],
+          "requires": {},
+          "owner": "admin",
+          "created_at": "2023-12-15T00:14:54.251Z"
+        },
+        "created_at": "2023-12-13T07:56:59.701Z",
+        "requires": {},
+        "state": {
+          "3b485139-9f69-40e9-a7e8-11d303f35ec9": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "widget": {
+                "da7c384f-ef2a-428d-a0d6-a49e829adc82": "Message Count",
+                "d1a88f0b-fd8c-4763-87e1-7ac8d3df1100": "All Messages"
+              },
+              "tab": {
+                "title": "Remediate Search"
+              }
+            },
+            "widgets": [
+              {
+                "id": "d1a88f0b-fd8c-4763-87e1-7ac8d3df1100",
+                "type": "messages",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 28800,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "host:\"remediate-server\""
+                },
+                "streams": [],
+                "config": {
+                  "fields": [
+                    "timestamp",
+                    "host",
+                    "hostname",
+                    "logContext",
+                    "repository",
+                    "msg",
+                    "reason",
+                    "result"
+                  ],
+                  "show_message_row": false,
+                  "show_summary": false,
+                  "decorators": [],
+                  "sort": [
+                    {
+                      "type": "pivot",
+                      "field": "time",
+                      "direction": "Descending"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "da7c384f-ef2a-428d-a0d6-a49e829adc82",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 28800,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": "host:\"remediate-server\""
+                },
+                "streams": [],
+                "config": {
+                  "visualization": "bar",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": null,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "timestamp"
+                      ],
+                      "type": "time",
+                      "config": {
+                        "interval": {
+                          "type": "auto",
+                          "scaling": 1
+                        }
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": null
+                      },
+                      "function": "count()"
+                    }
+                  ],
+                  "rollup": true,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": []
+                }
+              }
+            ],
+            "widget_mapping": {
+              "da7c384f-ef2a-428d-a0d6-a49e829adc82": [
+                "f98e651d-5bc9-4828-913b-3ef3d7aa028b"
+              ],
+              "d1a88f0b-fd8c-4763-87e1-7ac8d3df1100": [
+                "3dee2603-287d-45b9-90d4-d93687fa93c3"
+              ]
+            },
+            "positions": {
+              "da7c384f-ef2a-428d-a0d6-a49e829adc82": {
+                "col": 1,
+                "row": 1,
+                "height": 2,
+                "width": "Infinity"
+              },
+              "d1a88f0b-fd8c-4763-87e1-7ac8d3df1100": {
+                "col": 1,
+                "row": 3,
+                "height": 6,
+                "width": "Infinity"
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          }
+        },
+        "properties": [],
+        "owner": "admin",
+        "title": {
+          "@type": "string",
+          "@value": "Remediate Search"
+        },
+        "type": "DASHBOARD",
+        "description": {
+          "@type": "string",
+          "@value": ""
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.8+8e06d22"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "dashboard",
+        "version": "2"
+      },
+      "id": "56eee4bd-2e4c-4db0-88bf-e7211b7d3a07",
       "data": {
         "summary": {
           "@type": "string",
@@ -257,1268 +1923,7 @@
         "name": "dashboard",
         "version": "2"
       },
-      "id": "7b202b3c-26d0-4faf-ab6c-4f44def07ba6",
-      "data": {
-        "summary": {
-          "@type": "string",
-          "@value": "Remediate Search"
-        },
-        "search": {
-          "queries": [
-            {
-              "id": "3b485139-9f69-40e9-a7e8-11d303f35ec9",
-              "timerange": {
-                "from": 300,
-                "type": "relative"
-              },
-              "filters": [],
-              "query": {
-                "type": "elasticsearch",
-                "query_string": ""
-              },
-              "search_types": [
-                {
-                  "query": {
-                    "type": "elasticsearch",
-                    "query_string": "host:\"remediate-server\""
-                  },
-                  "name": null,
-                  "timerange": {
-                    "from": 28800,
-                    "type": "relative"
-                  },
-                  "offset": 0,
-                  "streams": [],
-                  "filter": null,
-                  "decorators": [],
-                  "type": "messages",
-                  "id": "3dee2603-287d-45b9-90d4-d93687fa93c3",
-                  "limit": 150,
-                  "filters": []
-                },
-                {
-                  "query": {
-                    "type": "elasticsearch",
-                    "query_string": "host:\"remediate-server\""
-                  },
-                  "name": "chart",
-                  "timerange": {
-                    "from": 28800,
-                    "type": "relative"
-                  },
-                  "column_limit": null,
-                  "streams": [],
-                  "row_limit": null,
-                  "series": [
-                    {
-                      "type": "count",
-                      "id": "count()",
-                      "field": null
-                    }
-                  ],
-                  "filter": null,
-                  "rollup": true,
-                  "row_groups": [
-                    {
-                      "type": "time",
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "interval": {
-                        "type": "auto",
-                        "scaling": 1
-                      }
-                    }
-                  ],
-                  "type": "pivot",
-                  "id": "f98e651d-5bc9-4828-913b-3ef3d7aa028b",
-                  "filters": [],
-                  "column_groups": [],
-                  "sort": []
-                }
-              ]
-            }
-          ],
-          "parameters": [],
-          "requires": {},
-          "owner": "admin",
-          "created_at": "2023-12-15T00:14:54.251Z"
-        },
-        "created_at": "2023-12-13T07:56:59.701Z",
-        "requires": {},
-        "state": {
-          "3b485139-9f69-40e9-a7e8-11d303f35ec9": {
-            "selected_fields": null,
-            "static_message_list_id": null,
-            "titles": {
-              "widget": {
-                "da7c384f-ef2a-428d-a0d6-a49e829adc82": "Message Count",
-                "d1a88f0b-fd8c-4763-87e1-7ac8d3df1100": "All Messages"
-              },
-              "tab": {
-                "title": "Remediate Search"
-              }
-            },
-            "widgets": [
-              {
-                "id": "da7c384f-ef2a-428d-a0d6-a49e829adc82",
-                "type": "aggregation",
-                "filter": null,
-                "filters": [],
-                "timerange": {
-                  "from": 28800,
-                  "type": "relative"
-                },
-                "query": {
-                  "type": "elasticsearch",
-                  "query_string": "host:\"remediate-server\""
-                },
-                "streams": [],
-                "config": {
-                  "visualization": "bar",
-                  "column_limit": null,
-                  "event_annotation": false,
-                  "row_limit": null,
-                  "row_pivots": [
-                    {
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "type": "time",
-                      "config": {
-                        "interval": {
-                          "type": "auto",
-                          "scaling": 1
-                        }
-                      }
-                    }
-                  ],
-                  "series": [
-                    {
-                      "config": {
-                        "name": null
-                      },
-                      "function": "count()"
-                    }
-                  ],
-                  "rollup": true,
-                  "column_pivots": [],
-                  "visualization_config": null,
-                  "formatting_settings": null,
-                  "sort": []
-                }
-              },
-              {
-                "id": "d1a88f0b-fd8c-4763-87e1-7ac8d3df1100",
-                "type": "messages",
-                "filter": null,
-                "filters": [],
-                "timerange": {
-                  "from": 28800,
-                  "type": "relative"
-                },
-                "query": {
-                  "type": "elasticsearch",
-                  "query_string": "host:\"remediate-server\""
-                },
-                "streams": [],
-                "config": {
-                  "fields": [
-                    "timestamp",
-                    "host",
-                    "hostname",
-                    "logContext",
-                    "repository",
-                    "msg",
-                    "reason",
-                    "result"
-                  ],
-                  "show_message_row": false,
-                  "show_summary": false,
-                  "decorators": [],
-                  "sort": [
-                    {
-                      "type": "pivot",
-                      "field": "time",
-                      "direction": "Descending"
-                    }
-                  ]
-                }
-              }
-            ],
-            "widget_mapping": {
-              "da7c384f-ef2a-428d-a0d6-a49e829adc82": [
-                "f98e651d-5bc9-4828-913b-3ef3d7aa028b"
-              ],
-              "d1a88f0b-fd8c-4763-87e1-7ac8d3df1100": [
-                "3dee2603-287d-45b9-90d4-d93687fa93c3"
-              ]
-            },
-            "positions": {
-              "da7c384f-ef2a-428d-a0d6-a49e829adc82": {
-                "col": 1,
-                "row": 1,
-                "height": 2,
-                "width": "Infinity"
-              },
-              "d1a88f0b-fd8c-4763-87e1-7ac8d3df1100": {
-                "col": 1,
-                "row": 3,
-                "height": 6,
-                "width": "Infinity"
-              }
-            },
-            "formatting": {
-              "highlighting": []
-            },
-            "display_mode_settings": {
-              "positions": {}
-            }
-          }
-        },
-        "properties": [],
-        "owner": "admin",
-        "title": {
-          "@type": "string",
-          "@value": "Remediate Search"
-        },
-        "type": "DASHBOARD",
-        "description": {
-          "@type": "string",
-          "@value": ""
-        }
-      },
-      "constraints": [
-        {
-          "type": "server-version",
-          "version": ">=5.2.8+8e06d22"
-        }
-      ]
-    },
-    {
-      "v": "1",
-      "type": {
-        "name": "dashboard",
-        "version": "2"
-      },
-      "id": "7f9de273-b5fc-413e-abb8-d22e2e93c61a",
-      "data": {
-        "summary": {
-          "@type": "string",
-          "@value": "Health Checks for each component"
-        },
-        "search": {
-          "queries": [
-            {
-              "id": "5c8213f9-1d55-4a1e-81a4-442ea06417f6",
-              "timerange": {
-                "from": 300,
-                "type": "relative"
-              },
-              "filters": [],
-              "query": {
-                "type": "elasticsearch",
-                "query_string": ""
-              },
-              "search_types": [
-                {
-                  "query": {
-                    "type": "elasticsearch",
-                    "query_string": "source: /controller_stats.*/"
-                  },
-                  "name": "chart",
-                  "timerange": {
-                    "from": 28800,
-                    "type": "relative"
-                  },
-                  "column_limit": null,
-                  "streams": [],
-                  "row_limit": null,
-                  "series": [
-                    {
-                      "type": "latest",
-                      "id": "Memory Usage",
-                      "field": "memory_usage_percentage"
-                    }
-                  ],
-                  "filter": null,
-                  "rollup": false,
-                  "row_groups": [
-                    {
-                      "type": "time",
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "interval": {
-                        "type": "timeunit",
-                        "timeunit": "5m"
-                      }
-                    }
-                  ],
-                  "type": "pivot",
-                  "id": "60858644-bfa7-4930-b627-8bf0ebf8bb0e",
-                  "filters": [],
-                  "column_groups": [
-                    {
-                      "type": "values",
-                      "fields": [
-                        "source"
-                      ],
-                      "limit": 15,
-                      "skip_empty_values": false
-                    }
-                  ],
-                  "sort": []
-                },
-                {
-                  "query": {
-                    "type": "elasticsearch",
-                    "query_string": "source: /controller_stats.*/"
-                  },
-                  "name": "chart",
-                  "timerange": {
-                    "from": 28800,
-                    "type": "relative"
-                  },
-                  "column_limit": null,
-                  "streams": [],
-                  "row_limit": null,
-                  "series": [
-                    {
-                      "type": "latest",
-                      "id": "CPU Usage",
-                      "field": "cpu_usage_percentage"
-                    }
-                  ],
-                  "filter": null,
-                  "rollup": false,
-                  "row_groups": [
-                    {
-                      "type": "time",
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "interval": {
-                        "type": "timeunit",
-                        "timeunit": "5m"
-                      }
-                    }
-                  ],
-                  "type": "pivot",
-                  "id": "c47d22ee-a465-4d9f-912e-7ba1476bdeba",
-                  "filters": [],
-                  "column_groups": [
-                    {
-                      "type": "values",
-                      "fields": [
-                        "source"
-                      ],
-                      "limit": 15,
-                      "skip_empty_values": false
-                    }
-                  ],
-                  "sort": []
-                },
-                {
-                  "query": {
-                    "type": "elasticsearch",
-                    "query_string": "host:/wss-[a-z]{3}-app/ AND \"/payload/healthcheck\""
-                  },
-                  "name": "chart",
-                  "timerange": {
-                    "from": 86400,
-                    "type": "relative"
-                  },
-                  "column_limit": null,
-                  "streams": [],
-                  "row_limit": null,
-                  "series": [
-                    {
-                      "type": "count",
-                      "id": "count()",
-                      "field": null
-                    }
-                  ],
-                  "filter": null,
-                  "rollup": true,
-                  "row_groups": [
-                    {
-                      "type": "time",
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "interval": {
-                        "type": "timeunit",
-                        "timeunit": "5m"
-                      }
-                    }
-                  ],
-                  "type": "pivot",
-                  "id": "0b00abea-adb5-4548-b2d7-2c0e0385dd1a",
-                  "filters": [],
-                  "column_groups": [],
-                  "sort": []
-                },
-                {
-                  "name": "events",
-                  "timerange": {
-                    "from": 28800,
-                    "type": "relative"
-                  },
-                  "query": {
-                    "type": "elasticsearch",
-                    "query_string": "source: /controller_stats.*/"
-                  },
-                  "streams": [],
-                  "id": "8524e548-aa1f-48bb-a93b-192f2f8f9552",
-                  "type": "events",
-                  "filter": null,
-                  "filters": []
-                }
-              ]
-            },
-            {
-              "id": "11f0d10b-ec64-4861-b650-780ed0e121a7",
-              "timerange": {
-                "from": 300,
-                "type": "relative"
-              },
-              "filters": [],
-              "query": {
-                "type": "elasticsearch",
-                "query_string": ""
-              },
-              "search_types": [
-                {
-                  "query": {
-                    "type": "elasticsearch",
-                    "query_string": "source:\"wss-scanner-healthcheck\" AND _exists_:scanner_version"
-                  },
-                  "name": "chart",
-                  "timerange": {
-                    "from": 28800,
-                    "type": "relative"
-                  },
-                  "column_limit": null,
-                  "streams": [],
-                  "row_limit": null,
-                  "series": [
-                    {
-                      "type": "latest",
-                      "id": "Seconds Since Last Scan Request",
-                      "field": "seconds_since_last_scan_request_numerical"
-                    }
-                  ],
-                  "filter": null,
-                  "rollup": true,
-                  "row_groups": [
-                    {
-                      "type": "time",
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "interval": {
-                        "type": "timeunit",
-                        "timeunit": "5m"
-                      }
-                    }
-                  ],
-                  "type": "pivot",
-                  "id": "e48cb1ac-4108-432f-bc97-da3c10b127be",
-                  "filters": [],
-                  "column_groups": [],
-                  "sort": []
-                },
-                {
-                  "query": {
-                    "type": "elasticsearch",
-                    "query_string": "source:\"wss-scanner-healthcheck\" AND _exists_:scanner_version"
-                  },
-                  "name": "chart",
-                  "timerange": {
-                    "from": 28800,
-                    "type": "relative"
-                  },
-                  "column_limit": null,
-                  "streams": [],
-                  "row_limit": null,
-                  "series": [
-                    {
-                      "type": "latest",
-                      "id": "Memory Usage",
-                      "field": "memory_usage_numerical"
-                    }
-                  ],
-                  "filter": null,
-                  "rollup": true,
-                  "row_groups": [
-                    {
-                      "type": "time",
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "interval": {
-                        "type": "timeunit",
-                        "timeunit": "5m"
-                      }
-                    }
-                  ],
-                  "type": "pivot",
-                  "id": "676ef888-3c9f-4676-baa0-2d4f21820ba2",
-                  "filters": [],
-                  "column_groups": [],
-                  "sort": []
-                },
-                {
-                  "query": {
-                    "type": "elasticsearch",
-                    "query_string": "source:\"wss-scanner-healthcheck\" AND _exists_:scanner_version"
-                  },
-                  "name": "chart",
-                  "timerange": {
-                    "from": 28800,
-                    "type": "relative"
-                  },
-                  "column_limit": null,
-                  "streams": [],
-                  "row_limit": null,
-                  "series": [
-                    {
-                      "type": "latest",
-                      "id": "Last Seen",
-                      "field": "timestamp"
-                    }
-                  ],
-                  "filter": null,
-                  "rollup": true,
-                  "row_groups": [
-                    {
-                      "type": "values",
-                      "fields": [
-                        "scanner_version"
-                      ],
-                      "limit": 15,
-                      "skip_empty_values": true
-                    }
-                  ],
-                  "type": "pivot",
-                  "id": "8c4d51a9-4625-4270-9b87-40fb0b97c26b",
-                  "filters": [],
-                  "column_groups": [],
-                  "sort": []
-                },
-                {
-                  "query": {
-                    "type": "elasticsearch",
-                    "query_string": "source:\"scan_requests_in_queue\""
-                  },
-                  "name": "chart",
-                  "timerange": {
-                    "from": 28800,
-                    "type": "relative"
-                  },
-                  "column_limit": null,
-                  "streams": [],
-                  "row_limit": null,
-                  "series": [
-                    {
-                      "type": "avg",
-                      "id": "avg(pending_requests)",
-                      "field": "pending_requests"
-                    }
-                  ],
-                  "filter": null,
-                  "rollup": true,
-                  "row_groups": [
-                    {
-                      "type": "time",
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "interval": {
-                        "type": "timeunit",
-                        "timeunit": "5m"
-                      }
-                    }
-                  ],
-                  "type": "pivot",
-                  "id": "086d3e58-0e2b-4d06-bdb7-f24c02d53247",
-                  "filters": [],
-                  "column_groups": [],
-                  "sort": []
-                }
-              ]
-            },
-            {
-              "id": "6651b868-5fbe-4a4f-8510-9595077aec50",
-              "timerange": {
-                "from": 300,
-                "type": "relative"
-              },
-              "filters": [],
-              "query": {
-                "type": "elasticsearch",
-                "query_string": ""
-              },
-              "search_types": [
-                {
-                  "query": {
-                    "type": "elasticsearch",
-                    "query_string": "source:\"remediate-healthcheck\""
-                  },
-                  "name": "chart",
-                  "timerange": {
-                    "from": 86400,
-                    "type": "relative"
-                  },
-                  "column_limit": null,
-                  "streams": [],
-                  "row_limit": null,
-                  "series": [
-                    {
-                      "type": "count",
-                      "id": "count()",
-                      "field": null
-                    }
-                  ],
-                  "filter": null,
-                  "rollup": true,
-                  "row_groups": [
-                    {
-                      "type": "time",
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "interval": {
-                        "type": "timeunit",
-                        "timeunit": "5m"
-                      }
-                    }
-                  ],
-                  "type": "pivot",
-                  "id": "f6ada02e-382a-4217-98ea-201e9bff5fe7",
-                  "filters": [],
-                  "column_groups": [],
-                  "sort": []
-                }
-              ]
-            }
-          ],
-          "parameters": [],
-          "requires": {},
-          "owner": "admin",
-          "created_at": "2024-06-30T04:38:25.104Z"
-        },
-        "created_at": "2023-12-14T23:53:38.967Z",
-        "requires": {},
-        "state": {
-          "5c8213f9-1d55-4a1e-81a4-442ea06417f6": {
-            "selected_fields": null,
-            "static_message_list_id": null,
-            "titles": {
-              "tab": {
-                "title": "Controller"
-              },
-              "widget": {
-                "0288fe92-1e4d-4336-af84-0308f187cd2c": "Health Check Responses over time"
-              }
-            },
-            "widgets": [
-              {
-                "id": "6d10f99d-5f2a-4e9b-b3cb-24369c224f7f",
-                "type": "aggregation",
-                "filter": null,
-                "filters": [],
-                "timerange": {
-                  "from": 28800,
-                  "type": "relative"
-                },
-                "query": {
-                  "type": "elasticsearch",
-                  "query_string": "source: /controller_stats.*/"
-                },
-                "streams": [],
-                "config": {
-                  "visualization": "line",
-                  "column_limit": 15,
-                  "event_annotation": true,
-                  "row_limit": null,
-                  "row_pivots": [
-                    {
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "type": "time",
-                      "config": {
-                        "interval": {
-                          "type": "timeunit",
-                          "value": 5,
-                          "unit": "minutes"
-                        }
-                      }
-                    }
-                  ],
-                  "series": [
-                    {
-                      "config": {
-                        "name": "CPU Usage"
-                      },
-                      "function": "latest(cpu_usage_percentage)"
-                    }
-                  ],
-                  "rollup": false,
-                  "column_pivots": [
-                    {
-                      "fields": [
-                        "source"
-                      ],
-                      "type": "values",
-                      "config": {
-                        "limit": 15
-                      }
-                    }
-                  ],
-                  "visualization_config": {
-                    "interpolation": "linear",
-                    "axis_type": "linear"
-                  },
-                  "formatting_settings": null,
-                  "sort": []
-                }
-              },
-              {
-                "id": "ef263e70-bbe5-48f2-8481-afe34a91b7b4",
-                "type": "aggregation",
-                "filter": null,
-                "filters": [],
-                "timerange": {
-                  "from": 28800,
-                  "type": "relative"
-                },
-                "query": {
-                  "type": "elasticsearch",
-                  "query_string": "source: /controller_stats.*/"
-                },
-                "streams": [],
-                "config": {
-                  "visualization": "line",
-                  "column_limit": 15,
-                  "event_annotation": false,
-                  "row_limit": null,
-                  "row_pivots": [
-                    {
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "type": "time",
-                      "config": {
-                        "interval": {
-                          "type": "timeunit",
-                          "value": 5,
-                          "unit": "minutes"
-                        }
-                      }
-                    }
-                  ],
-                  "series": [
-                    {
-                      "config": {
-                        "name": "Memory Usage"
-                      },
-                      "function": "latest(memory_usage_percentage)"
-                    }
-                  ],
-                  "rollup": false,
-                  "column_pivots": [
-                    {
-                      "fields": [
-                        "source"
-                      ],
-                      "type": "values",
-                      "config": {
-                        "limit": 15
-                      }
-                    }
-                  ],
-                  "visualization_config": {
-                    "interpolation": "linear",
-                    "axis_type": "linear"
-                  },
-                  "formatting_settings": null,
-                  "sort": []
-                }
-              },
-              {
-                "id": "0288fe92-1e4d-4336-af84-0308f187cd2c",
-                "type": "aggregation",
-                "filter": null,
-                "filters": [],
-                "timerange": {
-                  "from": 86400,
-                  "type": "relative"
-                },
-                "query": {
-                  "type": "elasticsearch",
-                  "query_string": "host:/wss-[a-z]{3}-app/ AND \"/payload/healthcheck\""
-                },
-                "streams": [],
-                "config": {
-                  "visualization": "line",
-                  "column_limit": null,
-                  "event_annotation": false,
-                  "row_limit": null,
-                  "row_pivots": [
-                    {
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "type": "time",
-                      "config": {
-                        "interval": {
-                          "type": "timeunit",
-                          "value": 5,
-                          "unit": "minutes"
-                        }
-                      }
-                    }
-                  ],
-                  "series": [
-                    {
-                      "config": {
-                        "name": null
-                      },
-                      "function": "count()"
-                    }
-                  ],
-                  "rollup": false,
-                  "column_pivots": [],
-                  "visualization_config": {
-                    "interpolation": "linear",
-                    "axis_type": "linear"
-                  },
-                  "formatting_settings": null,
-                  "sort": []
-                }
-              }
-            ],
-            "widget_mapping": {
-              "ef263e70-bbe5-48f2-8481-afe34a91b7b4": [
-                "60858644-bfa7-4930-b627-8bf0ebf8bb0e"
-              ],
-              "0288fe92-1e4d-4336-af84-0308f187cd2c": [
-                "0b00abea-adb5-4548-b2d7-2c0e0385dd1a"
-              ],
-              "6d10f99d-5f2a-4e9b-b3cb-24369c224f7f": [
-                "c47d22ee-a465-4d9f-912e-7ba1476bdeba",
-                "8524e548-aa1f-48bb-a93b-192f2f8f9552"
-              ]
-            },
-            "positions": {
-              "ef263e70-bbe5-48f2-8481-afe34a91b7b4": {
-                "col": 5,
-                "row": 1,
-                "height": 4,
-                "width": 4
-              },
-              "0288fe92-1e4d-4336-af84-0308f187cd2c": {
-                "col": 1,
-                "row": 5,
-                "height": 3,
-                "width": "Infinity"
-              },
-              "6d10f99d-5f2a-4e9b-b3cb-24369c224f7f": {
-                "col": 1,
-                "row": 1,
-                "height": 4,
-                "width": 4
-              }
-            },
-            "formatting": {
-              "highlighting": []
-            },
-            "display_mode_settings": {
-              "positions": {}
-            }
-          },
-          "11f0d10b-ec64-4861-b650-780ed0e121a7": {
-            "selected_fields": null,
-            "static_message_list_id": null,
-            "titles": {
-              "tab": {
-                "title": "Scanner"
-              },
-              "widget": {
-                "27a452a3-c524-421a-ac04-2f42f79419ec": "Average Seconds Since Last Scan Request",
-                "e0568156-a33b-4a4f-b845-cafcc433b227": "Average Memory Usage over Time",
-                "2970bb38-6e3f-4249-aecf-bdbd5cd356e6": "Scanner Versions",
-                "7d55f11a-508b-45af-a21e-8dfde1ce9afa": "Average Requests in Queue"
-              }
-            },
-            "widgets": [
-              {
-                "id": "27a452a3-c524-421a-ac04-2f42f79419ec",
-                "type": "aggregation",
-                "filter": null,
-                "filters": [],
-                "timerange": {
-                  "from": 28800,
-                  "type": "relative"
-                },
-                "query": {
-                  "type": "elasticsearch",
-                  "query_string": "source:\"wss-scanner-healthcheck\" AND _exists_:scanner_version"
-                },
-                "streams": [],
-                "config": {
-                  "visualization": "line",
-                  "column_limit": null,
-                  "event_annotation": false,
-                  "row_limit": null,
-                  "row_pivots": [
-                    {
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "type": "time",
-                      "config": {
-                        "interval": {
-                          "type": "timeunit",
-                          "value": 5,
-                          "unit": "minutes"
-                        }
-                      }
-                    }
-                  ],
-                  "series": [
-                    {
-                      "config": {
-                        "name": "Seconds Since Last Scan Request"
-                      },
-                      "function": "latest(seconds_since_last_scan_request_numerical)"
-                    }
-                  ],
-                  "rollup": false,
-                  "column_pivots": [],
-                  "visualization_config": {
-                    "interpolation": "linear",
-                    "axis_type": "linear"
-                  },
-                  "formatting_settings": null,
-                  "sort": []
-                }
-              },
-              {
-                "id": "e0568156-a33b-4a4f-b845-cafcc433b227",
-                "type": "aggregation",
-                "filter": null,
-                "filters": [],
-                "timerange": {
-                  "from": 28800,
-                  "type": "relative"
-                },
-                "query": {
-                  "type": "elasticsearch",
-                  "query_string": "source:\"wss-scanner-healthcheck\" AND _exists_:scanner_version"
-                },
-                "streams": [],
-                "config": {
-                  "visualization": "line",
-                  "column_limit": null,
-                  "event_annotation": false,
-                  "row_limit": null,
-                  "row_pivots": [
-                    {
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "type": "time",
-                      "config": {
-                        "interval": {
-                          "type": "timeunit",
-                          "value": 5,
-                          "unit": "minutes"
-                        }
-                      }
-                    }
-                  ],
-                  "series": [
-                    {
-                      "config": {
-                        "name": "Memory Usage"
-                      },
-                      "function": "latest(memory_usage_numerical)"
-                    }
-                  ],
-                  "rollup": false,
-                  "column_pivots": [],
-                  "visualization_config": {
-                    "interpolation": "linear",
-                    "axis_type": "linear"
-                  },
-                  "formatting_settings": null,
-                  "sort": []
-                }
-              },
-              {
-                "id": "2970bb38-6e3f-4249-aecf-bdbd5cd356e6",
-                "type": "aggregation",
-                "filter": null,
-                "filters": [],
-                "timerange": {
-                  "from": 28800,
-                  "type": "relative"
-                },
-                "query": {
-                  "type": "elasticsearch",
-                  "query_string": "source:\"wss-scanner-healthcheck\" AND _exists_:scanner_version"
-                },
-                "streams": [],
-                "config": {
-                  "visualization": "table",
-                  "column_limit": null,
-                  "event_annotation": false,
-                  "row_limit": 15,
-                  "row_pivots": [
-                    {
-                      "fields": [
-                        "scanner_version"
-                      ],
-                      "type": "values",
-                      "config": {
-                        "limit": 15,
-                        "skip_empty_values": true
-                      }
-                    }
-                  ],
-                  "series": [
-                    {
-                      "config": {
-                        "name": "Last Seen"
-                      },
-                      "function": "latest(timestamp)"
-                    }
-                  ],
-                  "rollup": false,
-                  "column_pivots": [],
-                  "visualization_config": {
-                    "pinned_columns": []
-                  },
-                  "formatting_settings": null,
-                  "sort": []
-                }
-              },
-              {
-                "id": "7d55f11a-508b-45af-a21e-8dfde1ce9afa",
-                "type": "aggregation",
-                "filter": null,
-                "filters": [],
-                "timerange": {
-                  "from": 28800,
-                  "type": "relative"
-                },
-                "query": {
-                  "type": "elasticsearch",
-                  "query_string": "source:\"scan_requests_in_queue\""
-                },
-                "streams": [],
-                "config": {
-                  "visualization": "line",
-                  "column_limit": null,
-                  "event_annotation": false,
-                  "row_limit": null,
-                  "row_pivots": [
-                    {
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "type": "time",
-                      "config": {
-                        "interval": {
-                          "type": "timeunit",
-                          "value": 5,
-                          "unit": "minutes"
-                        }
-                      }
-                    }
-                  ],
-                  "series": [
-                    {
-                      "config": {
-                        "name": null
-                      },
-                      "function": "avg(pending_requests)"
-                    }
-                  ],
-                  "rollup": false,
-                  "column_pivots": [],
-                  "visualization_config": {
-                    "interpolation": "linear",
-                    "axis_type": "linear"
-                  },
-                  "formatting_settings": null,
-                  "sort": []
-                }
-              }
-            ],
-            "widget_mapping": {
-              "27a452a3-c524-421a-ac04-2f42f79419ec": [
-                "e48cb1ac-4108-432f-bc97-da3c10b127be"
-              ],
-              "e0568156-a33b-4a4f-b845-cafcc433b227": [
-                "676ef888-3c9f-4676-baa0-2d4f21820ba2"
-              ],
-              "2970bb38-6e3f-4249-aecf-bdbd5cd356e6": [
-                "8c4d51a9-4625-4270-9b87-40fb0b97c26b"
-              ],
-              "7d55f11a-508b-45af-a21e-8dfde1ce9afa": [
-                "086d3e58-0e2b-4d06-bdb7-f24c02d53247"
-              ]
-            },
-            "positions": {
-              "e0568156-a33b-4a4f-b845-cafcc433b227": {
-                "col": 5,
-                "row": 1,
-                "height": 4,
-                "width": 4
-              },
-              "27a452a3-c524-421a-ac04-2f42f79419ec": {
-                "col": 1,
-                "row": 1,
-                "height": 4,
-                "width": 4
-              },
-              "2970bb38-6e3f-4249-aecf-bdbd5cd356e6": {
-                "col": 9,
-                "row": 1,
-                "height": 4,
-                "width": 4
-              },
-              "7d55f11a-508b-45af-a21e-8dfde1ce9afa": {
-                "col": 1,
-                "row": 5,
-                "height": 4,
-                "width": 4
-              }
-            },
-            "formatting": {
-              "highlighting": []
-            },
-            "display_mode_settings": {
-              "positions": {}
-            }
-          },
-          "6651b868-5fbe-4a4f-8510-9595077aec50": {
-            "selected_fields": null,
-            "static_message_list_id": null,
-            "titles": {
-              "tab": {
-                "title": "Remediate"
-              },
-              "widget": {
-                "837b710a-0df9-4b5e-a43e-ff43f943506a": "Healthcheck Requests over Time"
-              }
-            },
-            "widgets": [
-              {
-                "id": "837b710a-0df9-4b5e-a43e-ff43f943506a",
-                "type": "aggregation",
-                "filter": null,
-                "filters": [],
-                "timerange": {
-                  "from": 86400,
-                  "type": "relative"
-                },
-                "query": {
-                  "type": "elasticsearch",
-                  "query_string": "source:\"remediate-healthcheck\""
-                },
-                "streams": [],
-                "config": {
-                  "visualization": "line",
-                  "column_limit": null,
-                  "event_annotation": false,
-                  "row_limit": null,
-                  "row_pivots": [
-                    {
-                      "fields": [
-                        "timestamp"
-                      ],
-                      "type": "time",
-                      "config": {
-                        "interval": {
-                          "type": "timeunit",
-                          "value": 5,
-                          "unit": "minutes"
-                        }
-                      }
-                    }
-                  ],
-                  "series": [
-                    {
-                      "config": {
-                        "name": null
-                      },
-                      "function": "count()"
-                    }
-                  ],
-                  "rollup": false,
-                  "column_pivots": [],
-                  "visualization_config": {
-                    "interpolation": "linear",
-                    "axis_type": "linear"
-                  },
-                  "formatting_settings": null,
-                  "sort": []
-                }
-              }
-            ],
-            "widget_mapping": {
-              "837b710a-0df9-4b5e-a43e-ff43f943506a": [
-                "f6ada02e-382a-4217-98ea-201e9bff5fe7"
-              ]
-            },
-            "positions": {
-              "837b710a-0df9-4b5e-a43e-ff43f943506a": {
-                "col": 1,
-                "row": 1,
-                "height": 4,
-                "width": 4
-              }
-            },
-            "formatting": {
-              "highlighting": []
-            },
-            "display_mode_settings": {
-              "positions": {}
-            }
-          }
-        },
-        "properties": [],
-        "owner": "admin",
-        "title": {
-          "@type": "string",
-          "@value": "Healthchecks"
-        },
-        "type": "DASHBOARD",
-        "description": {
-          "@type": "string",
-          "@value": ""
-        }
-      },
-      "constraints": [
-        {
-          "type": "server-version",
-          "version": ">=5.2.8+8e06d22"
-        }
-      ]
-    },
-    {
-      "v": "1",
-      "type": {
-        "name": "dashboard",
-        "version": "2"
-      },
-      "id": "6a175690-7189-46a8-864f-475a039e49cb",
+      "id": "df78f4bd-f4a9-4933-b3fa-061074ad3831",
       "data": {
         "summary": {
           "@type": "string",
@@ -1759,468 +2164,7 @@
         "name": "input",
         "version": "1"
       },
-      "id": "26086a6b-158f-44d0-875f-05b8bdf3833f",
-      "data": {
-        "title": {
-          "@type": "string",
-          "@value": "Controller Stats"
-        },
-        "configuration": {
-          "target_url": {
-            "@type": "string",
-            "@value": "http://host.docker.internal:2375/containers/wss-ghe-app/stats?stream=false"
-          },
-          "path": {
-            "@type": "string",
-            "@value": "$"
-          },
-          "interval": {
-            "@type": "integer",
-            "@value": 10
-          },
-          "headers": {
-            "@type": "string",
-            "@value": ""
-          },
-          "throttling_allowed": {
-            "@type": "boolean",
-            "@value": false
-          },
-          "timeunit": {
-            "@type": "string",
-            "@value": "SECONDS"
-          },
-          "enable_flattening": {
-            "@type": "boolean",
-            "@value": false
-          },
-          "source": {
-            "@type": "string",
-            "@value": "controller_stats"
-          },
-          "charset_name": {
-            "@type": "string",
-            "@value": "UTF-8"
-          }
-        },
-        "static_fields": {},
-        "type": {
-          "@type": "string",
-          "@value": "org.graylog2.inputs.misc.jsonpath.JsonPathInput"
-        },
-        "global": {
-          "@type": "boolean",
-          "@value": false
-        },
-        "extractors": []
-      },
-      "constraints": [
-        {
-          "type": "server-version",
-          "version": ">=5.2.8+8e06d22"
-        }
-      ]
-    },
-    {
-      "v": "1",
-      "type": {
-        "name": "input",
-        "version": "1"
-      },
-      "id": "b1111773-1ddf-4c45-b18f-bde6641fccbe",
-      "data": {
-        "title": {
-          "@type": "string",
-          "@value": "Scanner Stats"
-        },
-        "configuration": {
-          "target_url": {
-            "@type": "string",
-            "@value": "http://host.docker.internal:2375/containers/wss-scanner/stats?stream=false"
-          },
-          "path": {
-            "@type": "string",
-            "@value": "$"
-          },
-          "interval": {
-            "@type": "integer",
-            "@value": 10
-          },
-          "headers": {
-            "@type": "string",
-            "@value": ""
-          },
-          "throttling_allowed": {
-            "@type": "boolean",
-            "@value": false
-          },
-          "timeunit": {
-            "@type": "string",
-            "@value": "SECONDS"
-          },
-          "enable_flattening": {
-            "@type": "boolean",
-            "@value": false
-          },
-          "source": {
-            "@type": "string",
-            "@value": "scanner_stats"
-          },
-          "charset_name": {
-            "@type": "string",
-            "@value": "UTF-8"
-          }
-        },
-        "static_fields": {},
-        "type": {
-          "@type": "string",
-          "@value": "org.graylog2.inputs.misc.jsonpath.JsonPathInput"
-        },
-        "global": {
-          "@type": "boolean",
-          "@value": false
-        },
-        "extractors": []
-      },
-      "constraints": [
-        {
-          "type": "server-version",
-          "version": ">=5.2.8+8e06d22"
-        }
-      ]
-    },
-    {
-      "v": "1",
-      "type": {
-        "name": "input",
-        "version": "1"
-      },
-      "id": "48c950fb-c370-4d2f-a68c-0a002b60b50b",
-      "data": {
-        "title": {
-          "@type": "string",
-          "@value": "Scanner HealthCheck"
-        },
-        "configuration": {
-          "target_url": {
-            "@type": "string",
-            "@value": "http://host.docker.internal:9393/health-check"
-          },
-          "path": {
-            "@type": "string",
-            "@value": "$"
-          },
-          "interval": {
-            "@type": "integer",
-            "@value": 15
-          },
-          "headers": {
-            "@type": "string",
-            "@value": "Accept: application/json"
-          },
-          "throttling_allowed": {
-            "@type": "boolean",
-            "@value": false
-          },
-          "timeunit": {
-            "@type": "string",
-            "@value": "SECONDS"
-          },
-          "enable_flattening": {
-            "@type": "boolean",
-            "@value": false
-          },
-          "source": {
-            "@type": "string",
-            "@value": "wss-scanner-healthcheck"
-          },
-          "charset_name": {
-            "@type": "string",
-            "@value": "UTF-8"
-          }
-        },
-        "static_fields": {},
-        "type": {
-          "@type": "string",
-          "@value": "org.graylog2.inputs.misc.jsonpath.JsonPathInput"
-        },
-        "global": {
-          "@type": "boolean",
-          "@value": false
-        },
-        "extractors": [
-          {
-            "target_field": {
-              "@type": "string",
-              "@value": "scanner_version"
-            },
-            "condition_value": {
-              "@type": "string",
-              "@value": ""
-            },
-            "order": {
-              "@type": "integer",
-              "@value": 0
-            },
-            "converters": [],
-            "configuration": {
-              "regex_value": {
-                "@type": "string",
-                "@value": "Scanner Version=([\\d\\.]+),"
-              }
-            },
-            "source_field": {
-              "@type": "string",
-              "@value": "result"
-            },
-            "title": {
-              "@type": "string",
-              "@value": "Scanner Version"
-            },
-            "type": {
-              "@type": "string",
-              "@value": "REGEX"
-            },
-            "cursor_strategy": {
-              "@type": "string",
-              "@value": "COPY"
-            },
-            "condition_type": {
-              "@type": "string",
-              "@value": "NONE"
-            }
-          },
-          {
-            "target_field": {
-              "@type": "string",
-              "@value": "max_heap_size_mb"
-            },
-            "condition_value": {
-              "@type": "string",
-              "@value": ""
-            },
-            "order": {
-              "@type": "integer",
-              "@value": 0
-            },
-            "converters": [
-              {
-                "type": {
-                  "@type": "string",
-                  "@value": "NUMERIC"
-                },
-                "configuration": {}
-              }
-            ],
-            "configuration": {
-              "regex_value": {
-                "@type": "string",
-                "@value": "maxHeapSizeMB=([\\d]+),"
-              }
-            },
-            "source_field": {
-              "@type": "string",
-              "@value": "result"
-            },
-            "title": {
-              "@type": "string",
-              "@value": "maxHeapSizeMB"
-            },
-            "type": {
-              "@type": "string",
-              "@value": "REGEX"
-            },
-            "cursor_strategy": {
-              "@type": "string",
-              "@value": "COPY"
-            },
-            "condition_type": {
-              "@type": "string",
-              "@value": "NONE"
-            }
-          },
-          {
-            "target_field": {
-              "@type": "string",
-              "@value": "memory_usage_numerical"
-            },
-            "condition_value": {
-              "@type": "string",
-              "@value": ""
-            },
-            "order": {
-              "@type": "integer",
-              "@value": 0
-            },
-            "converters": [
-              {
-                "type": {
-                  "@type": "string",
-                  "@value": "NUMERIC"
-                },
-                "configuration": {}
-              }
-            ],
-            "configuration": {
-              "regex_value": {
-                "@type": "string",
-                "@value": "Memory Usage=([\\d]+),"
-              }
-            },
-            "source_field": {
-              "@type": "string",
-              "@value": "result"
-            },
-            "title": {
-              "@type": "string",
-              "@value": "Memory Usage"
-            },
-            "type": {
-              "@type": "string",
-              "@value": "REGEX"
-            },
-            "cursor_strategy": {
-              "@type": "string",
-              "@value": "COPY"
-            },
-            "condition_type": {
-              "@type": "string",
-              "@value": "NONE"
-            }
-          },
-          {
-            "target_field": {
-              "@type": "string",
-              "@value": "seconds_since_last_scan_request_numerical"
-            },
-            "condition_value": {
-              "@type": "string",
-              "@value": ""
-            },
-            "order": {
-              "@type": "integer",
-              "@value": 0
-            },
-            "converters": [
-              {
-                "type": {
-                  "@type": "string",
-                  "@value": "NUMERIC"
-                },
-                "configuration": {}
-              }
-            ],
-            "configuration": {
-              "regex_value": {
-                "@type": "string",
-                "@value": "Seconds Since Last Scan Request=([\\d]+)"
-              }
-            },
-            "source_field": {
-              "@type": "string",
-              "@value": "result"
-            },
-            "title": {
-              "@type": "string",
-              "@value": "Seconds Since Last Scan Request"
-            },
-            "type": {
-              "@type": "string",
-              "@value": "REGEX"
-            },
-            "cursor_strategy": {
-              "@type": "string",
-              "@value": "COPY"
-            },
-            "condition_type": {
-              "@type": "string",
-              "@value": "NONE"
-            }
-          }
-        ]
-      },
-      "constraints": [
-        {
-          "type": "server-version",
-          "version": ">=5.2.8+8e06d22"
-        }
-      ]
-    },
-    {
-      "v": "1",
-      "type": {
-        "name": "input",
-        "version": "1"
-      },
-      "id": "04d255da-aa37-4e07-84bd-6a6062289425",
-      "data": {
-        "title": {
-          "@type": "string",
-          "@value": "Remediate Healthcheck"
-        },
-        "configuration": {
-          "target_url": {
-            "@type": "string",
-            "@value": "http://host.docker.internal:8582"
-          },
-          "path": {
-            "@type": "string",
-            "@value": "$"
-          },
-          "interval": {
-            "@type": "integer",
-            "@value": 15
-          },
-          "headers": {
-            "@type": "string",
-            "@value": "Accept: application/json"
-          },
-          "throttling_allowed": {
-            "@type": "boolean",
-            "@value": false
-          },
-          "timeunit": {
-            "@type": "string",
-            "@value": "SECONDS"
-          },
-          "enable_flattening": {
-            "@type": "boolean",
-            "@value": false
-          },
-          "source": {
-            "@type": "string",
-            "@value": "remediate-healthcheck"
-          },
-          "charset_name": {
-            "@type": "string",
-            "@value": "UTF-8"
-          }
-        },
-        "static_fields": {},
-        "type": {
-          "@type": "string",
-          "@value": "org.graylog2.inputs.misc.jsonpath.JsonPathInput"
-        },
-        "global": {
-          "@type": "boolean",
-          "@value": false
-        },
-        "extractors": []
-      },
-      "constraints": [
-        {
-          "type": "server-version",
-          "version": ">=5.2.8+8e06d22"
-        }
-      ]
-    },
-    {
-      "v": "1",
-      "type": {
-        "name": "input",
-        "version": "1"
-      },
-      "id": "4337947b-9563-4b0f-8355-ed079097abcd",
+      "id": "6808eb55-8b1c-4d8a-a097-8d55c5ebafe0",
       "data": {
         "title": {
           "@type": "string",
@@ -2513,7 +2457,536 @@
         "name": "input",
         "version": "1"
       },
-      "id": "d774f60f-a570-4e87-96ff-7900ab97eeae",
+      "id": "4a407726-ab19-4be9-ab70-eab6b14d7fd6",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "Scanner HealthCheck"
+        },
+        "configuration": {
+          "target_url": {
+            "@type": "string",
+            "@value": "http://host.docker.internal:9393/health-check"
+          },
+          "path": {
+            "@type": "string",
+            "@value": "$"
+          },
+          "interval": {
+            "@type": "integer",
+            "@value": 15
+          },
+          "headers": {
+            "@type": "string",
+            "@value": "Accept: application/json"
+          },
+          "throttling_allowed": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "timeunit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          },
+          "enable_flattening": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "source": {
+            "@type": "string",
+            "@value": "wss-scanner-healthcheck"
+          },
+          "charset_name": {
+            "@type": "string",
+            "@value": "UTF-8"
+          }
+        },
+        "static_fields": {},
+        "type": {
+          "@type": "string",
+          "@value": "org.graylog2.inputs.misc.jsonpath.JsonPathInput"
+        },
+        "global": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "extractors": [
+          {
+            "target_field": {
+              "@type": "string",
+              "@value": "scanner_version"
+            },
+            "condition_value": {
+              "@type": "string",
+              "@value": ""
+            },
+            "order": {
+              "@type": "integer",
+              "@value": 0
+            },
+            "converters": [],
+            "configuration": {
+              "regex_value": {
+                "@type": "string",
+                "@value": "Scanner Version=([\\d\\.]+),"
+              }
+            },
+            "source_field": {
+              "@type": "string",
+              "@value": "result"
+            },
+            "title": {
+              "@type": "string",
+              "@value": "Scanner Version"
+            },
+            "type": {
+              "@type": "string",
+              "@value": "REGEX"
+            },
+            "cursor_strategy": {
+              "@type": "string",
+              "@value": "COPY"
+            },
+            "condition_type": {
+              "@type": "string",
+              "@value": "NONE"
+            }
+          },
+          {
+            "target_field": {
+              "@type": "string",
+              "@value": "max_heap_size_mb"
+            },
+            "condition_value": {
+              "@type": "string",
+              "@value": ""
+            },
+            "order": {
+              "@type": "integer",
+              "@value": 0
+            },
+            "converters": [
+              {
+                "type": {
+                  "@type": "string",
+                  "@value": "NUMERIC"
+                },
+                "configuration": {}
+              }
+            ],
+            "configuration": {
+              "regex_value": {
+                "@type": "string",
+                "@value": "maxHeapSizeMB=([\\d]+),"
+              }
+            },
+            "source_field": {
+              "@type": "string",
+              "@value": "result"
+            },
+            "title": {
+              "@type": "string",
+              "@value": "maxHeapSizeMB"
+            },
+            "type": {
+              "@type": "string",
+              "@value": "REGEX"
+            },
+            "cursor_strategy": {
+              "@type": "string",
+              "@value": "COPY"
+            },
+            "condition_type": {
+              "@type": "string",
+              "@value": "NONE"
+            }
+          },
+          {
+            "target_field": {
+              "@type": "string",
+              "@value": "memory_usage_numerical"
+            },
+            "condition_value": {
+              "@type": "string",
+              "@value": ""
+            },
+            "order": {
+              "@type": "integer",
+              "@value": 0
+            },
+            "converters": [
+              {
+                "type": {
+                  "@type": "string",
+                  "@value": "NUMERIC"
+                },
+                "configuration": {}
+              }
+            ],
+            "configuration": {
+              "regex_value": {
+                "@type": "string",
+                "@value": "Memory Usage=([\\d]+),"
+              }
+            },
+            "source_field": {
+              "@type": "string",
+              "@value": "result"
+            },
+            "title": {
+              "@type": "string",
+              "@value": "Memory Usage"
+            },
+            "type": {
+              "@type": "string",
+              "@value": "REGEX"
+            },
+            "cursor_strategy": {
+              "@type": "string",
+              "@value": "COPY"
+            },
+            "condition_type": {
+              "@type": "string",
+              "@value": "NONE"
+            }
+          },
+          {
+            "target_field": {
+              "@type": "string",
+              "@value": "seconds_since_last_scan_request_numerical"
+            },
+            "condition_value": {
+              "@type": "string",
+              "@value": ""
+            },
+            "order": {
+              "@type": "integer",
+              "@value": 0
+            },
+            "converters": [
+              {
+                "type": {
+                  "@type": "string",
+                  "@value": "NUMERIC"
+                },
+                "configuration": {}
+              }
+            ],
+            "configuration": {
+              "regex_value": {
+                "@type": "string",
+                "@value": "Seconds Since Last Scan Request=([\\d]+)"
+              }
+            },
+            "source_field": {
+              "@type": "string",
+              "@value": "result"
+            },
+            "title": {
+              "@type": "string",
+              "@value": "Seconds Since Last Scan Request"
+            },
+            "type": {
+              "@type": "string",
+              "@value": "REGEX"
+            },
+            "cursor_strategy": {
+              "@type": "string",
+              "@value": "COPY"
+            },
+            "condition_type": {
+              "@type": "string",
+              "@value": "NONE"
+            }
+          }
+        ]
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.8+8e06d22"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "input",
+        "version": "1"
+      },
+      "id": "53baf755-7b9e-40df-b79b-2d8073de03a8",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "Scanner Stats"
+        },
+        "configuration": {
+          "target_url": {
+            "@type": "string",
+            "@value": "http://host.docker.internal:2375/containers/wss-scanner/stats?stream=false"
+          },
+          "path": {
+            "@type": "string",
+            "@value": "$"
+          },
+          "interval": {
+            "@type": "integer",
+            "@value": 10
+          },
+          "headers": {
+            "@type": "string",
+            "@value": ""
+          },
+          "throttling_allowed": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "timeunit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          },
+          "enable_flattening": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "source": {
+            "@type": "string",
+            "@value": "scanner_stats"
+          },
+          "charset_name": {
+            "@type": "string",
+            "@value": "UTF-8"
+          }
+        },
+        "static_fields": {},
+        "type": {
+          "@type": "string",
+          "@value": "org.graylog2.inputs.misc.jsonpath.JsonPathInput"
+        },
+        "global": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "extractors": []
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.8+8e06d22"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "input",
+        "version": "1"
+      },
+      "id": "65657126-6da8-4902-bb0a-583dea482dbb",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "Remediate Stats"
+        },
+        "configuration": {
+          "target_url": {
+            "@type": "string",
+            "@value": "http://host.docker.internal:2375/containers/remediate-server/stats?stream=false"
+          },
+          "path": {
+            "@type": "string",
+            "@value": "$"
+          },
+          "interval": {
+            "@type": "integer",
+            "@value": 10
+          },
+          "headers": {
+            "@type": "string",
+            "@value": ""
+          },
+          "throttling_allowed": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "timeunit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          },
+          "enable_flattening": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "source": {
+            "@type": "string",
+            "@value": "remediate_stats"
+          },
+          "charset_name": {
+            "@type": "string",
+            "@value": "UTF-8"
+          }
+        },
+        "static_fields": {},
+        "type": {
+          "@type": "string",
+          "@value": "org.graylog2.inputs.misc.jsonpath.JsonPathInput"
+        },
+        "global": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "extractors": []
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.8+8e06d22"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "input",
+        "version": "1"
+      },
+      "id": "c35c0bfe-ae2a-4067-bb13-062a6b60f1f6",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "Controller Stats"
+        },
+        "configuration": {
+          "target_url": {
+            "@type": "string",
+            "@value": "http://host.docker.internal:2375/containers/wss-ghe-app/stats?stream=false"
+          },
+          "path": {
+            "@type": "string",
+            "@value": "$"
+          },
+          "interval": {
+            "@type": "integer",
+            "@value": 10
+          },
+          "headers": {
+            "@type": "string",
+            "@value": ""
+          },
+          "throttling_allowed": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "timeunit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          },
+          "enable_flattening": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "source": {
+            "@type": "string",
+            "@value": "controller_stats"
+          },
+          "charset_name": {
+            "@type": "string",
+            "@value": "UTF-8"
+          }
+        },
+        "static_fields": {},
+        "type": {
+          "@type": "string",
+          "@value": "org.graylog2.inputs.misc.jsonpath.JsonPathInput"
+        },
+        "global": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "extractors": []
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.8+8e06d22"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "input",
+        "version": "1"
+      },
+      "id": "c59e1b8b-0e30-422f-b352-7d46c0aec974",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "Remediate Healthcheck"
+        },
+        "configuration": {
+          "target_url": {
+            "@type": "string",
+            "@value": "http://host.docker.internal:8582"
+          },
+          "path": {
+            "@type": "string",
+            "@value": "$"
+          },
+          "interval": {
+            "@type": "integer",
+            "@value": 15
+          },
+          "headers": {
+            "@type": "string",
+            "@value": "Accept: application/json"
+          },
+          "throttling_allowed": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "timeunit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          },
+          "enable_flattening": {
+            "@type": "boolean",
+            "@value": false
+          },
+          "source": {
+            "@type": "string",
+            "@value": "remediate-healthcheck"
+          },
+          "charset_name": {
+            "@type": "string",
+            "@value": "UTF-8"
+          }
+        },
+        "static_fields": {},
+        "type": {
+          "@type": "string",
+          "@value": "org.graylog2.inputs.misc.jsonpath.JsonPathInput"
+        },
+        "global": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "extractors": []
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.8+8e06d22"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "input",
+        "version": "1"
+      },
+      "id": "e5605f20-9c03-4ed8-95de-b1c2a1ca013f",
       "data": {
         "title": {
           "@type": "string",
@@ -2636,7 +3109,7 @@
         "name": "pipeline",
         "version": "1"
       },
-      "id": "04cbca42-3b3f-4389-baef-45a32fb1bde1",
+      "id": "09135e6b-f27d-4d88-9ad2-9fc7e9871b88",
       "data": {
         "title": {
           "@type": "string",
@@ -2648,12 +3121,12 @@
         },
         "source": {
           "@type": "string",
-          "@value": "pipeline \"Controller CPU Usage\"\nstage 0 match either\nrule \"Calculate Controller Used Memory\"\nrule \"Calculate Controller Used CPU\"\nend"
+          "@value": "pipeline \"Controller CPU Usage\"\nstage 0 match either\nrule \"Calculate CPU Percentage\"\nrule \"Calculate Memory Percentage\"\nend"
         },
         "connected_streams": [
           {
             "@type": "string",
-            "@value": "18c69ed6-026e-407e-9d79-2253cda726bd"
+            "@value": "c15a668c-c603-4607-b5ff-6e75d6553ccf"
           }
         ]
       },
@@ -2670,19 +3143,19 @@
         "name": "pipeline_rule",
         "version": "1"
       },
-      "id": "c79b1d84-628d-4d4b-95b1-6b824aaf5b26",
+      "id": "cba52a90-4cfb-4564-84d4-154de69bbfce",
       "data": {
         "title": {
           "@type": "string",
-          "@value": "Calculate Controller Used Memory"
+          "@value": "Calculate CPU Percentage"
         },
         "description": {
           "@type": "string",
-          "@value": "Calculate Controller Memory"
+          "@value": "Calculate Controller CPU Usage"
         },
         "source": {
           "@type": "string",
-          "@value": "rule \"Calculate Controller Used Memory\"\nwhen\n    true\nthen\n    let current_message = to_string($message.result);\n    let memory_usage = regex(\"memory_stats.*?usage=(\\\\d+)\", current_message)[\"0\"];\n    let memory_limit = regex(\"memory_stats.*?limit=(\\\\d+)\", current_message)[\"0\"];\n    \n    let memory_usage_percentage = (to_double(memory_usage) / to_double(memory_limit)) * 100.0;\n    \n    set_field(\"memory_usage_percentage\", to_double(memory_usage_percentage));\nend"
+          "@value": "rule \"Calculate CPU Percentage\"\nwhen\n    true\nthen\n    let current_message = to_string($message.result);\n    let cpu_total_usage = regex(\"cpu_stats.*?cpu_usage.*?total_usage=(\\\\d+)\", current_message)[\"0\"];\n    let system_cpu_usage = regex(\"cpu_stats.*?cpu_usage.*?system_cpu_usage=(\\\\d+)\", current_message)[\"0\"];\n    let num_cpus = regex(\"cpu_stats.*?online_cpus=(\\\\d+)\", current_message)[\"0\"];\n    \n    let precpu_total_usage = regex(\"precpu_stats.*?cpu_usage.*?total_usage=(\\\\d+)\", current_message)[\"0\"];\n    let system_precpu_usage = regex(\"precpu_stats.*?cpu_usage.*?system_cpu_usage=(\\\\d+)\", current_message)[\"0\"];\n    \n    let cpu_delta = to_double(cpu_total_usage) - to_double(precpu_total_usage);\n    let system_cpu_delta = to_double(system_cpu_usage) - to_double(system_precpu_usage);\n    \n    let cpu_usage_percentage = (to_double(cpu_delta) / to_double(system_cpu_delta)) * to_double(num_cpus) * 100.0;\n    \n    set_field(\"cpu_usage_percentage\", to_double(cpu_usage_percentage));\nend"
         }
       },
       "constraints": [
@@ -2698,19 +3171,19 @@
         "name": "pipeline_rule",
         "version": "1"
       },
-      "id": "9ce57b12-90e1-4436-b2f2-59ffcbe892f4",
+      "id": "4fe90e92-6908-4de9-b515-9f565a61c736",
       "data": {
         "title": {
           "@type": "string",
-          "@value": "Calculate Controller Used CPU"
+          "@value": "Calculate Memory Percentage"
         },
         "description": {
           "@type": "string",
-          "@value": "Calculate Controller CPU Usage"
+          "@value": "Calculate Controller Memory"
         },
         "source": {
           "@type": "string",
-          "@value": "rule \"Calculate Controller Used CPU\"\nwhen\n    true\nthen\n    let current_message = to_string($message.result);\n    let cpu_total_usage = regex(\"cpu_stats.*?cpu_usage.*?total_usage=(\\\\d+)\", current_message)[\"0\"];\n    let system_cpu_usage = regex(\"cpu_stats.*?cpu_usage.*?system_cpu_usage=(\\\\d+)\", current_message)[\"0\"];\n    let num_cpus = regex(\"cpu_stats.*?online_cpus=(\\\\d+)\", current_message)[\"0\"];\n    \n    let precpu_total_usage = regex(\"precpu_stats.*?cpu_usage.*?total_usage=(\\\\d+)\", current_message)[\"0\"];\n    let system_precpu_usage = regex(\"precpu_stats.*?cpu_usage.*?system_cpu_usage=(\\\\d+)\", current_message)[\"0\"];\n    \n    let cpu_delta = to_double(cpu_total_usage) - to_double(precpu_total_usage);\n    let system_cpu_delta = to_double(system_cpu_usage) - to_double(system_precpu_usage);\n    \n    let cpu_usage_percentage = (to_double(cpu_delta) / to_double(system_cpu_delta)) * to_double(num_cpus) * 100.0;\n    \n    set_field(\"cpu_usage_percentage\", to_double(cpu_usage_percentage));\nend"
+          "@value": "rule \"Calculate Memory Percentage\"\nwhen\n    true\nthen\n    let current_message = to_string($message.result);\n    let memory_usage = regex(\"memory_stats.*?usage=(\\\\d+)\", current_message)[\"0\"];\n    let memory_limit = regex(\"memory_stats.*?limit=(\\\\d+)\", current_message)[\"0\"];\n    \n    let memory_usage_percentage = (to_double(memory_usage) / to_double(memory_limit)) * 100.0;\n    \n    set_field(\"memory_usage_percentage\", to_double(memory_usage_percentage));\nend"
         }
       },
       "constraints": [
@@ -2726,7 +3199,7 @@
         "name": "stream",
         "version": "1"
       },
-      "id": "18c69ed6-026e-407e-9d79-2253cda726bd",
+      "id": "c15a668c-c603-4607-b5ff-6e75d6553ccf",
       "data": {
         "alarm_callbacks": [],
         "outputs": [],
@@ -2782,6 +3255,28 @@
               "@type": "string",
               "@value": ""
             }
+          },
+          {
+            "type": {
+              "@type": "string",
+              "@value": "EXACT"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "source"
+            },
+            "value": {
+              "@type": "string",
+              "@value": "remediate_stats"
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "description": {
+              "@type": "string",
+              "@value": ""
+            }
           }
         ],
         "alert_conditions": [],
@@ -2815,7 +3310,7 @@
         "name": "stream_title",
         "version": "1"
       },
-      "id": "e30588c6-33b1-4242-a234-7a8dd93c6a1b",
+      "id": "5c286c18-3a43-41dd-8421-39c8e221bf28",
       "data": {
         "title": {
           "@type": "string",
@@ -2835,7 +3330,7 @@
         "name": "stream_title",
         "version": "1"
       },
-      "id": "65bb4994-32a2-4501-a33e-608a05dea203",
+      "id": "632daf8e-aed9-4862-8995-c9f18418dc9a",
       "data": {
         "title": {
           "@type": "string",
@@ -2855,12 +3350,12 @@
         "name": "url_whitelist_entry",
         "version": "1"
       },
-      "id": "2156a429-5dc2-4a14-a4d9-b682e951234f",
+      "id": "8a243c3a-ccac-4a0f-a9ec-e892cfcbaa43",
       "data": {
         "id": "cb0a3295-a8d8-416a-8957-3d8554b84107",
         "type": "regex",
         "title": "Controller Stats",
-        "value": "^\\Qhttp://host.docker.internal:2375/containers/wss-ghe-app/stats?stream=false\\E$"
+        "value": "^\\Qhttp://host.docker.internal:2375/containers/.*/stats?stream=false\\E$"
       },
       "constraints": [
         {
