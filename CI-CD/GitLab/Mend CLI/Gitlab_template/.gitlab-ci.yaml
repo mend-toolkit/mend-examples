@@ -1,0 +1,84 @@
+default:
+  image: maven:3.8-openjdk-11
+
+include:
+  - remote: 'https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/GitLab/Mend%20CLI/Gitlab_template/mend.yml'
+
+  # - project: 'templates/templates'
+  #   file: 'mend.yaml'
+
+# Vars for Maven
+variables:
+  MAVEN_OPTS: -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
+  MAVEN_CLI_OPTS: -DskipTests
+
+stages:
+  - build
+  - download
+  - mend_scan
+  - mend_reports
+
+## Cache exmple for Maven
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .m2/repository
+    - target
+  policy: pull-push
+
+## Maven example - replace with your builds steps
+# maven_build:
+#   image: maven:3.8-openjdk-11
+#   stage: build
+#   script: mvn $MAVEN_OPTS clean install $MAVEN_CLI_OPTS
+#   cache:
+#     key: ${CI_COMMIT_REF_SLUG}
+#     paths:
+#       - .m2/repository
+#       - target
+#     policy: push
+#   tags:
+#     - docker
+  
+## NPM example - replace with your builds steps
+# npm_build:
+#   image: node:18.18.0-alpine
+#   stage: build
+#   script: npm i
+#   artifacts:
+#     paths:
+#       - node_modules
+#   tags:
+#     - docker
+
+# The Mend SCA CLI scan should be called AFTER a package manager build step such as "mvn clean install -DskipTests=true" or "npm install --only=prod"
+
+.download_mend:
+  stage: download 
+  extends: download_mend
+  tags:
+    - docker
+
+.mend_sca:
+  stage: mend_scan
+  extends: mend_sca
+  allow_failure: true
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .m2/repository
+      - target
+    policy: pull
+  parallel: # Run both SCA and SAST in parallel, make sure your runner is configured for concurrent jobs: https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-global-section
+    matrix:
+      - INSTANCE: 1
+  tags:
+    - dind
+
+.mend_reports:
+  image: python:3.9-slim-bullseye
+  stage: mend_reports
+  extends: mend_reports
+  tags:
+    - docker
+  when: manual
