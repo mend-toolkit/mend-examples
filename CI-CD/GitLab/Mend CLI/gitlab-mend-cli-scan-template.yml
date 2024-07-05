@@ -92,12 +92,13 @@ mend_scan:
       echo "there is no go.mod file"
     fi
     echo Downloading Mend CLI
-    curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
+    curl https://downloads.mend.io/cli/linux_amd64/mend -o ./mend && chmod +x ./mend
     echo Run Mend dependencies scan
-    mend dep -u
+    ./mend dep -u --fail-policy --export-results dep-results.txt -s "$CI_PROJECT_NAMESPACE//$PROJECT"
     echo Run Mend code scan
-    mend code
-    cp -r ~/.mend/logs $CI_PROJECT_DIR/mend-logs
+    ./mend code -r --formats sarif --filename code-results --non-interactive
+    cp -R $HOME/.mend/logs $CI_PROJECT_DIR/mend_logs
+    cp code-results.sarif $CI_PROJECT_DIR/mend_logs
   artifacts:
     paths:
       - mend-logs/
