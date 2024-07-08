@@ -1,15 +1,14 @@
 version: "2"
 services:
 
-
-  remediate:
+  remediate-server:
     image: wss-remediate:latest
     container_name: remediate-server
     environment:
       LOG_LEVEL: DEBUG
-      PIP_USER: <user_email>
-      PIP_PASS: <artifactory provided password>
-      PIP_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
+      POETRY_REPOSITORIES_MAIN_URL: "https://<artifactory_instance>.jfrog.io/artifactory/api/pypi/simple"
+      POETRY_HTTP_BASIC_MAIN_USERNAME: "<username>" # Can be an email address that is not urlencoded
+      POETRY_HTTP_BASIC_MAIN_PASSWORD: "<password>"
     ports:
       - "8080:8080"
     volumes:
@@ -25,7 +24,6 @@ services:
         max-size: 1m
         max-file: "5"
 
-
   app:
     image: wss-ghe-app:latest
     container_name: wss-ghe-app
@@ -36,8 +34,6 @@ services:
       - "5678:5678"
     volumes:
       - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
-    depends_on:
-      - remediate
     logging:
       driver: local
       options:
@@ -48,20 +44,19 @@ services:
   scanner:
     image: wss-scanner:latest
     container_name: wss-scanner-ghe
+    environment:
+      EXTERNAL_LOG_IN_CONSOLE: "true"
+      LOG_LEVEL: DEBUG
+      POETRY_REPOSITORIES_MAIN_URL: "https://<artifactory_instance>.jfrog.io/artifactory/api/pypi/simple"
+      POETRY_HTTP_BASIC_MAIN_USERNAME: "<username>"
+      POETRY_HTTP_BASIC_MAIN_PASSWORD: "<password>"
     extra_hosts:
       - "files.pythonhosted.org:127.0.0.1"
       - "pypi.org:127.0.0.1"
-    environment:
-      EXTERNAL_LOG_IN_CONSOLE: true
-      LOG_LEVEL: DEBUG
-      PIP_INDEX_URL: https://<artifactory_email>:<artifactory_provided_password>@<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
     ports:
       - "9393:9393"
     volumes:
       - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
-    extra_hosts:
-      - "files.pythonhosted.org:127.0.0.1"
-      - "pypi.org:127.0.0.1"
     restart: always
     depends_on:
       - app

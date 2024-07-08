@@ -68,15 +68,38 @@ The Auth Token environment variable must be specified in a source that allows sp
    - For the scanner, use an environment variable like:
 
      ```
-     PIP_INDEX_URL: https://<user_email>:<user_password>@<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
+     PIP_INDEX_URL: https://<username>:<user_password>@<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
      ```
+
+     If your username is an email address, then you should urlencode the "@" symbol. For ``user.example@test.org`` you would specify ``user.example%40test.org``
 
 > [!NOTE]  
 Pip prioritizes environment variables over workspace files. Refer to [https://pip.pypa.io/en/stable/topics/configuration/](https://pip.pypa.io/en/stable/topics/configuration/#precedence-override-order) for details.
 
-   No `pip.conf` file is required for the scanner or remediate container; it uses the environment variable.
+   No ``pip.conf`` file is required for the scanner or remediate container; it uses the environment variable.
 
-4. **Go**:
+4. **Poetry**:
+
+   - Poetry specifies which repository it references in the ``pyproject.toml`` as well as the ``poetry.lock`` files. Therefore, the name of the repository in the pyproject.toml MUST match the name of the repository in the environment variables.  
+     For instance, if you have the following in your ``pyproject.toml``:
+     ```
+     [[tool.poetry.source]]
+     name = "main"
+     url = "https://<private registry url>"
+     priority = "primary"
+     ```
+
+     Then you must also set the environment variables on the scanner with relation to the name "main". For instance:
+     ```
+     POETRY_REPOSITORIES_MAIN_URL: "https://<private registry url>"
+     POETRY_HTTP_BASIC_MAIN_USERNAME: "<username>"
+     POETRY_HTTP_BASIC_MAIN_PASSWORD: "<password>"
+     ```
+
+> [!NOTE]  
+If the registry for poetry is also shared with PIP, then you can consolidate this for the remediate server/worker containers to only specify the PIP registry/username/password, and then add the ``poetry`` and ``pep621`` managers to the config.js.
+
+5. **Go**:
 
    - For both scanner and remediate containers, use an environment variable similar to Pip's:
 
@@ -87,7 +110,7 @@ Pip prioritizes environment variables over workspace files. Refer to [https://pi
 > [!NOTE]  
 Go's `datasource` in Renovate doesn't support private registries; use `GOPROXY`. Refer to this [link](https://docs.renovatebot.com/modules/datasource/go/) for details.
 
-5. **Gradle**:
+6. **Gradle**:
 
    Mend offers two methods for resolving private registries with Gradle: Groovy and Kotlin.
 
@@ -118,7 +141,7 @@ Go's `datasource` in Renovate doesn't support private registries; use `GOPROXY`.
 
    For the remediate container, match the `gradle` and `gradle-wrapper` managers for both `repositoryUrl` and `pluginRepositoryUrl`.
 
-6. **NuGet**:
+7. **NuGet**:
 
    - Create a `NuGet.Config` file that references environment variables for the Artifactory registry.
    - The password is the one provided by Artifactory with the specification `ClearTextPassword` in the `NuGet.Config` file.
@@ -126,7 +149,7 @@ Go's `datasource` in Renovate doesn't support private registries; use `GOPROXY`.
 > [!WARNING]  
 Map the file into the container as `NuGet.Config` with the correct capitalization. This is because the container already creates this file when installing the dotnet CLI, and needs to be overridden.
 
-7. **Docker**:
+8. **Docker**:
 
    - The integration itself doesn't perform image scans.
    - Only Remediate/Renovate require credentials.
