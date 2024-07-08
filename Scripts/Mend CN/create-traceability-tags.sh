@@ -24,7 +24,7 @@ check_and_add_labels() {
     echo "Mend Label already exists in $dockerfile_path"
   else
     source_dir=${dockerfile_path:2}
-    sed -i  "1i LABEL io.mend.image.dockerfile.path=$source_dir" "$dockerfile_path"
+    sed -i  "/^FROM/a LABEL io.mend.image.dockerfile.path=$source_dir" "$dockerfile_path"
   fi
 
   grep -Eq 'LABEL org\.opencontainers\.image\.source=.*' "$dockerfile_path"
@@ -36,7 +36,7 @@ check_and_add_labels() {
     source_url=$(git config --get remote.origin.url 2>/dev/null)
     source_url=${source_url%\.git}
 
-    sed -i "1i LABEL org.opencontainers.image.source=$source_url" "$dockerfile_path"
+    sed -i "/^FROM/a LABEL org.opencontainers.image.source=$source_url" "$dockerfile_path"
   fi
 
   echo "Labels added to $dockerfile_path"

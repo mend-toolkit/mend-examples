@@ -89,7 +89,7 @@ LABEL io.mend.image.dockerfile.path=<dockerfile_path>
 
 ```sh
 cd $PROJECT_DIR
-curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Mend CN/create-traceability-tags.sh
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Mend%20CN/create-traceability-tags.sh
 chmod +x ./create-traceability-tags.sh && ./create-traceability-tags.sh
 ```
 
