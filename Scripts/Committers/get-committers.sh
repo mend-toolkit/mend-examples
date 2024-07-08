@@ -28,7 +28,7 @@ fi
 for line in $lines; do
     cd $workdir
     echo "Cloning $line"
-    git clone $line $workdir/currentrepo
+    git clone --depth 1 --no-checkout $line $workdir/currentrepo
 
     # Handle error if the repo no longer exists
     if [ $? -ne 0 ]
@@ -38,6 +38,7 @@ for line in $lines; do
     else
         cd $workdir/currentrepo
 
+        git pull --unshallow
         # Pull the committers emails based on the $BEGIN_DATE variable
         COMMITTERS=$(git shortlog -sce --since="$BEGIN_DATE" | sed 's/^ *\([0-9]*\) \(.*\) <\([^>]*\)>$/\3/')
         echo "Found the following committers"
