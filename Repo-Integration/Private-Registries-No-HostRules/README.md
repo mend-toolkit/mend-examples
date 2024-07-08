@@ -71,7 +71,7 @@ The Auth Token environment variable must be specified in a source that allows sp
      PIP_INDEX_URL: https://<username>:<user_password>@<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
      ```
 
-     If your username is an email address, then you should urlencode the "@" symbol. For ``user.example@test.org`` you would specify ``user.example%40test.org``
+     If your username is an email address, then you should url encode the "@" symbol. For ``user.example@test.org`` you would specify ``user.example%40test.org``
 
 > [!NOTE]  
 Pip prioritizes environment variables over workspace files. Refer to [https://pip.pypa.io/en/stable/topics/configuration/](https://pip.pypa.io/en/stable/topics/configuration/#precedence-override-order) for details.
@@ -80,7 +80,7 @@ Pip prioritizes environment variables over workspace files. Refer to [https://pi
 
 4. **Poetry**:
 
-   - Poetry specifies which repository it references in the ``pyproject.toml`` as well as the ``poetry.lock`` files. Therefore, the name of the repository in the pyproject.toml MUST match the name of the repository in the environment variables.  
+   - Poetry specifies which repository it references in the ``pyproject.toml`` as well as the ``poetry.lock`` files. Therefore, the name of the repository in the pyproject.toml **MUST** match the name of the repository in the environment variables.  
      For instance, if you have the following in your ``pyproject.toml``:
      ```
      [[tool.poetry.source]]
