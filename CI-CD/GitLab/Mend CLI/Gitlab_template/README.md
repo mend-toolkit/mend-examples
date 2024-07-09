@@ -51,6 +51,7 @@ stages:
   - mend_scan
   - mend_reports
 
+### Maven Example
 ## Cache example for Maven
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -59,27 +60,6 @@ cache:
     - target
   policy: pull-push
 
-## Cache example for Gradle
- cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull-push
-    paths:
-      - build
-      - .gradle
-
-## Cache example for NPM
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - node_modules/
-  policy: pull-push
-
-## Cache example for Python
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - venv/
-  policy: pull-push
 
 ## Maven example - replace with your builds steps
 maven_build:
@@ -95,6 +75,15 @@ maven_build:
    tags:
      - docker # Depends on your runner tag , for gitlab.com hosted tags, see: https://docs.gitlab.com/ee/ci/runners/hosted_runners/linux.html#machine-types-available-for-linux---x86-64
 
+### Gradle Example
+## Cache example for Gradle
+ cache:
+    ey: "$CI_COMMIT_REF_NAME"
+    policy: pull-push
+    paths:
+      - build
+      - .gradle
+
 ## Gradle example - replace with your builds steps
 gradle_build:
   stage: build
@@ -108,6 +97,13 @@ gradle_build:
   tags:
     - docker
 
+### NPM Example
+## Cache example for NPM
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+  policy: pull-push
 
 ## NPM example - replace with your builds steps
 npm_build:
@@ -119,6 +115,14 @@ npm_build:
       - node_modules/
   tags:
     - docker
+
+### Python Example
+## Cache example for Python
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - venv/
+  policy: pull-push
 
 ## Python example - replace with your builds steps
 python_bulild:
@@ -133,7 +137,6 @@ python_bulild:
       - venv
   tags:
     - docker
-
 
 # Call Mend from Template
 .download_mend:
