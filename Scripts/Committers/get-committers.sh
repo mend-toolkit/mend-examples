@@ -28,7 +28,7 @@ fi
 for line in $lines; do
     cd $workdir
     echo "Cloning $line"
-    git clone $line $workdir/currentrepo
+    git clone --filter=blob:none --no-checkout $line $workdir/currentrepo
 
     # Handle error if the repo no longer exists
     if [ $? -ne 0 ]
