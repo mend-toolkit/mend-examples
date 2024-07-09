@@ -19,7 +19,7 @@ stages:
   - mend_scan
   - mend_reports
 
-download_mend:
+download_executable:
   stage: download
   image: curlimages/curl:latest
   script: |
@@ -32,7 +32,7 @@ download_mend:
 mend_sca:
   stage: mend_scan
   allow_failure: true
-  needs: [download_mend]
+  needs: [download_executable]
   script: |
     if [ -f requirements.txt ]; then
       source venv/bin/activate
@@ -58,7 +58,7 @@ mend_sca:
 
 mend_sast:
   stage: mend_scan
-  needs: [download_mend]
+  needs: [download_executable]
   script: |
     ./mend code -r --formats sarif --filename code-results --non-interactive
   after_script: |
