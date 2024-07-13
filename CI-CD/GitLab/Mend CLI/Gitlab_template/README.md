@@ -172,7 +172,7 @@ python_bulild:
 ```
 
 ### Add Mend build variables
-Before triggering the pipeline, add the following to your CI/CD variables:
+Before triggering the pipeline, add the following to your [GitLab CI/CD variables in the project settings](https://docs.gitlab.com/ee/ci/variables/#define-a-cicd-variable-in-the-ui):
 ```bash
 MEND_EMAIL: your_email@company.com or serviceuser@company.com
 MEND_USER_KEY: User Key from Mend UI
