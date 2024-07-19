@@ -101,13 +101,13 @@ if [[ "$MEND_REPORTSCOPE" = "Organization" ]] ; then
 	tokenScope=org
 	token=$MEND_ORG_UUID
 elif [[ "$MEND_REPORTSCOPE" = "Product" ]] ; then
-	[[ -z $WS_PRODUCTTOKEN ]] && echo "No WS_PRODUCTTOKEN specified and MEND_REPORTSCOPE=Product" && exit
+	[[ -z $MEND_PRODUCTTOKEN ]] && echo "No MEND_PRODUCTTOKEN specified and MEND_REPORTSCOPE=Product" && exit
 	tokenScope=product
-	token=$WS_PRODUCTTOKEN
+	token=$MEND_PRODUCTTOKEN
 elif [[ "$MEND_REPORTSCOPE" = "Project" ]] ; then
-	[[ -z $WS_PROJECTTOKEN ]] && echo "No WS_PROJECTTOKEN specified and MEND_REPORTSCOPE=Project" && exit
+	[[ -z $MEND_PROJECTTOKEN ]] && echo "No MEND_PROJECTTOKEN specified and MEND_REPORTSCOPE=Project" && exit
 	tokenScope=project
-	token=$WS_PROJECTTOKEN
+	token=$MEND_PROJECTTOKEN
 fi
 
 # Generate Report
@@ -147,6 +147,6 @@ while [[ $ready = "false" ]] ; do
 	fi
 done
 reportDir="$(pwd)/mendreports"
-unzip $reportFile -d $reportDir && rm $reportFile
+unzip "$reportFile" -d "$reportDir" && rm "$reportFile"
 
 # Publish the mendreports folder according to your pipeline instructions
