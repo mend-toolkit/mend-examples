@@ -20,7 +20,7 @@
 # MEND_URL - e.g. https://saas.mend.io/agent
 # MEND_USER_KEY - An administrator's userkey
 # MEND_ORG_UUID - API Key for organization (optional)
-# MEND_PRODUCT_UUID or MEND_PROJECT_UUID depending on the report scope
+# MEND_PRODUCTTOKEN or MEND_PROJECTTOKEN depending on the report scope
 #
 # ******** Usage ********
 # To run this script, a user should set the following environment variables:
