@@ -78,7 +78,7 @@ maven_build:
 ### Gradle Example
 ## Cache example for Gradle
  cache:
-    ey: "$CI_COMMIT_REF_NAME"
+    key: "$CI_COMMIT_REF_NAME"
     policy: pull-push
     paths:
       - build
@@ -183,6 +183,6 @@ MEND_URL: Your base Mend URL (e.g: https://saas.mend.io)
 All scan logs, from all Mend stages including the reports are uploaded to each build stage as Artifacts
 
 ### Modify the default scan steps
-The template executes SCA, SAST and generate all reports which described above.
+The template executes SCA, SCA Reachability, SAST and generate all reports which described above.
 If you wish to change it from the template or when you run the pipeline manually.
 
