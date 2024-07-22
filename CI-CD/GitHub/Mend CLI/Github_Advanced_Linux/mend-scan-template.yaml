@@ -9,6 +9,9 @@ on:
       SCA:
         required: true
         type: boolean
+      SCA_Reachability:
+        required: false
+        type: boolean
       SAST:
         required: true
         type: boolean
@@ -26,9 +29,10 @@ on:
       
         
 jobs:
-  build:
+  Mend Scans:
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -37,23 +41,30 @@ jobs:
           echo "MEND_URL=${{ inputs.MEND_URL }}" >> $GITHUB_ENV
           echo "MEND_EMAIL"=${{ secrets.MEND_EMAIL }} >> $GITHUB_ENV
           echo "MEND_USER_KEY"=${{ secrets.MEND_USER_KEY }} >> $GITHUB_ENV
-      
+          
       - name: Download Mend CLI
         run: curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
         
       - name: Run Mend SCA Scan
-        id: SCA
-        if: ${{ inputs.SCA }}
+        id: SCA_Reachability
+        if: ${{ inputs.SCA && ! inputs.SCA_Reachability }}
         run: |
            mend dep -u --fail-policy --export-results dep-results.txt
            cp dep-results.txt ~/.mend/logs
+      
+      - name: Run Mend SCA Reachability Scan
+        id: SCA
+        if: ${{ inputs.SCA && inputs.SCA_Reachability }}
+        run: |
+           mend dep -u -r --fail-policy --export-results dep-results.txt
+           cp dep-results.txt ~/.mend/logs
 
       - name: Check SCA results if failed
-        if: steps.SCA.outcome == 'failure'
+        if: steps.SCA.outcome == 'failure' || steps.SCA_Reachability.outcome == 'failure'
         run: echo -e "\033[0;31mDependency scan policy violation"
 
       - name: Check SCA results if succeeded
-        if: steps.SCA.outcome == 'success'
+        if: steps.SCA.outcome == 'success' || steps.SCA_Reachability.outcome == 'success'
         run: echo -e "\033[0;32mNo policy violations found in dependencies scan"
 
       - name: Run Mend SAST Scan
@@ -63,11 +74,11 @@ jobs:
            mend code -r --formats sarif --filename code-results --non-interactive
            cp code-results.sarif ~/.mend/logs
       
-      - name: Check SAST results
+      - name: Check SAST results if failed
         if: steps.SAST.outcome == 'failure'
         run: echo -e "\033[0;31mCode scan threshold violation"
 
-      - name: Check SAST results
+      - name: Check SAST results if succeeded
         if: steps.SAST.outcome == 'success'
         run: echo -e "\033[0;32mNo policy violations found in code scan"
 

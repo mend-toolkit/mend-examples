@@ -30,6 +30,7 @@ call-template:
       MEND_URL: "https://saas-eu.mend.io"
       # MEND_URL: "https://saas.mend.io"
       SCA: true
+      SCA_Reachability: true # Whether to run SCA Reachability, supported for Java and JS: https://docs.mend.io/bundle/sca_user_guide/page/sca_reachability_in_the_mend_cli.html
       SAST: true
       CN: false # TODO add steps to template
       SCA_Reports: 'ALL'
