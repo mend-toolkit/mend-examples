@@ -6,6 +6,9 @@ variables:
   MEND_SCA:
     description: "'true' to trigger SCA"
     value: "true"
+  MEND_SCA_REACHABILITY:
+    description: "'true' to trigger SCA Reachability"
+    value: "false"
   MEND_SAST:
     description: "'true' to trigger mend_sast"
     value: "true"
@@ -53,8 +56,33 @@ mend_sca:
       - $CI_PROJECT_DIR/mend_logs/
     expire_in: 2 weeks
   rules:
-    - if: '$MEND_SCA == "true"'
+    - if: '$MEND_SCA == "true" && $MEND_SCA_REACHABILITY == "false"'
 
+mend_sca_reachability:
+  stage: mend_scan
+  allow_failure: true
+  needs: [download_mend]
+  script: |
+    if [ -f requirements.txt ]; then
+      source venv/bin/activate
+    fi
+    ./mend dep -r -u --fail-policy --export-results dep-results.txt -s "$CI_PROJECT_NAMESPACE//$PROJECT"
+  after_script: |
+    if [[ $CI_JOB_STATUS == 'failed' ]]; then
+      echo "Dependency scan policy violation"
+    else
+      echo "No policy violations found in dependencies scan"
+    fi
+    cp -R $HOME/.mend/logs $CI_PROJECT_DIR/mend_logs
+  artifacts:
+    when: always
+    untracked: true
+    paths:
+      - dep-results.txt
+      - $CI_PROJECT_DIR/mend_logs/
+    expire_in: 2 weeks
+  rules:
+    - if: '$MEND_SCA == "true" && $MEND_SCA_REACHABILITY == "true"'
 
 mend_sast:
   stage: mend_scan
@@ -79,9 +107,13 @@ mend_sast:
     - if: '$MEND_SAST == "true"'
 
 mend_reports:
-  image: python:3.9-slim-bullseye
+  image: python:3.10.14-slim-bullseye
   stage: mend_reports
-  needs: [mend_sca]
+  needs:
+    - job: mend_sca
+      optional: true
+    - job: mend_sca_reachability
+      optional: true
   before_script:
     - apt update && apt install curl -y
   script: |
@@ -136,4 +168,4 @@ mend_reports:
       - mend_reports/
     when: always
   rules:
-    - if: '$MEND_SCA == "true"'
+    - if: '$MEND_SCA == "true" || $MEND_SCA_REACHABILITY == "true"'
