@@ -10,6 +10,7 @@ This folder contains scripts for use with the Mend SCA platform and Unified agen
 - [Get all malicious packages in an organization](#get-all-malicious-packages-in-an-organization)
 - [Group Permissions](#group-permissions)
 - [Scan Errors](#scan-errors)
+- [Get All Policies in an Organization](#get-all-organization-policies)
 
 ### Unified Agent Scripts  
 The following scripts are designed to be used with the Unified Agent. Currently, it is recommended to use the Mend CLI for scanning purposes. However, these scripts can be used to bridge the gap between the Mend Unified Agent and the CLI in cases where the Unified Agent is required.
@@ -174,6 +175,34 @@ chmod +x ./scanerrors.sh && ./scanerrors.sh
 
 <br>
 <hr>
+
+## Get All Organization Policies
+
+[get-all-policies.sh](get-all-policies.sh)  
+
+This script allows a user to retrieve all policies from an organization at every level in the organization hierarchy (Organization, Product, and Project)
+<br>
+
+**Prerequisites:**  
+
+* ``sudo apt-get install jq curl``
+* ``export MEND_USER_KEY`` - An administrator's userkey
+* ``export MEND_EMAIL`` - The administrator's email
+* ``export MEND_ORG_UUID`` - API Key for organization (optional)
+* ``export MEND_URL`` - e.g. https://saas.mend.io/
+
+<br>
+
+**Execution:**  
+
+```
+curl -LJO https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Scripts/Mend%20SCA/get-all-policies.sh
+chmod +x ./get-all-policies.sh && ./get-all-policies.sh
+```
+
+<br>
+<hr>
+
 
 # Unified Agent Only Scripts
 
