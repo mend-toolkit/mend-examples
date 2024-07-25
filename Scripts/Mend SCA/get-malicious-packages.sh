@@ -62,7 +62,9 @@ do
         echo "Getting Malicious Packages for Product $((i+1))/$NUM_PRODUCTS: $CURRENT_PRODUCT_TOKEN"
 
         # Get all security alerts that have "MSC" in the name
-        CURRENT_OUTPUT=$(curl -s --location "$MEND_API_URL/products/$CURRENT_PRODUCT_TOKEN/alerts/security?pageSize=10000&page=0&search=vulnerabilityName%3ALIKE%3AMSC" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN" | jq '.retVal' )
+        CURRENT_OUTPUT=$(curl -s --location "$MEND_API_URL/products/$CURRENT_PRODUCT_TOKEN/alerts/security?pageSize=10000&page=0&search=vulnerabilityName:LIKE:MSC" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN" | jq '.retVal' )
+        ## Switch to use below for additional status filter
+        #CURRENT_OUTPUT=$(curl -s --location "$MEND_API_URL/products/$CURRENT_PRODUCT_TOKEN/alerts/security?pageSize=10000&page=0&search=vulnerabilityName:LIKE:MSC;status:IN:ACTIVE" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN" | jq '.retVal' )
 
         if [[ "$CURRENT_OUTPUT" =~ "errorMessage" ]]; then
                 ERROR_MESSAGE=$(echo "$CURRENT_OUTPUT" | jq '.errorMessage')
@@ -75,7 +77,7 @@ do
 done
 
 # Extract all the information we need for an alert
-OUTPUT=$(echo "$OUTPUT" | jq '[.[] | {productName: .product.name, projectName: .project.name, vulnId: .name, libraryName: .component.name, vulnScore: .vulnerability.vulnerabilityScoring }]')
+OUTPUT=$(echo "$OUTPUT" | jq '[.[] | {productuuid: .product.uuid, productName: .product.name, projectName: .project.name, vulnId: .name, libraryName: .component.name, vulnScore: .vulnerability.vulnerabilityScoring, alertStatus: .alertInfo.status }]')
 echo -e "\nMalicious Packages: \n$OUTPUT"
 
 # $OUTPUT can now be used in any notification process such as an email, consume it in another alerting system.
