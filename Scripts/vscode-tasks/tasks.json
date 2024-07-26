@@ -1,0 +1,71 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    // Must install - https://marketplace.visualstudio.com/items?itemName=augustocdias.tasks-shell-input 
+    // Use Cmd + K + Cmd +S to edit Keyboard shortcut and add Tasks: Run Task to a short - always use the before running Mend commands
+    // Add .vscode and /working directory to .gitignore
+    // Update your env variables below
+    "version": "2.0.0",
+    "options": {
+        "env": {
+            "MEND_URL": "https://saas.mend.io",
+            "MEND_EMAIL": "your-email-here",
+            "MEND_USER_KEY": "your-user-key"
+            }
+        },
+    "tasks": [
+        {
+            "label": "Mend - License",
+            "type": "shell",
+            "command": "./.vscode/mend/license.sh",
+            "args": [
+                "${input:projectuuid}"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Mend - Dep Scan",
+            "type": "shell",
+            "command": "mend dep -u -s *//IDE-Scans//* --export-results ./.vscode/mend/sca-scan.txt",
+            "problemMatcher": []
+            
+        },
+        {
+            "label": "Mend - IAC Scan",
+            "type": "shell",
+            "command": "mend iac --no-upload",
+            "problemMatcher": []
+            
+        },
+        {
+            "label": "Mend - Image Scan",
+            "type": "shell",
+            "command": "mend image --no-upload ${input:imagename}",
+            "problemMatcher": []
+            
+        },
+        {
+            "label": "Mend - Code Scan",
+            "type": "shell",
+            "command": "mend code -s *//IDE-Scans//* ",
+            "problemMatcher": []
+            
+        }
+    ],
+    "inputs": [
+        {
+           "id": "projectuuid",
+            "type": "command",
+            "command": "shellCommand.execute",
+            "args": {
+                "command": "grep 'project=' ./.vscode/mend/sca-scan.txt | cut -d '=' -f 2",
+                "useFirstResult": "true"
+            },
+        },
+        {
+            "id": "imagename",
+            "type": "promptString",
+            "description": "Enter your image name and version such as ubuntu:latest"
+        }
+    ]
+}
