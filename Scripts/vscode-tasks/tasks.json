@@ -26,7 +26,7 @@
         {
             "label": "Mend - Dep Scan",
             "type": "shell",
-            "command": "mend dep -u -s *//IDE-Scans//* --export-results ./.vscode/mend/sca-scan.txt",
+            "command": "mend dep -u -r -s \"*//IDE-Scans//*\" --export-results ./.vscode/mend/sca-scan.txt",
             "problemMatcher": []
             
         },
@@ -47,7 +47,7 @@
         {
             "label": "Mend - Code Scan",
             "type": "shell",
-            "command": "mend code -s *//IDE-Scans//* ",
+            "command": "mend code -s \"*//IDE-Scans//*\" ",
             "problemMatcher": []
             
         }
