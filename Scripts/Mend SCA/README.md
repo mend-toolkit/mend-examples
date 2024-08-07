@@ -190,6 +190,7 @@ This script allows a user to retrieve all policies from an organization at every
 * ``export MEND_EMAIL`` - The administrator's email
 * ``export MEND_ORG_UUID`` - API Key for organization (optional)
 * ``export MEND_URL`` - e.g. https://saas.mend.io/
+* ``export MEND_CSV`` - true (optional) - Outputs the data to a csv file.
 
 <br>
 

@@ -22,6 +22,7 @@
 # MEND_EMAIL - The administrator's email
 # MEND_ORG_UUID - API Key for organization (optional)
 # MEND_URL - e.g. https://saas.mend.io/
+# MEND_CSV - true (optional)
 
 # Reformat MEND_URL for the API to https://api-<env>/api/v2.0
 MEND_API_URL=$(echo "${MEND_URL}" | sed -E 's/(saas|app)(.*)/api-\1\2\/api\/v2.0/g')
@@ -135,7 +136,15 @@ for (( i=0; i<=NUM_PRODUCTS-1; i++ )); do
         OUTPUT=$(echo $OUTPUT | jq ".products |= . + [$PRODUCT_DATA]")
 done
 
-# Output the final object
-echo "Result: "
-echo $OUTPUT | jq '.'
-
+echo -e "\n"
+if [ "$MEND_CSV" = "true" ]; then
+        POLICIES_OUTPUT="mend_policies.csv"
+        echo "Type,PolicyName,PolicyOwner,ProductName,ProjectName" > "$POLICIES_OUTPUT"
+        echo $OUTPUT | jq -r '.policies[] | "ORG,\(.policyName),\(.policyOwner),,"' >> "$POLICIES_OUTPUT"
+        echo $OUTPUT | jq -r '.products[] | . as $product | .policies[] | "PRODUCT,\(.policyName),\(.policyOwner),\($product.productName)," '>> "$POLICIES_OUTPUT"
+        echo $OUTPUT | jq -r '.products[] | .projects[] | . as $project | .policies[] | "PROJECT,\(.policyName),\(.policyOwner),\($project.projectName)"' >> "$POLICIES_OUTPUT"
+        echo "Results CSV can be found at $(realpath $POLICIES_OUTPUT)"
+else
+        echo "Result: "
+        echo $OUTPUT | jq '.'
+fi
