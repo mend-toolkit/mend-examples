@@ -22,6 +22,7 @@
 # MEND_EMAIL - The administrator's email
 # MEND_ORG_UUID - API Key for organization (optional)
 # MEND_URL - e.g. https://saas.mend.io/
+# MEND_CSV - true (optional)
 
 # Reformat MEND_URL for the API to https://api-<env>/api/v2.0
 MEND_API_URL=$(echo "${MEND_URL}" | sed -E 's/(saas|app)(.*)/api-\1\2\/api\/v2.0/g')
