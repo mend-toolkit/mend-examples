@@ -118,13 +118,16 @@ Example docker-compose.yaml snippet:
     # ...
 ```
 
+> **_NOTE:_** If you still get `UNABLE_TO_GET_ISSUER_CERT` when remediate-server boots up, use the following ENV var: `NODE_TLS_REJECT_UNAUTHORIZED=0`, for more information see [here](https://github.com/renovatebot/renovate/discussions/27562)
+
+
 #### Appendix: update-java-ca-certificates usage
 
 This utility is created by: https://github.com/swisscom/update-java-ca-certificates.
 The purpose of this utility is to create a keystore at /etc/ssl/java/cacerts without the need for Java. Here are the following steps to run this:
 
-1. Make sure you have added the certificate to the /usr/local/share/ca-certificates  directory and run: ``sudo update-ca-certificates``
-2. The certificate should now be added to your /etc/ssl/certs directory. To confirm you can run: ``ls -al /etc/ssl/certs | grep <your_cert_name>``
+1. Make sure you have added the certificate to the `/usr/local/share/ca-certificates` directory and run: ``sudo update-ca-certificates``
+2. The certificate should now be added to your `/etc/ssl/certs directory`. To confirm you can run: ``ls -al /etc/ssl/certs | grep <your_cert_name>``
 3. Run the update-java-ca-certificates utility with super user privileges: 
 
 ```shell
