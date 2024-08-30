@@ -174,3 +174,16 @@ The host rule provided in the ``config.js`` file will not force Remediate/Renova
 
 > [!NOTE]  
 Many packages don't follow the "SemVer" versioning scheme, which is the default for the ``docker`` manager. Refer to [https://docs.renovatebot.com/docker/#version-compatibility](https://docs.renovatebot.com/docker/#version-compatibility) for details on changing versioning for specific packages. This can be handled directly in the repository and does not need to be handled at the container level. Refer to [https://docs.renovatebot.com/modules/versioning/](https://docs.renovatebot.com/modules/versioning/) for more information on supported versioning schemes and custom versioning.
+
+9. **Ruby**:
+
+   - Does not have any configuration files. Although a ``.gemrc`` file can be used, there is no need with the use of environment variables.
+   - Specifying URL/credentials are different for the scanner and remediate. Both will be specified in this section.
+   - For Renovate, the hostType must be set to "rubygems", and the URL must be in the format: ``https://<artifactory_instance>.jfrog.io/artifactory/<ruby_repository>``.
+      - The credentials are username and password, where the password is the token generated when using Artifactory's "Set Me Up" function.
+   - For the Scanner, set the following environment variables:
+      - ``GEM_HOST: https://<artifactory_instance>.jfrog.io/artifactory/api/gems/<ruby_repository>``
+      - ``GEM_API_KEY: <artifactory_api_key>``
+
+> [!NOTE]
+The Artifactory API Key for your ruby registry can be found by navigating to: ``https://<artifactory_instance>.jfrog.io/artifactory/api/gems/<ruby_repository>/api/v1/api_key.yaml`` in your browser and logging in. After doing so, a file will be downloaded that contains the API key, which you can then copy and paste the value into the environment variable. The value should not include "Basic" or any other form of HTTP Authentication prefixes.

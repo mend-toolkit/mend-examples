@@ -1,0 +1,77 @@
+version: "2"
+services:
+
+
+  remediate:
+    image: wss-remediate:latest
+    container_name: remediate-server
+    environment:
+      LOG_LEVEL: DEBUG
+      RUBY_REGISTRY: "https://<artifactory_instance>.jfrog.io/artifactory/default-ruby"
+      RUBY_USER: "<artifactory_email>"
+      RUBY_PASS: "<artifactory_pass>"
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "/path/to/config.js:/usr/src/app/config.js"
+    restart: always
+    extra_hosts:
+      - "rubygems.org:127.0.0.1"
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+
+
+  app:
+    image: wss-ghe-app:latest
+    container_name: wss-ghe-app
+    environment:
+      LOG_LEVEL: DEBUG
+    ports:
+      - "9494:9494"
+      - "5678:5678"
+    volumes:
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+    depends_on:
+      - remediate
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+
+
+  scanner:
+    image: wss-scanner:latest
+    container_name: wss-scanner-ghe
+    extra_hosts:
+      - "rubygems.org:127.0.0.1"
+    environment:
+      EXTERNAL_LOG_IN_CONSOLE: true
+      LOG_LEVEL: DEBUG
+      GEM_SOURCE: "https://<artifactory_instance>.jfrog.io/artifactory/api/gems/default-ruby"
+      GEM_HOST: "https://<artifactory_instance>.jfrog.io/artifactory/api/gems/default-ruby"
+      GEM_API_KEY: "<artifactory_api_key>"
+    ports:
+      - "9393:9393"
+    volumes:
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+    extra_hosts:
+      - "rubygems.org:127.0.0.1"
+    restart: always
+    depends_on:
+      - app
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+
+
+networks:
+  default:
+    name: my_bridge
+    external: false
