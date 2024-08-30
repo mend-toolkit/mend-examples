@@ -43,7 +43,6 @@ services:
         max-size: 1m
         max-file: "5"
 
-
   scanner:
     image: wss-scanner:latest
     container_name: wss-scanner-ghe
@@ -52,7 +51,6 @@ services:
     environment:
       EXTERNAL_LOG_IN_CONSOLE: true
       LOG_LEVEL: DEBUG
-      GEM_SOURCE: "https://<artifactory_instance>.jfrog.io/artifactory/api/gems/default-ruby"
       GEM_HOST: "https://<artifactory_instance>.jfrog.io/artifactory/api/gems/default-ruby"
       GEM_API_KEY: "<artifactory_api_key>"
     ports:

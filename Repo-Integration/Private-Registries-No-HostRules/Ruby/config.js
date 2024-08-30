@@ -1,6 +1,6 @@
 module.exports = {
 	"packageRules": [{
-		"matchManagers": ["bundler", "puppet", "ruby-version"],
+		"matchManagers": ["bundler", "puppet"],
 		"registryUrls": ["process.env.RUBY_REGISTRY"]
 	}],
 	"hostRules": [{
