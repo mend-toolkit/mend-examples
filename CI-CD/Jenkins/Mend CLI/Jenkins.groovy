@@ -68,7 +68,10 @@ pipeline {
         
         stage('Run Mend SCA') {
             steps {
-               MendSCAScan()
+                echo "Reachability is enabled"
+                MendSCAScan(reachability: true)
+                echo "Reachability is disabled"
+                MendSCAScan(reachability: false)
             }
         }
         stage('Run SCA Reports') {
