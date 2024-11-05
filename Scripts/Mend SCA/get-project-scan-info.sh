@@ -51,7 +51,7 @@ function login() {
 function getAPIData() {
     LAST_PAGE=false
     CURRENT_PAGE=0
-    OUTPUT={"\"projectInfo\": []}"
+    OUTPUT="{\"projectInfo\": []}"
     while ! $LAST_PAGE; do
         CURRENT_PROJECT=$(curl -s --location "$MEND_API_URL/orgs/$MEND_ORG_UUID/entities?pageSize=1&page=$CURRENT_PAGE" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN")
 
@@ -65,11 +65,20 @@ function getAPIData() {
         fi
 
         # Retrieve information for a row of information
-        PROJECT_UUID=$(echo "$CURRENT_PROJECT" | jq -r '.retVal.[0].project.uuid')
-        PROJECT_NAME=$(echo "$CURRENT_PROJECT" | jq -r '.retVal.[0].project.name')
-        PRODUCT_NAME=$(echo "$CURRENT_PROJECT" | jq -r '.retVal.[0].product.name')
-        LAST_SCAN_DATE=$(echo "$CURRENT_PROJECT" | jq -r '.retVal.[0].project | select(.lastScanned != null) | .lastScanned')
-
+        # echo "$CURRENT_PROJECT" | jq -e '.retVal[0] | has("project")'
+        # exit
+        # echo "$CURRENT_PROJECT" | jq -e '.retVal[0] | has("project")' >/dev/null && echo "Key exists" || echo "Key does not exist"
+        result=$(echo "$CURRENT_PROJECT" | jq -r '.retVal[0] | has("project")')
+        if [ "$result" = "true" ] ; then
+            # echo $CURRENT_PROJECT
+            PROJECT_UUID=$(echo "$CURRENT_PROJECT" | jq -r '.retVal[].project.uuid')
+            PROJECT_NAME=$(echo "$CURRENT_PROJECT" | jq -r '.retVal.[].project.name')
+            PRODUCT_NAME=$(echo "$CURRENT_PROJECT" | jq -r '.retVal.[].product.name')
+            LAST_SCAN_DATE=$(echo "$CURRENT_PROJECT" | jq -r '.retVal.[].project | select(.lastScanned != null) | .lastScanned')
+            echo $PROJECT_UUID
+        else
+            continue
+        fi
         if [ -z $LAST_SCAN_DATE ]; then
             LAST_SCAN_DATE="null"
         fi
@@ -84,6 +93,7 @@ function getAPIData() {
         # Get Plugin Version / Name from the vitals
         PLUGIN_NAME=$(echo "$CURRENT_PROJECT_VITALS" | jq -r '.retVal.pluginName')
         PLUGIN_VERSION=$(echo "$CURRENT_PROJECT_VITALS" | jq -r '.retVal.pluginVersion')
+        echo $PLUGIN_NAME
 
         PROJECT_INFO=$(jq --null-input \
             --arg organization "$MEND_ORG_NAME" \
@@ -93,7 +103,7 @@ function getAPIData() {
             --arg pluginName "$PLUGIN_NAME" \
             --arg pluginVersion "$PLUGIN_VERSION" \
             '[{"orgName": $organization, "productName": $product, "projectName": $project, "lastScanDate": $lastScan, "pluginName": $pluginName, "pluginVersion", $pluginVersion}]')
-
+        echo $PROJECT_INFO
         OUTPUT=$(echo $OUTPUT | jq ".projectInfo |= . + $PROJECT_INFO")
     done
 }
