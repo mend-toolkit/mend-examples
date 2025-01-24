@@ -21,23 +21,23 @@
 # 5. Mend Environment URL (without https://) - MEND_URL e.g saas.mend.io
 
  if [ -z $CSV_FILE ]; then
-    echo "Error: Missing CSV_FILE. Provide it as a command-line argument or environment variable."
+    echo "Error: Missing CSV_FILE variable."
     exit 1
   fi
    if [ -z $USER_KEY ]; then
-    echo "Error: Missing USER_KEY. Provide it as a command-line argument or environment variable."
+    echo "Error: Missing USER_KEY variable."
     exit 1
   fi
    if [ -z $ORG_TOKEN ]; then
-    echo "Error: Missing ORG_TOKEN. Provide it as a command-line argument or environment variable."
+    echo "Error: Missing ORG_TOKEN variable."
     exit 1
   fi
    if [ -z $USER_EMAIL ]; then
-    echo "Error: Missing USER_EMAIL. Provide it as a command-line argument or environment variable."
+    echo "Error: Missing USER_EMAIL variable."
     exit 1
   fi
    if [ -z $MEND_URL ]; then
-    echo "Error: Missing MEND_URL. Provide it as a command-line argument or environment variable."
+    echo "Error: Missing MEND_URL variable."
     exit 1
   fi
 
