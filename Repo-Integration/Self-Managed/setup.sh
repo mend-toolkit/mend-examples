@@ -19,6 +19,7 @@ AGENT_PATH=""
 AGENT_TAR=""
 MEND_DIR=""
 BASE_DIR=""
+SHELLTYPE=""
 
 REPO_INTEGRATION_DIR=$(pwd)
 
@@ -93,8 +94,13 @@ function env_port_check() {
     which lsb_release 2>&1 >/dev/null
 
     if [[ $? -ne 0 ]] || [[ $(lsb_release -is | grep Ubuntu) -ne "Ubuntu" ]]; then
-        echo "This script is only supported on Ubuntu distributions"
-        exit 1
+        if [[ $(uname | grep -o ^MINGW64_NT) == "MINGW64_NT" ]]; then
+          echo gitbash
+          exit 1
+        else
+          echo "This script is only supported on Ubuntu distributions"
+          exit 1
+        fi
     fi
 
     ## Check if docker version > 18
