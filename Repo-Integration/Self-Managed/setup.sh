@@ -91,14 +91,14 @@ function get_commandline_flags(){
 
 function env_port_check() {
     ## Check if operating system is Ubuntu
-    which lsb_release 2>&1 >/dev/null
+    lsb_release 2>&1 >/dev/null
 
     if [[ $? -ne 0 ]] || [[ $(lsb_release -is | grep Ubuntu) -ne "Ubuntu" ]]; then
         if [[ $(uname | grep -o ^MINGW64_NT) == "MINGW64_NT" ]]; then
           echo gitbash
           exit 1
         else
-          echo "This script is only supported on Ubuntu distributions"
+          echo "This script is only supported on Ubuntu and Git Bash for Windows distributions"
           exit 1
         fi
     fi
