@@ -1,7 +1,7 @@
 The following scripts can be used to gather data from the Mend.io application and different Source Control Management systems in order to understand how many developers are currently working on repositories throughout the calendar year.
 
 > [!IMPORTANT]
-The project tags repoFullName and remoteUrl are only populated by the [Unified CLI](https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html) and [repository integration](https://docs.mend.io/bundle/integrations/page/repo_integrations.html) scans (with exception for Developer Platform).  [Unified Agent](https://docs.mend.io/bundle/unified_agent/page/getting_started_with_the_unified_agent.html) and [Developer Platform](https://docs.mend.io/bundle/platform/page/mend_developer_platform.html) users will need to provide a list of repositories manually to run the [get-committers.sh](./get-committers.sh) script.
+The project tags repoFullName and remoteUrl are only populated by the [Unified CLI](https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html) and [repository integration](https://docs.mend.io/bundle/integrations/page/repo_integrations.html) scans.  [Unified Agent](https://docs.mend.io/bundle/unified_agent/page/getting_started_with_the_unified_agent.html) and [Developer Platform](https://docs.mend.io/bundle/platform/page/mend_developer_platform.html) users will need to provide a list of repositories manually to run the [get-committers.sh](./get-committers.sh) script.
 
 
 
