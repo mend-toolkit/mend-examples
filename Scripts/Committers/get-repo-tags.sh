@@ -5,7 +5,7 @@
 # Users should edit this file to add any steps for consuming the information provided by the API requests however needed.
 # 
 # For more information on the APIs used, please check our REST API documentation page:
-# ðŸ“š https://docs.mend.io/bundle/mend-api-2-0/page/index.html
+# 📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html
 #
 # ******** Description ********
 # This script pulls all of the projects in an organization and then retrieves the tags for each and grabs the repoFullName and remoteUrl
