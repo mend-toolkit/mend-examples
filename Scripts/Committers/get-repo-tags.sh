@@ -5,7 +5,7 @@
 # Users should edit this file to add any steps for consuming the information provided by the API requests however needed.
 # 
 # For more information on the APIs used, please check our REST API documentation page:
-# 📚 https://docs.mend.io/bundle/mend-api-2-0/page/index.html
+# ðŸ“š https://docs.mend.io/bundle/mend-api-2-0/page/index.html
 #
 # ******** Description ********
 # This script pulls all of the projects in an organization and then retrieves the tags for each and grabs the repoFullName and remoteUrl
@@ -13,6 +13,8 @@
 # 
 # The WS_API_KEY environment variable is optional. If this is not specified in the script, then the Login API will
 # authenticate to the last organization the user accessed in the Mend UI.
+# 
+# MEND_ONLY_UPDATED_REPOS environment variable is optional. If this is set to true, Mend will only retrieve repos that have been updated in the last 90 days according to the Mend UI Last Scan Date
 #
 # Prerequisites:
 # apt install jq curl
@@ -20,6 +22,7 @@
 # MEND_EMAIL - The administrator's email
 # WS_APIKEY - API Key for organization (optional)
 # MEND_URL - e.g. https://saas.mend.io
+# MEND_ONLY_UPDATED_REPOS - true/false (optional)
 
 # Reformat MEND_URL for the API to https://api-<env>/api/v2.0
 MEND_API_URL=$(echo "${MEND_URL}" | sed -E 's/(saas|app)(.*)/api-\1\2\/api\/v2.0/g')
@@ -43,23 +46,49 @@ WS_APIKEY=$(echo $LOGIN_RESPONSE | jq -r '.retVal.orgUuid')
 
 # Get all project entities
 echo "Retrieving Projects from Organization"
+ISLASTPAGE=false
+ALL_ENTITIES=()
+while [ $ISLASTPAGE = "false" ]; do
+	ENTITY_RESPONSE=$(curl -s --location "$MEND_API_URL/orgs/$WS_APIKEY/entities?pageSize=10000&page=0" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN")
+ 
+  ENTITIES=$(echo $ENTITY_RESPONSE | jq '.retVal')
+	ISLASTPAGE=$(echo $ENTITY_RESPONSE | jq -r '.additionalData.isLastPage' )
+	ALL_ENTITIES+=$ENTITIES
+done
 
-ENTITY_RESPONSE=$(curl -s --location "$MEND_API_URL/orgs/$WS_APIKEY/entities?pageSize=10000&page=0" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN")
-NUM_ENTITIES=$(echo $ENTITY_RESPONSE | jq -r '.additionalData.totalItems' )
-ENTITIES=$(echo $ENTITY_RESPONSE | jq '.retVal')
-PROJECT_ENTITIES=$(echo $ENTITIES | jq -r '[.[] | .project]')
+PROJECT_ENTITIES=$(echo $ALL_ENTITIES | jq -r '[.[] | select(has("project")) | .project]')
+if [ "$MEND_ONLY_UPDATED_REPOS" = "true" ]; then
+
+  echo "Filtering Projects that have not been scanned in 90 days"
+	NINETY_DAYS_AGO=$(date -d "-91 days" +%s)
+
+  NO_SCAN_DATE=$(echo $PROJECT_ENTITIES | jq '[.[] | select(has("lastScanned") | not)]')
+	PROJECT_ENTITIES=$(echo $PROJECT_ENTITIES | jq -r --argjson cutoff $NINETY_DAYS_AGO  '[.[] | select((.lastScanned | fromdateiso8601? // 0) > $cutoff)]')
+
+  if [ -n "$NO_SCAN_DATE" ]; then
+    NO_DATE_PROJECT_NAMES=$(echo $NO_SCAN_DATE | jq -r ".[].name" )
+    echo -e "\n\nProjects with no Last Scan Date"
+    echo "-----------------"
+    printf '%s\n' "${NO_DATE_PROJECT_NAMES[@]}"
+    # Optional - save to text file
+    echo "${NO_DATE_PROJECT_NAMES[@]}" >> no_scan_Date.txt
+  fi
+fi
+NUM_ENTITIES=$(echo $PROJECT_ENTITIES | jq 'length' )
 
 # These output variable starts with nothing, and will get populated with data as we pull the tags for each project.
 REPOFULLNAME=()
 REMOTEURL=()
 
+echo -e "\n\nGetting Tags"
+echo "-----------------"
 # Loop through each entity in $PROJECT_ENTITIES and get the tag repoFullName.
 for (( i=0; i<=$NUM_ENTITIES-1; i++ ))
 do
         CURRENT_PROJECT_NAME=$(echo $PROJECT_ENTITIES | jq -r ".[$i].name" )
         echo "Getting TAGS for PROJECT $(($i+1))/$NUM_ENTITIES: $CURRENT_PROJECT_NAME"
 		
-    	CURRENT_PROJECT_TAGS=$(echo $PROJECT_ENTITIES | jq ".[$i].tags" )
+    	  CURRENT_PROJECT_TAGS=$(echo $PROJECT_ENTITIES | jq ".[$i].tags" )
 
         REPOFULLNAME_TAG=$(echo $CURRENT_PROJECT_TAGS | jq -r '.[] | select(.key | startswith("repoFullName")) | .value')
         REPOFULLNAME+=($REPOFULLNAME_TAG)
@@ -67,6 +96,8 @@ do
         REMOTEURL_TAG=$(echo $CURRENT_PROJECT_TAGS | jq -r '.[] | select(.key | startswith("remoteUrl")) | .value')
         REMOTEURL+=($REMOTEURL_TAG)
 done
+
+
 
 # Extract all the information we need for an alert
 echo -e "\n\nAll repoFullName Repositories"
