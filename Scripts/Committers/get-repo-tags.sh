@@ -47,13 +47,15 @@ WS_APIKEY=$(echo $LOGIN_RESPONSE | jq -r '.retVal.orgUuid')
 # Get all project entities
 echo "Retrieving Projects from Organization"
 ISLASTPAGE=false
+PAGE_COUNTER=0
 ALL_ENTITIES=()
 while [ $ISLASTPAGE = "false" ]; do
-	ENTITY_RESPONSE=$(curl -s --location "$MEND_API_URL/orgs/$WS_APIKEY/entities?pageSize=10000&page=0" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN")
+	ENTITY_RESPONSE=$(curl -s --location "$MEND_API_URL/orgs/$WS_APIKEY/entities?pageSize=10000&page=$PAGE_COUNTER" --header 'Content-Type: application/json' --header "Authorization: Bearer $JWT_TOKEN")
  
-  ENTITIES=$(echo $ENTITY_RESPONSE | jq '.retVal')
+  	ENTITIES=$(echo $ENTITY_RESPONSE | jq '.retVal')
 	ISLASTPAGE=$(echo $ENTITY_RESPONSE | jq -r '.additionalData.isLastPage' )
 	ALL_ENTITIES+=$ENTITIES
+	PAGE_COUNTER+=1
 done
 
 PROJECT_ENTITIES=$(echo $ALL_ENTITIES | jq -r '[.[] | select(has("project")) | .project]')
