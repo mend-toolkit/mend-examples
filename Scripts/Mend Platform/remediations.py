@@ -59,14 +59,17 @@ print("Number of scans: " + str(numScans))
 
 scannum = 0
 uuids = set()
+scans= set()
 newuuids = set()
+allfindings = dict()
 #types = []
 #files = []
 #lines = []
 remediations = set()
 
 for scan in scansresp['retVal']:
-  print(scan['uuid'])
+  thisscanid = scan['uuid']
+  print(thisscanid)
   resultsUrl = 'https://saas.mend.io/bff/api/projects/' + projectUuid + '/sast/scans/' + scan['uuid'] + '/results'
   resultsHeaders = dict()
   resultsHeaders['authorization'] = 'Bearer ' + jwtToken
@@ -77,18 +80,14 @@ for scan in scansresp['retVal']:
 
   if scannum == 0:
     for finding in resultsresp['retVal']['rows']:
-      # print(finding['vulnerability']['uuid'] + " " + finding['vulnerability']['type'] + " " + finding['vulnerability']['file'] + " " + str(finding['vulnerability']['line']))
-      uuids.add(finding['vulnerability']['uuid'])
-      #types.append(finding['vulnerability']['type'])
-      #files.append(finding['vulnerability']['file'])
-      #lines.append(finding['vulnerability']['line'])
-    #print(len(uuids))
-    #for i in range(len(uuids)):
-      #print(uuids[i] + " " + types[i] + " " + files[i] + " " + str(lines[i]))
+      thisuuid = finding['vulnerability']['uuid']
+      uuids.add(thisuuid)
+      allfindings[thisuuid] = thisscanid
   else:
     for finding in resultsresp['retVal']['rows']:
       newuuids.add(finding['vulnerability']['uuid'])
-    remediations.update(uuids.difference(newuuids))
+    thisremediations = uuids.difference(newuuids)
+    remediations.update(thisremediations)
     print("Remediations: " + str(remediations))
     newones = newuuids.difference(uuids)
     print("New ones: " + str(newones))
@@ -99,6 +98,9 @@ for scan in scansresp['retVal']:
       #   remediations.append(finding['vulnerability']['uuid'])
   scannum += 1
 
+for foo in remediations:
+  print(foo + " === " + allfindings[foo])
+# print(allfindings)
 
 # wb = Workbook()
 # ws = wb.active
