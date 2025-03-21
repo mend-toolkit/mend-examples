@@ -14,8 +14,10 @@ args = parser.parse_args()
 
 email = args.email
 userKey = args.userkey
-startDate = args.startdate
-finishDate = args.finishdate
+startDate = datetime.datetime.fromisoformat(args.startdate)
+finishDate = datetime.datetime.fromisoformat(args.finishdate)
+print(startDate)
+print(finishDate)
 projectUuid = args.projectuuid
 
 
@@ -62,79 +64,67 @@ uuids = set()
 scans= set()
 newuuids = set()
 allfindings = dict()
-#types = []
-#files = []
-#lines = []
 remediations = set()
 
-for scan in scansresp['retVal']:
-  thisscanid = scan['uuid']
-  print(thisscanid)
-  resultsUrl = 'https://saas.mend.io/bff/api/projects/' + projectUuid + '/sast/scans/' + scan['uuid'] + '/results'
-  resultsHeaders = dict()
-  resultsHeaders['authorization'] = 'Bearer ' + jwtToken
-  resultsHeaders['Content-Type'] = 'application/json'
-  resultsr = requests.post(resultsUrl, headers=resultsHeaders, data='{"startRow": 0, "endRow": 9999, "rowGroupCols": [], "valueCols": [], "pivotCols": [], "pivotMode": false, "groupKeys": [], "filterModel": {}, "sortModel": [ { "sort": "desc", "colId": "severity" } ] }')
-  resultsr.raise_for_status()
-  resultsresp = json.loads(resultsr.text)
 
-  if scannum == 0:
-    for finding in resultsresp['retVal']['rows']:
-      thisuuid = finding['vulnerability']['uuid']
-      uuids.add(thisuuid)
-      allfindings[thisuuid] = thisscanid
-  else:
-    for finding in resultsresp['retVal']['rows']:
-      newuuids.add(finding['vulnerability']['uuid'])
-    thisremediations = uuids.difference(newuuids)
-    remediations.update(thisremediations)
-    print("Remediations: " + str(remediations))
-    newones = newuuids.difference(uuids)
-    print("New ones: " + str(newones))
-    uuids.update(newones)
-      # if finding['vulnerability']['uuid'] in uuids:
-      #   print("Found " + finding['vulnerability']['uuid'])
-      # else:
-      #   remediations.append(finding['vulnerability']['uuid'])
-  scannum += 1
+for scan in scansresp['retVal']:
+  newuuids.clear()
+  thisscanid = scan['uuid']
+  scanTime = datetime.datetime.fromisoformat(scan['scanTime'])
+  scanTimeNaive = scanTime.replace(tzinfo=None)
+  # print("Scan "+thisscanid+" has datetime "+str(scanTimeNaive))
+  if scanTimeNaive >= startDate and scanTimeNaive <= finishDate:
+    # print(thisscanid+" processed; inside of date range. ")
+    resultsHeaders = dict()
+    resultsHeaders['authorization'] = 'Bearer ' + jwtToken
+    resultsHeaders['Content-Type'] = 'application/json'
+    resultsUrl = 'https://saas.mend.io/bff/api/projects/' + projectUuid + '/sast/scans/' + scan['uuid'] + '/results'
+    resultsr = requests.post(resultsUrl, headers=resultsHeaders, data='{"startRow": 0, "endRow": 9999, "rowGroupCols": [], "valueCols": [], "pivotCols": [], "pivotMode": false, "groupKeys": [], "filterModel": {}, "sortModel": [ { "sort": "desc", "colId": "severity" } ] }')
+    resultsr.raise_for_status()
+    resultsresp = json.loads(resultsr.text)
+
+    if scannum == 0:
+      for finding in resultsresp['retVal']['rows']:
+        thisuuid = finding['vulnerability']['uuid']
+        uuids.add(thisuuid)
+        allfindings[thisuuid] = thisscanid
+    else:
+      for finding in resultsresp['retVal']['rows']:
+        thisuuid = finding['vulnerability']['uuid']
+        newuuids.add(thisuuid)
+        allfindings[thisuuid] = thisscanid
+      thisremediations = uuids.difference(newuuids)
+      remediations.update(thisremediations)
+      # print("Remediations: " + str(remediations))
+      newones = newuuids.difference(uuids)
+      # print("New ones: " + str(newones))
+      uuids.update(newones)
+    scannum += 1
+  #else:
+    #print("Scan "+thisscanid+" skipped; outside of date range. ")
+
+wb = Workbook()
+ws = wb.active
 
 for foo in remediations:
-  print(foo + " === " + allfindings[foo])
-# print(allfindings)
+  # print("foo: " + foo)
+  # print(" --- allfindings[foo]: " + allfindings[foo])
+  remedsUrl = 'https://saas.mend.io/bff/api/projects/' + projectUuid + '/sast/scans/' + allfindings[foo] + '/findings/' + foo
+  # 	https://saas.mend.io/bff/api/projects/de94d8d0-9f97-4f05-bebd-53ee1c8b5572/sast/scans/3943a076-ddde-4cfe-838e-93db6df4a3d3/findings/122883d7-4f0b-4acb-b38c-a4969ea1a7ac
+  # print(remedsUrl)
+  remedsr = requests.get(remedsUrl, headers=resultsHeaders)
+  remedsr.raise_for_status()
+  remedsresp = json.loads(remedsr.text)
+  id = remedsresp['retVal']['id']
+  type = remedsresp['retVal']['type']['name']
+  language = remedsresp['retVal']['type']['language']
+  createdTime = remedsresp['retVal']['createdTime']
+  severity = remedsresp['retVal']['severity']
+  name = remedsresp['retVal']['sharedStep']['name']
+  file = remedsresp['retVal']['sharedStep']['file']
+  line = str(remedsresp['retVal']['sharedStep']['line'])
+  remedline = [id,type,language,createdTime,severity,name,file,line]
+  ws.append(remedline)
+  print(remedline)
 
-# wb = Workbook()
-# ws = wb.active
-# ws.append(['Vulnerability totals for projects with label(s): ' + args.labels + ' at ' + str(datetime.datetime.now())])
-# xlHeader = ['Total Vulns','Total Critical Vulns','Total High Vulns','Total Medium Vulns','Total Low Vulns','SCA Vulns','SCA Critical Vulns','SCA High Vulns','SCA Medium Vulns','SCA Low Vulns','SAST Vulns','SAST High Vulns','SAST Medium Vulns','SAST Low Vulns','Image Vulns','Image Critical Vulns','Image High Vulns','Image Medium Vulns','Image Low Vulns']
-# ws.append(xlHeader)
-
-
-# scaCritical = int(vulnsresp['retVal']['totalSummary']['vulnerabilities']['critical'])
-# scaHigh = int(vulnsresp['retVal']['totalSummary']['vulnerabilities']['high'])
-# scaMedium = int(vulnsresp['retVal']['totalSummary']['vulnerabilities']['medium'])
-# scaLow = int(vulnsresp['retVal']['totalSummary']['vulnerabilities']['low'])
-# scaTotal = scaCritical+scaHigh+scaMedium+scaLow
-
-# sastHigh = int(vulnsresp['retVal']['totalSummary']['sastVulnerabilities']['high'])
-# sastMedium = int(vulnsresp['retVal']['totalSummary']['sastVulnerabilities']['medium'])
-# sastLow = int(vulnsresp['retVal']['totalSummary']['sastVulnerabilities']['low'])
-# sastTotal = sastHigh+sastMedium+sastLow
-
-# imgCritical = int(vulnsresp['retVal']['totalSummary']['imgScan']['critical'])
-# imgHigh = int(vulnsresp['retVal']['totalSummary']['imgScan']['high'])
-# imgMedium = int(vulnsresp['retVal']['totalSummary']['imgScan']['medium'])
-# imgLow = int(vulnsresp['retVal']['totalSummary']['imgScan']['low'])
-# imgTotal = imgCritical+imgHigh+imgMedium+imgLow
-
-# #note we do NOT pull the Unified totals from the summary response like we do for each scan type above, because as of 5/20/2024 the Unified total is off by one
-# #the MP UI must sum the individual engine counts itself as well, because its totals are correct
-
-# unifiedCritical = scaCritical+imgCritical
-# unifiedHigh = scaHigh+sastHigh+imgHigh
-# unifiedMedium = scaMedium+sastMedium+imgMedium
-# unifiedLow = scaLow+sastLow+imgLow
-# unifiedTotal = unifiedCritical+unifiedHigh+unifiedMedium+unifiedLow
-
-# ws.append([unifiedTotal,unifiedCritical,unifiedHigh,unifiedMedium,unifiedLow,scaTotal,scaCritical,scaHigh,scaMedium,scaLow,sastTotal,sastHigh,sastMedium,sastLow,imgTotal,imgCritical,imgHigh,imgMedium,imgLow])
-
-# wb.save(orgName+".xlsx")
+wb.save("foo.xlsx")
