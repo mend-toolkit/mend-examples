@@ -4,20 +4,18 @@ from openpyxl import Workbook
 import argparse
 import datetime
 
-parser = argparse.ArgumentParser('remediations.py','help goes here')
-parser.add_argument('-p', '--projectuuid')
-parser.add_argument('-s', '--startdate')
-parser.add_argument('-f', '--finishdate')
-parser.add_argument('-e', '--email')
-parser.add_argument('-u', '--userkey')
+parser = argparse.ArgumentParser('remediations.py','This script creates an XLS spreadsheet containing the SAST vulnerabilities that were remediated within a supplied scan date range.')
+parser.add_argument('-p', '--projectuuid', required=True)
+parser.add_argument('-s', '--startdate', required=True)
+parser.add_argument('-f', '--finishdate', required=True)
+parser.add_argument('-e', '--email', required=True)
+parser.add_argument('-u', '--userkey', required=True)
 args = parser.parse_args()
 
 email = args.email
 userKey = args.userkey
 startDate = datetime.datetime.fromisoformat(args.startdate)
 finishDate = datetime.datetime.fromisoformat(args.finishdate)
-print(startDate)
-print(finishDate)
 projectUuid = args.projectuuid
 
 
@@ -105,6 +103,7 @@ for scan in scansresp['retVal']:
 
 wb = Workbook()
 ws = wb.active
+ws.append(["Vuln UUID","Vuln Type","Vuln Language","Vuln Created Time","Vuln Severity","Sink function name","Sink File","Sink Line Number"])
 
 for foo in remediations:
   # print("foo: " + foo)
@@ -127,4 +126,4 @@ for foo in remediations:
   ws.append(remedline)
   print(remedline)
 
-wb.save("foo.xlsx")
+wb.save("SASTRemediations.xlsx")
