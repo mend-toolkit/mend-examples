@@ -7,8 +7,10 @@ This script demonstrates how to convert third-party SAST findings into a format 
 
 - Mend requires access to the code base in order to import 3rd party results. Access to the code base will allow Mend to keep track of suppressed vulnerabilities as well as generate snippets like a regular Mend scan.
 
-- In order to import results, the file to be imported must a pre-defined schema found in the Mend documentation. 
+- In order to import results, the file to be imported must a pre-defined schema found in the [Mend documentation](https://docs.mend.io/platform/latest/integrate-third-party-code-scan-results-into-mend-#Integratethird-partyCodeScanResultsintoMendSAST-JSONSchema). 
 Below is the minumum viable input file. Each field in the JSON below is required.
+> [!NOTE]  
+> Each CWE must have a unique name. If a duplicate name is provided, the all types of the same name will be reported under the last read CWE with that name.
 
 ```json
 {
