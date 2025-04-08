@@ -1,0 +1,1315 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$id": "https://raw.githubusercontent.com/mend-toolkit/mend-examples/main/Repo-Integration/Schemas/ghc-integration-schema.json",
+  "title": "Mend for Github.com Integration .whitesource file schema",
+  "description": "The schema used for Mend for Github Enterprise .whitesource files and repo-config.json",
+  "type": "object",
+  "properties": {
+    "settingsInheritedFrom": {
+      "description": "Where to inherit repository configuration from.\nMust be in the format: <organization>/<repository>@<branch> where a repo-config.json file is located.\n(Integration Default: \"\")",
+      "type": "string",
+      "pattern": "[a-zA-Z0-9-_]+/[a-zA-Z0-9-_]+@[a-zA-Z0-9-_]+",
+      "default": ""
+    },
+    "scanSettings": {
+      "description": "Settings to determine how the integration scans your repository.",
+      "type": "object",
+      "additionalProperties": false,
+      "default": {
+        "configMode": "AUTO",
+        "baseBranches": [],
+        "configExternalURL": ""
+      },
+      "properties": {
+        "configMode": {
+          "description": "Where to pull Unified Agent configurations from - Accepted Values: AUTO, LOCAL, EXTERNAL.\nAUTO - Use default integration settings.\nLOCAL - Use settings specified in the whitesource.config file in the repository (not supported in a repo-config.json file).\nEXTERNAL - External link to a whitesource.config file.\n(Integration Default: AUTO)",
+          "type": "string",
+          "enum": [
+            "AUTO",
+            "LOCAL",
+            "EXTERNAL"
+          ],
+          "default": "AUTO"
+        },
+        "configExternalURL": {
+          "description": "The external link value for \"configMode\". Required if configMode = \"EXTERNAL\"\n(Integration Default: \"\")",
+          "type": "string",
+          "default": ""
+        },
+        "baseBranches": {
+          "description": "Branches that should be scanned and reported on by the Mend Integration.\n(Integration Default: [])",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "cloneSubModules": {
+          "description": "Whether to include git submodules as part of the scan.\n(Integration Default: false)",
+          "type": "boolean",
+          "default": false
+        },
+        "enableLicenseViolations": {
+          "description": "Whether to generate a License Check for a valid push.\nThis utilizes policies in the Mend UI that begin with [License]\n(Integration Default: false)",
+          "type": "boolean",
+          "default": false
+        },
+        "javaVersion": {
+          "description": "Defines the version of java to use when scanning an onboarded repository.\nAvailable Values: [8, 11,17]\n(Integration Default: 17)",
+          "type": "number",
+          "enum": [
+            8,
+            11,
+            17
+          ],
+          "default": 17
+        },
+        "projectToken": {
+          "description": "Adds the ability to map a Github repository to an existing Mend Project. This must be in the form of a project token.\n(Integration Default: \"\")",
+          "type": "string",
+          "default": ""
+        },
+        "releaseBranches": {
+          "description": "Any branch listed in this property will be scanned upon receiving a valid push to this branch.\nA project will also be created for each release branch in the Mend UI. These can be specified in the form of a regular expression.\n(Integration Default: [])",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "scanDependabotPR": {
+          "description": "Determine the behavior of scanning Dependabot Pull Requests.\n(Integration Default: false)",
+          "type": "boolean",
+          "default": false
+        },
+        "repoNameSync": {
+          "description": "Sync's the Product's name in the Mend UI with the Repo Name. If the Repository name has changed then the product's name will change after a new scan.\n(Integration Default: false)",
+          "type": "boolean",
+          "default": false
+        },
+        "skipScanningStage": {
+          "description": "Controls what stages of the scanning process will be skipped for specific package managers.\nThe three stages of scanning that can be controlled are: connectivity, config, preStep.\n(Integration Default: {})",
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "default": {
+            "connectivity": [],
+            "config": [],
+            "preStep": []
+          },
+          "properties": {
+            "connectivity": {
+              "$ref": "#/definitions/reusedModels/scanningStagePackageManager"
+            },
+            "config": {
+              "$ref": "#/definitions/reusedModels/scanningStagePackageManager"
+            },
+            "preStep": {
+              "$ref": "#/definitions/reusedModels/scanningStagePackageManager"
+            }
+          }
+        },
+        "exploitability": {
+          "description": "Whether data around exploitability will be displayed under issues and security checks.\n(Integration Default: false)",
+          "type": "boolean",
+          "default": false
+        },
+        "enableReachability": {
+          "description": "Required to enable Mend Reachability scans.\n(Integration Default: false)",
+          "type": "boolean",
+          "default": false
+        },
+        "reachabilityScanDelayHours": {
+          "description": "Specifies the time interval for triggering an SCA + Reachability check run after code commits that include changes to the existing supported files.\nRequires \"enableReachability\" = true (Integration Default: 48)",
+          "type": "number",
+          "default": 48
+        },
+        "enableIaC": {
+          "description": "Whether to enable an IAC checkrun for each valid push.\n(Integration Default: false).",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "scanSettingsSAST": {
+      "description": "Settings for SAST scans",
+      "type": "object",
+      "additionalProperties": false,
+      "default": {
+        "enableScan": false,
+        "scanPullRequests": false,
+        "incrementalScan": true,
+        "baseBranches": [],
+        "snippetSize": 10
+      },
+      "properties": {
+        "enableScan": {
+          "description": "Whether to enable SAST Scans.\n(Integration Default: false)",
+          "type": "boolean",
+          "default": false
+        },
+        "baseBranches": {
+          "description": "Triggers a SAST scan for each commit on the specified branch.\nCurrently only supports one base branch. This will be extended in a future release.\n(Integration Default: <default branch>)",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 1,
+          "default": []
+        },
+        "scanPullRequests": {
+          "description": "Whether to scan pull requests or not.\n(Integration Default: false)",
+          "type": "boolean",
+          "default": false
+        },
+        "incrementalScan": {
+          "description": "Enable a faster scan by outputting results which are relative to the previous scan. The previous scan it refers to is the last scan on the base branch.\n(Integration Default: true)",
+          "type": "boolean",
+          "default": true
+        },
+        "snippetSize": {
+          "description": "Adjust the amount of lines that are displayed in the snippets that appear in the MendSAST application under the findings details section.\n(Integration Default: 10)",
+          "type": "number",
+          "default": 10
+        },
+        "configExternalURL": {
+          "description": "The url where where the external .mendsastcli-config.json file is hosted.\nMust be in URL format - supports http, https, and ftp protocols.",
+          "type": "string",
+          "pattern": "(http|https|ftp)://.+",
+          "default": ""
+        }
+      }
+    },
+    "imageSettings": {
+      "description": "Settings for image scans",
+      "type": "object",
+      "additionalProperties": false,
+      "default": {
+        "imageTracing": {
+          "enableImageTracingPR": false,
+          "addRepositoryCoordinates": false,
+          "addDockerfilePath": false
+        }
+      },
+      "properties": {
+        "imageTracing": {
+          "description": "Image Tracing Settings",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enableImageTracingPR": {
+              "description": "Activate Dockerfile labeling.\n(Integration Default: false)",
+              "type": "boolean",
+              "default": false
+            },
+            "addDockerfilePath": {
+              "description": "Add the relative path of the Dockerfile within the repository as a label in the Dockerfile.\n(Integration Default: false)",
+              "type": "boolean",
+              "default": false
+            },
+            "addRepositoryCoordinates": {
+              "description": "Adds the repository URL as a label in the Dockerfile.\n(Integration Default: false)",
+              "type": "boolean",
+              "default": false
+            }
+          }
+        }
+      }
+    },
+    "checkRunSettings": {
+      "description": "Settings to determine how the Github.com checkrun behaves.",
+      "type": "object",
+      "additionalProperties": false,
+      "default": {
+        "vulnerableCheckRunConclusionLevel": "failure",
+        "displayMode": "diff",
+        "useMendCheckNames": true
+      },
+      "properties": {
+        "displayMode": {
+          "description": "The type of mode to display for the checkrun.\ndiff - the difference between two commits.\nbaseline - summary of all detected vulnerabilities.\n(Integration Default: diff)",
+          "type": "string",
+          "enum": [
+            "baseline",
+            "diff"
+          ],
+          "default": "diff"
+        },
+        "vulnerableCheckRunConclusionLevel": {
+          "description": "Determines how a checkrun is displayed after a vulnerable checkrun is the result.\nsuccess - The checkrun succeeds.\nfailure - The checkrun fails and blocks any branch protection policies/pipelines.\nnone - A checkrun is not created.\n(Integration Default: failure)",
+          "type": "string",
+          "enum": [
+            "success",
+            "failure",
+            "none"
+          ],
+          "default": "failure"
+        },
+        "licenseCheckRunConclusionLevel": {
+          "description": "Determines how a license checkrun is displayed after the checkrun results in a license that violates policy.\nsuccess - The checkrun succeeds.\nfailure - The checkrun fails and blocks any branch protection policies/pipelines.\nOnly necessary if \"scanSettings.enableLicenseViolations=true\" and \"vulnerableCheckRunConclusionLevel != none\"\n(Integration Default: failure)",
+          "type": "string",
+          "enum": [
+            "success",
+            "failure"
+          ],
+          "default": "failure"
+        },
+        "showWsInfo": {
+          "description": "Determines whether to show additional Mend information such as the project token in the checkrun.\n(Integration Default: false)",
+          "type": "boolean",
+          "default": false
+        },
+        "useMendCheckNames": {
+          "description": "Determines the name of all checkRuns created by the integration. If set to true, then the name \"Mend\" is used. Otherwise, \"Whitesource\" is used.\n(Integration Default: true)",
+          "type": "boolean",
+          "default": true
+        },
+        "strictMode": {
+          "description": "Controls the messaging and status of a checkrun that results in a partial scan.\nfailure - Partial scans show detailed partial scan info and fails the checkrun.\nwarning - Partial scans show detailed info but does not affect the checkRun.\nnone - Partial Scan information will not be printed and the checkRun will not be affected.\nRequires \"checkRunSettings.vulnerableCheckRunConclusionLevel == failure\"\n(Integration Default: none)",
+          "type": "string",
+          "enum": [
+            "failure",
+            "warning",
+            "none"
+          ],
+          "default": "none"
+        },
+        "strictModeCustomMessage": {
+          "description": "A custom message that will get printed out by the integration in the checkRun message. Accepts HTML.\nRequired \"strictMode\" == warning or failure.\n(Integration Default: \"\")",
+          "type": "string",
+          "default": ""
+        },
+        "failOnVulnerabilityMinCvss": {
+          "description": "The minimum CVSS score with which to fail a checkrun.\nRequires \"vulnerableCheckRunConclusionLevel\" == failure.\n(Integration Default: 0.0)",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 0.0
+        },
+        "failOnVulnerabilityMinSeverity": {
+          "description": "The minimum vulnerability severity that will fail a checkrun.\nRequires \"vulnerableCheckRunConclusionLevel\" == failure.\n(Integration Default: low)",
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ],
+          "default": "low"
+        },
+        "iacCheckRunConclusionLevel": {
+          "description": "Define the conclusion status for when a Mend IaC Check is completed.\nRequires \"scanSettings.enableIaC\" == failure.\n(Integration Default: failure)",
+          "type": "string",
+          "enum": [
+            "success",
+            "failure"
+          ],
+          "default": "failure"
+        }
+      }
+    },
+    "checkRunSettingsSAST": {
+      "description": "CheckRun settings for SAST Scans.",
+      "type": "object",
+      "additionalProperties": false,
+      "default": {
+        "checkRunConclusionLevel": "failure",
+        "severityThreshold": "high"
+      },
+      "properties": {
+        "checkRunConclusionLevel": {
+          "description": "Determine when the commit should return a failure or success on \"New Findings\" introduced in the commit.\n(Integration Default: failure)",
+          "type": "string",
+          "enum": [
+            "failure",
+            "success"
+          ],
+          "default": "failure"
+        },
+        "severityThreshold": {
+          "description": "Set the threshold of \"New Findings\" introduced in the commit that would trigger \"checkRunConclusionLevel\" to return a failed build.\n(Integration Default: high)",
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "default": "high"
+        }
+      }
+    },
+    "releaseBranchSettings": {
+      "description": "Settings to apply when scanning release branches. Release Branches must be enabled to use these settings.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "checkRunSettings": {
+          "description": "Checkrun settings to apply to scans on release branches.\n(Integration Default: {})",
+          "type": "object",
+          "additionalproperties": false,
+          "properties": {
+            "failOnLicenseViolation": {
+              "description": "Determines whether the checkrun on a release branch should fail if there is a license violation.\n(Integration Default: false)",
+              "type": "boolean",
+              "default": false
+            },
+            "showWsInfo": {
+              "description": "Determines whether to show additional Mend information such as the project token inside the check run.\n(Integration Default: false)",
+              "type": "boolean",
+              "default": false
+            },
+            "strictMode": {
+              "description": "Controls the messaging and status of security and license checks in release branches in case of partial scan results.\n(Integration Default: none)",
+              "type": "string",
+              "enum": [
+                "none",
+                "warning",
+                "failure"
+              ],
+              "default": "none"
+            },
+            "failOnVulnerabilityMinCvss": {
+              "description": "Determines the minimum cvss score that will result in a failed checkrun.\n(Integration Default: 0.0)",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 10,
+              "default": 0.0
+            },
+            "failOnVulnerabilityMinSeverity": {
+              "description": "Determines the minimum severity that will result in a failed checkrun.\n(Integration Default: low)",
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high",
+                "critical"
+              ],
+              "default": "low"
+            },
+            "failOnIacFindings": {
+              "description": "Determines whether a Mend Check Run in release branches should be marked as failed when an IaC violation is detected.\nRequires \"scanSettings.enableIaC\" == true.\n(Integration Default: false)",
+              "type": "boolean",
+              "default": false
+            }
+          }
+        }
+      }
+    },
+    "issueSettings": {
+      "description": "Settings that describe how issues should be created.",
+      "type": "object",
+      "additionalProperties": false,
+      "default": {
+        "minSeverityLevel": "low",
+        "issueType": "DEPENDENCY"
+      },
+      "properties": {
+        "minSeverityLevel": {
+          "description": "Define Github issue creation on a minimum severity level for a vulnerability.\n(Integration Default: low)",
+          "type": "string",
+          "enum": [
+            "none",
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ],
+          "default": "low"
+        },
+        "minVulnerabilityScore": {
+          "description": "Define Github issue creation based on a minimum cvss score for a vulnerability.\n(Integration Default: 0.0)",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 0.0
+        },
+        "maxVulnerabilityScore": {
+          "description": "Define Github issue creation based on a maximum cvss score for a vulnerability.\n(Integration Default: 10.0)",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 10.0
+        },
+        "displayLicenseViolations": {
+          "description": "Create Github issues on every detected license policy violation.\n(Integration Default: true if scanSettings.enableLicenseViolations=true)",
+          "type": "boolean",
+          "default": true
+        },
+        "issueType": {
+          "description": "Define how vulnerabilities are grouped in Github Issues.\nDEPENDENCY = Group all vulnerabilities into one issue for a dependency.\nVULNERABILITY = One issue per vulnerability.\n(Integration Default: DEPENDENCY).",
+          "type": "string",
+          "enum": [
+            "VULNERABILITY",
+            "DEPENDENCY"
+          ],
+          "default": "DEPENDENCY"
+        },
+        "customLabels": {
+          "description": "Define labels that will be added to Github issues created after a scan.\n(Integration Default: [])",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "assignees": {
+          "description": "Define users that will be assigned to the Github issues that are created after a scan.\n(Integration Default: [])",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "iacIssues": {
+          "description": "Whether to generate findings for IaC issues.\n(Integration Default: false)",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "remediateSettings": {
+      "description": "Define settings for remediate/renovate.",
+      "type": "object",
+      "required": [
+        "workflowRules"
+      ],
+      "allOf": [
+        {
+          "$ref": "https://docs.renovatebot.com/renovate-schema.json"
+        }
+      ],
+      "default": {
+        "workflowRules": {
+          "enabled": true
+        }
+      },
+      "properties": {
+        "enableRenovate": {
+          "description": "Whether to enable Renovate along with Remediate functionality.\n(Integration Default: false)",
+          "type": "boolean",
+          "default": false
+        },
+        "workflowRules": {
+          "description": "Used to specify the rules that regulate when to open remediation pull requests.",
+          "type": "object",
+          "required": [
+            "enabled"
+          ],
+          "properties": {
+            "enabled": {
+              "description": "enable workflow rules for automatic remediation pull requests.\n(Integration Default: true)",
+              "type": "boolean",
+              "default": true
+            },
+            "minVulnerabilitySeverity": {
+              "description": "The minimum vulnerability severity for automatic remediation pull requests.\n(Integration Default: low)",
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high",
+                "critical"
+              ],
+              "default": "low"
+            },
+            "minVulnerabilityScore": {
+              "description": "The minimum CVSS Score for automatic remediation pull requests to be created.\n(Integration Default: 0.0)",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 10,
+              "default": 0.0
+            },
+            "maxVulnerabilityScore": {
+              "description": "The maxiumum CVSS Score for automatic remediation pull requests to be created.\n(Integration Default: 10.0)",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 10,
+              "default": 10.0
+            }
+          }
+        }
+      }
+    },
+    "hostRules": {
+      "description": "Host Rules to provide credentials to the integration for private registries.\nMust have either a userName/password combo, or token.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "matchHost",
+          "hostType",
+          "encrypted"
+        ],
+        "additionalProperties": false,
+        "default": {
+          "hostType": "",
+          "matchHost": "",
+          "userName": "",
+          "encrypted": {
+            "password": ""
+          }
+        },
+        "properties": {
+          "matchHost": {
+            "description": "The URL of the private registry where the dependencies are hosted.",
+            "type": "string"
+          },
+          "hostType": {
+            "description": "The type of private registry.",
+            "type": "string",
+            "enum": [
+              "npm",
+              "maven",
+              "pypi",
+              "go",
+              "nuget",
+              "ruby",
+              "sbt"
+            ]
+          },
+          "userName": {
+            "description": "The value used when the private registry requires a username/password combination. If a token is provided this is not required.",
+            "type": "string"
+          },
+          "encrypted": {
+            "description": "Used for encrypted credentials. Signals to the integration to decrypt the credentials.\nUse https://mend-resources.mend.io/index-gh.html to encrypt credentials.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "password": {
+                "description": "Your encrypted password. Use https://mend-resources.mend.io/index-gh.html.",
+                "type": "string"
+              },
+              "token": {
+                "description": "Your encrypted token. Use https://mend-resources.mend.io/index-gh.html.",
+                "type": "string"
+              }
+            }
+          },
+          "envVariablesMapping": {
+            "description": "Map your userName and password to environment variables that are in your package manager settings files.\nRequires either username/password combo, or token.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "username": {
+                "description": "The username for your private registry",
+                "type": "string"
+              },
+              "password": {
+                "description": "The password for your private registry",
+                "type": "string"
+              },
+              "token": {
+                "description": "The token for your private registry",
+                "type": "string"
+              }
+            },
+            "oneOf": [
+              {
+                "required": [
+                  "username",
+                  "password"
+                ],
+                "properties": {
+                  "token": false
+                }
+              },
+              {
+                "required": [
+                  "token"
+                ],
+                "properties": {
+                  "userName": false,
+                  "password": false
+                }
+              }
+            ]
+          },
+          "sourceName": {
+            "description": "Only for pipenv private registries. Use this parameter if you don't have a specific package index.\nIn this case, Mend will create one for you based on other parameters of hostRules. The value should be the index name used for your private dependencies.",
+            "type": "string"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "encrypted": {
+                  "required": [
+                    "token"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "userName": false
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "encrypted": {
+                  "required": [
+                    "password"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "userName"
+              ]
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "userName"
+              ]
+            },
+            "then": {
+              "properties": {
+                "encrypted": {
+                  "required": [
+                    "password"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "leastVulnerablePackageSettings": {
+      "description": "Settings for Least Vulnerable Package",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "description": "Whether to enable Least Vulnerable Package.\n(Integration Default: false)",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "scanSettings"
+        ],
+        "properties": {
+          "scanSettings": {
+            "required": [
+              "configMode"
+            ],
+            "properties": {
+              "configMode": {
+                "enum": [
+                  "EXTERNAL"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireConfigModeExternalUrl"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "scanSettings"
+        ],
+        "properties": {
+          "scanSettings": {
+            "required": [
+              "configExternalURL"
+            ],
+            "properties": {
+              "configExternalURL": {
+                "pattern": ".+"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireConfigModeExternal"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "scanSettings"
+        ],
+        "properties": {
+          "scanSettings": {
+            "required": [
+              "enableLicenseViolations"
+            ],
+            "properties": {
+              "enableLicenseViolations": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireVulnerableConclusionLevelSuccessFailure"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "checkRunSettings"
+        ],
+        "properties": {
+          "checkRunSettings": {
+            "required": [
+              "licenseCheckRunConclusionLevel"
+            ]
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireVulnerableConclusionLevelSuccessFailure"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "checkRunSettings"
+        ],
+        "properties": {
+          "checkRunSettings": {
+            "required": [
+              "strictMode"
+            ],
+            "properties": {
+              "strictMode": {
+                "enum": [
+                  "warning",
+                  "failure"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/validationRules/requireVulnerableConclusionLevelFailure"
+          },
+          {
+            "$ref": "#/definitions/validationRules/requireLicenseConclusionLevelFailure"
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "checkRunSettings"
+        ],
+        "properties": {
+          "checkRunSettings": {
+            "required": [
+              "strictModeCustomMessage"
+            ]
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireStrictModeWarningFailure"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "checkRunSettings"
+        ],
+        "properties": {
+          "checkRunSettings": {
+            "required": [
+              "failOnVulnerabilityMinCvss"
+            ]
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireVulnerableConclusionLevelFailure"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "checkRunSettings"
+        ],
+        "properties": {
+          "checkRunSettings": {
+            "required": [
+              "failOnVulnerabilityMinSeverity"
+            ]
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireVulnerableConclusionLevelFailure"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "releaseBranchSettings"
+        ],
+        "properties": {
+          "releaseBranchSettings": {
+            "required": [
+              "checkRunSettings"
+            ],
+            "properties": {
+              "checkRunSettings": {
+                "required": [
+                  "strictMode"
+                ],
+                "properties": {
+                  "strictMode": {
+                    "enum": [
+                      "warning",
+                      "failure"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/validationRules/requireVulnerableConclusionLevelFailure"
+          },
+          {
+            "$ref": "#/definitions/validationRules/requireLicenseConclusionLevelFailure"
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "releaseBranchSettings"
+        ],
+        "properties": {
+          "releaseBranchSettings": {
+            "required": [
+              "checkRunSettings"
+            ],
+            "properties": {
+              "checkRunSettings": {
+                "required": [
+                  "failOnVulnerabilityMinCvss"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireVulnerableConclusionLevelFailure"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "releaseBranchSettings"
+        ],
+        "properties": {
+          "releaseBranchSettings": {
+            "required": [
+              "checkRunSettings"
+            ],
+            "properties": {
+              "checkRunSettings": {
+                "required": [
+                  "failOnVulnerabilityMinSeverity"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireVulnerableConclusionLevelFailure"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "issueSettings"
+        ],
+        "properties": {
+          "issueSettings": {
+            "required": [
+              "displayLicenseViolations"
+            ],
+            "properties": {
+              "displayLicenseViolations": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireEnableLicenseViolations"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "checkRunSettingsSAST"
+        ],
+        "properties": {
+          "checkRunSettingsSAST": {
+            "required": [
+              "severityThreshold"
+            ]
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireSASTConclusionLevelFailure"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "checkRunSettings"
+        ],
+        "properties": {
+          "checkRunSettings": {
+            "required": [
+              "iacCheckRunConclusionLevel"
+            ]
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireEnableIaC"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "releaseBranchSettings"
+        ],
+        "properties": {
+          "releaseBranchSettings": {
+            "required": [
+              "checkRunSettings"
+            ],
+            "properties": {
+              "checkRunSettings": {
+                "required": [
+                  "failOnIacFindings"
+                ],
+                "properties": {
+                  "failOnIacFindings": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireEnableIaC"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "issueSettings"
+        ],
+        "properties": {
+          "issueSettings": {
+            "required": [
+              "iacIssues"
+            ],
+            "properties": {
+              "iacIssues": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireEnableIaC"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "imageSettings"
+        ],
+        "properties": {
+          "imageSettings": {
+            "required": [
+              "imageTracing"
+            ],
+            "properties": {
+              "imageTracing": {
+                "required": [
+                  "addDockerfilePath"
+                ],
+                "properties": {
+                  "addDockerfilePath": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireEnableImageTracingPR"
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "imageSettings"
+        ],
+        "properties": {
+          "imageSettings": {
+            "required": [
+              "imageTracing"
+            ],
+            "properties": {
+              "imageTracing": {
+                "required": [
+                  "addRepositoryCoordinates"
+                ],
+                "properties": {
+                  "addRepositoryCoordinates": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/definitions/validationRules/requireEnableImageTracingPR"
+      }
+    }
+  ],
+  "definitions": {
+    "reusedModels": {
+      "scanningStagePackageManager": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "maven",
+            "npm",
+            "nuget-csproj",
+            "nuget-packages",
+            "pip",
+            "yarn"
+          ]
+        }
+      }
+    },
+    "validationRules": {
+      "requireConfigModeExternal": {
+        "properties": {
+          "scanSettings": {
+            "required": [
+              "configMode"
+            ],
+            "properties": {
+              "configMode": {
+                "const": "EXTERNAL"
+              }
+            }
+          }
+        }
+      },
+      "requireConfigModeExternalUrl": {
+        "properties": {
+          "scanSettings": {
+            "required": [
+              "configExternalURL"
+            ],
+            "properties": {
+              "configExternalURL": {
+                "pattern": "(http|https).+"
+              }
+            }
+          }
+        }
+      },
+      "requireEnableReachability": {
+        "properties": {
+          "scanSettings": {
+            "required": [
+              "enableReachability"
+            ],
+            "properties": {
+              "enableReachability": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "requireEnableLicenseViolations": {
+        "properties": {
+          "scanSettings": {
+            "required": [
+              "enableLicenseViolations"
+            ],
+            "properties": {
+              "enableLicenseViolations": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "requireEnableIacViolations": {
+        "properties": {
+          "scanSettings": {
+            "required": [
+              "enableIaC"
+            ],
+            "properties": {
+              "enableIaC": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "requireVulnerableConclusionLevelFailure": {
+        "properties": {
+          "checkRunSettings": {
+            "properties": {
+              "vulnerableCheckRunConclusionLevel": {
+                "const": "failure"
+              }
+            }
+          }
+        }
+      },
+      "requireVulnerableConclusionLevelSuccessFailure": {
+        "properties": {
+          "checkRunSettings": {
+            "properties": {
+              "vulnerableCheckRunConclusionLevel": {
+                "enum": [
+                  "success",
+                  "failure"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "requireLicenseConclusionLevelFailure": {
+        "properties": {
+          "checkRunSettings": {
+            "properties": {
+              "licenseCheckRunConclusionLevel": {
+                "const": "failure"
+              }
+            }
+          }
+        }
+      },
+      "requireStrictModeWarningFailure": {
+        "properties": {
+          "checkRunSettings": {
+            "required": [
+              "strictMode"
+            ],
+            "properties": {
+              "strictMode": {
+                "enum": [
+                  "warning",
+                  "failure"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "requireSASTConclusionLevelFailure": {
+        "properties": {
+          "checkRunSettingsSAST": {
+            "required": [
+              "checkRunConclusionLevel"
+            ],
+            "properties": {
+              "checkRunConclusionLevel": {
+                "enum": [
+                  "failure"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "requireEnableIaC": {
+        "properties": {
+          "scanSettings": {
+            "required": [
+              "enableIaC"
+            ],
+            "properties": {
+              "enableIaC": {
+                "enum": [
+                  true
+                ]
+              }
+            }
+          }
+        }
+      },
+      "requireEnableImageTracingPR": {
+        "properties": {
+          "imageSettings": {
+            "properties": {
+              "imageTracing": {
+                "required": [
+                  "enableImageTracingPR"
+                ],
+                "properties": {
+                  "enableImageTracingPR": {
+                    "enum": [
+                      true
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
