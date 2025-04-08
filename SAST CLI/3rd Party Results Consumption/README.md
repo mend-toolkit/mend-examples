@@ -74,4 +74,4 @@ mend image import --input-file converted_results --scope "<my_application>//<my_
 
 ## Note
 
-The script uses `xargs` for parallel processing of warnings, with the number of parallel processes calculated as 75% of available CPU cores. 
+The script uses `xargs` for parallel processing of 3rd party findings, with the number of parallel processes calculated as 75% of available CPU cores. 
