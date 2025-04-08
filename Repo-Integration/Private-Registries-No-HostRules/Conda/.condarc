@@ -1,0 +1,9 @@
+channel_alias: https://${CONDA_USER_ENCODED}:${CONDA_PASS}@${CONDA_CHANNEL}
+
+channels:
+  - https://${CONDA_USER_ENCODED}:${CONDA_PASS}@${CONDA_CHANNEL}
+
+default_channels:
+  - https://${CONDA_USER_ENCODED}:${CONDA_PASS}@${CONDA_CHANNEL}
+
+ssl_verify: true

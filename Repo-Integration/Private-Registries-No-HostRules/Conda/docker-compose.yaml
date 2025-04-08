@@ -1,0 +1,78 @@
+version: "2"
+services:
+
+
+  remediate:
+    image: wss-remediate:latest
+    container_name: remediate-server
+    environment:
+      LOG_LEVEL: DEBUG
+      CONDA_USER: <user_email>
+      CONDA_PASS: <artifactory provided password>
+      CONDA_REGISTRY: https://<artifactory_instance>.jfrog.io/artifactory/api/pypi/default-pypi/simple
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "/path/to/config.js:/usr/src/app/config.js"
+    restart: always
+    extra_hosts:
+      - "repo.anaconda.com:127.0.0.1"
+      - "conda.anaconda.com:127.0.0.1"
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+
+
+  app:
+    image: wss-ghe-app:latest
+    container_name: wss-ghe-app
+    environment:
+      LOG_LEVEL: DEBUG
+    ports:
+      - "9494:9494"
+      - "5678:5678"
+    volumes:
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+    depends_on:
+      - remediate
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+
+
+  scanner:
+    image: wss-scanner:latest
+    container_name: wss-scanner-ghe
+    environment:
+      EXTERNAL_LOG_IN_CONSOLE: true
+      LOG_LEVEL: DEBUG
+      CONDA_CHANNEL: <artifactory_instance>.jfrog.io/artifacotry/api/pypi/default-conda
+      CONDA_USER_ENCODED: <conda_user_urlencoded>
+      CONDA_PASS: <artifactory provided password>
+    ports:
+      - "9393:9393"
+    volumes:
+      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "/path/to/.condarc:/home/wss-scanner/.condarc"
+    extra_hosts:
+      - "repo.anaconda.com:127.0.0.1"
+      - "conda.anaconda.com:127.0.0.1"
+    restart: always
+    depends_on:
+      - app
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+
+
+networks:
+  default:
+    name: my_bridge
+    external: false
