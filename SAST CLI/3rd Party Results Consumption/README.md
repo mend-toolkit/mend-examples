@@ -68,7 +68,7 @@ mend auth login
 Example:
 ```bash
 ./mend_convert_brakeman.sh results.json converted_results.json
-mend image import --input-file converted_results --scope "<my_application>//<my_project>"
+mend code import --input-file converted_results --scope "<my_application>//<my_project>"
 ```
 
 
