@@ -212,6 +212,8 @@ function create_env_file() {
     echo "GITHUB_COM_TOKEN=${github_com_token}" >> ${REPO_INTEGRATION_DIR}/.env
     echo "EXTERNAL_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
     echo "MEND_ADVANCED_MERGE_CONFIDENCE_ENABLED=true" >> ${REPO_INTEGRATION_DIR}/.env
+    echo "MEND_SCA_ORCHESTRATOR_ENABLED=true" >> ${REPO_INTEGRATION_DIR}/.env
+    echo "MEND_AI_ENABLE_CODE_CAPABILITIES=true" >> ${REPO_INTEGRATION_DIR}/.env
 
     if [[ $USE_GRAYLOG -eq 1 ]]; then
         # Add Graylog Password and Secret
