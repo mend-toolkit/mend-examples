@@ -1,0 +1,10 @@
+[repositories]
+local
+
+# App/library resolution (Maven-style)
+private-releases: https://<artifactory_instance>.jfrog.io/artifactory/libs-release
+private-snapshots: https://<artifactory_instance>.jfrog.io/artifactory/libs-snapshot
+
+# SBT plugins (Ivy-style pattern). Use a proxy repo that mirrors https://repo.scala-sbt.org/sbt/sbt-plugin-releases
+private-sbt-plugins: https://<artifactory_instance>.jfrog.io/artifactory/sbt-plugin-releases/, \
+  [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]
