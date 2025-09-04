@@ -1,7 +1,6 @@
-version: "2"
 services:
   remediate:
-    image: wss-remediate:latest
+    image: wss-remediate:25.8.1
     container_name: remediate-server
     environment:
       LOG_LEVEL: DEBUG
@@ -16,8 +15,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
-      - "./SBT/config.js:/usr/src/app/config.js"
+      - "/home/ubuntu/agent-4-github-enterprise-25.8.1.2/wss-configuration/config/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "/home/ubuntu/SBT/config.js:/usr/src/app/config.js"
     restart: always
     extra_hosts:
       # Optional: block default public registries
@@ -31,7 +30,7 @@ services:
       options: { max-size: 1m, max-file: "5" }
 
   app:
-    image: wss-ghe-app:latest
+    image: wss-ghe-app:25.8.1.2
     container_name: wss-ghe-app
     environment:
       LOG_LEVEL: DEBUG
@@ -39,14 +38,14 @@ services:
       - "9494:9494"
       - "5678:5678"
     volumes:
-      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "/home/ubuntu/agent-4-github-enterprise-25.8.1.2/wss-configuration/config/prop.json:/etc/usr/local/whitesource/conf/prop.json"
     depends_on: [remediate]
     logging:
       driver: local
       options: { max-size: 1m, max-file: "5" }
 
   scanner:
-    image: wss-scanner:latest
+    image: wss-scanner:25.8.1.1
     container_name: wss-scanner-ghe
     environment:
       WS_UA_LOG_IN_CONSOLE: true
@@ -54,33 +53,3 @@ services:
       # For SBT global credentials and repos override
       SBT_USER: ${SBT_USER}
       SBT_PASS: ${SBT_PASS}
-      SBT_REGISTRY_HOST: ${SBT_REGISTRY_HOST}
-      SBT_BASE_URL: ${SBT_BASE_URL}
-      SBT_RELEASES: ${SBT_RELEASES}
-      SBT_SNAPSHOTS: ${SBT_SNAPSHOTS}
-      SBT_PLUGIN_RELEASES: ${SBT_PLUGIN_RELEASES}
-      # Force using ~/.sbt/repositories only
-      SBT_OPTS: "-Dsbt.override.build.repos=true"
-    ports:
-      - "9393:9393"
-    volumes:
-      - "/path/to/prop.json:/etc/usr/local/whitesource/conf/prop.json"
-      - "./SBT/repositories:/home/wss-scanner/.sbt/repositories"
-      - "./SBT/credentials.sbt:/home/wss-scanner/.sbt/1.0/credentials.sbt"
-    restart: always
-    depends_on: [app]
-    extra_hosts:
-      # Optional: block default public registries
-      - "repo.maven.apache.org:127.0.0.1"
-      - "repo1.maven.org:127.0.0.1"
-      - "repo2.maven.org:127.0.0.1"
-      - "repo.scala-sbt.org:127.0.0.1"
-      - "repo.typesafe.com:127.0.0.1"
-    logging:
-      driver: local
-      options: { max-size: 1m, max-file: "5" }
-
-networks:
-  default:
-    name: my_bridge
-    external: false
