@@ -101,7 +101,7 @@ volumes:
   - ./SBT/global.sbt:/home/wss-scanner/.sbt/1.0/global.sbt:ro
 ```
 
-**Remediate container (optional):**
+**Remediate container:**
 ```yaml
 volumes:
   - ./SBT/config.js:/usr/src/app/config.js:ro
