@@ -1,44 +1,125 @@
-# How the Files Work & How to Use Them
+## 10) Scala (SBT)
+
+SBT (Scala Build Tool) by default resolves dependencies from Maven Central and sbt community plugin repositories. To comply with private-registry-only policies, configure Mend to resolve Scala/SBT dependencies solely through your private Artifactory repositories.
+
+### Create Environment Variables
+
+Add to your `.env` or directly under `environment:` in `docker-compose.yml`:
+
+```dotenv
+SBT_USER=<artifactory_user_or_token>
+SBT_PASS=<password_or_access_token>
+SBT_REALM=Artifactory Realm
+SBT_REGISTRY_HOST=<artifactory_domain>                      # e.g. rivernetm.jfrog.io  (NO https://)
+SBT_BASE_URL=https://<artifactory_domain>/artifactory
+SBT_RELEASES=https://<artifactory_domain>/artifactory/libs-release
+SBT_SNAPSHOTS=https://<artifactory_domain>/artifactory/libs-snapshot
+SBT_PLUGIN_RELEASES=https://<artifactory_domain>/artifactory/sbt-plugins
+```
+---
+
+### Package Manager Settings
+
+Create the following files on the host and map them into the scanner container:
+
+**`~/.sbt/repositories`**
+```ini
+[repositories]
+local
+private-releases: ${SBT_RELEASES}
+private-snapshots: ${SBT_SNAPSHOTS}
+private-sbt-plugins: ${SBT_PLUGIN_RELEASES},   [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]
+```
+
+**`~/.sbt/1.0/credentials.sbt`**
+```scala
+import scala.sys.env
+
+credentials += Credentials(
+  env.getOrElse("SBT_REALM", "Artifactory Realm"),
+  env.getOrElse("SBT_REGISTRY_HOST", ""),  // e.g. rivernetm.jfrog.io
+  env.getOrElse("SBT_USER", ""),
+  env.getOrElse("SBT_PASS", "")
+)
+```
+
+`~/.sbt/1.0/global.sbt`** — recommended to ensure dependency resolution during scans:
+```scala
+ThisBuild / useCoursier := false                      // or configure COURSIER_* env if you prefer Coursier
+ThisBuild / update / aggregate := true
+Compile / compile := (Compile / compile).dependsOn(Compile / update).value
+Test    / compile := (Test    / compile).dependsOn(Test    / update).value
+ThisBuild / evictionErrorLevel := Level.Info
+```
+---
+
+### Remediate/Renovate Configuration 
+
+Provide `config.js` for Renovate so private repos are used for Scala artifacts:
+
+```js
+module.exports = {
+  hostRules: [
+    {
+      hostType: "maven",
+      matchHost: process.env.SBT_REGISTRY_HOST,
+      username: process.env.SBT_USER,
+      password: process.env.SBT_PASS
+    },
+    {
+      hostType: "ivy",
+      matchHost: process.env.SBT_REGISTRY_HOST,
+      username: process.env.SBT_USER,
+      password: process.env.SBT_PASS
+    }
+  ]
+};
+```
+
+Mount it into the remediate container at `/usr/src/app/config.js`.
 
 ---
 
-## What each file does
+### Map Files and Variables
 
-### 1) `repositories`
-**Purpose:** Defines the ONLY repositories SBT is allowed to use inside the scanner container.  
-**Effect:** Combined with `-Dsbt.override.build.repos=true`, project-level resolvers are ignored.
+**Scanner container (docker-compose):**
+```yaml
+environment:
+  SBT_OPTS: "-Dsbt.override.build.repos=true"
+  SBT_USER: ${SBT_USER}
+  SBT_PASS: ${SBT_PASS}
+  SBT_REALM: ${SBT_REALM}
+  SBT_REGISTRY_HOST: ${SBT_REGISTRY_HOST}
+  SBT_BASE_URL: ${SBT_BASE_URL}
+  SBT_RELEASES: ${SBT_RELEASES}
+  SBT_SNAPSHOTS: ${SBT_SNAPSHOTS}
+  SBT_PLUGIN_RELEASES: ${SBT_PLUGIN_RELEASES}
 
-- Mapped to: `/home/wss-scanner/.sbt/repositories`
-- Contains:
-  - `private-releases`: private Maven-style repo (e.g., libs-release)
-  - `private-snapshots`: private Maven-style repo (e.g., libs-snapshot)
-  - `private-sbt-plugins`: private proxy for sbt-plugin-releases (Ivy pattern)
-- If you enabled `extra_hosts` in `docker-compose.yaml`, public hosts (Maven Central, repo.scala-sbt.org, etc.) are blocked.
+volumes:
+  - ./SBT/repositories:/home/wss-scanner/.sbt/repositories:ro
+  - ./SBT/credentials.sbt:/home/wss-scanner/.sbt/1.0/credentials.sbt:ro
+  - ./SBT/global.sbt:/home/wss-scanner/.sbt/1.0/global.sbt:ro
+```
 
-### 2) `credentials.sbt`
-**Purpose:** Provides authentication to your private registry for all SBT operations.  
-**How:** Reads environment variables (e.g., `SBT_USER`, `SBT_PASS`, `SBT_REGISTRY_HOST`, `SBT_REALM`) and registers global `Credentials(...)`.
+**Remediate container (optional):**
+```yaml
+volumes:
+  - ./SBT/config.js:/usr/src/app/config.js:ro
+```
 
-- Mapped to: `/home/wss-scanner/.sbt/1.0/credentials.sbt`
-- No secrets are stored in the file; values come from container environment variables.
+---
 
-### 3) `config.js`
-**Purpose:** Configures Remediate/Renovate to resolve SBT dependencies through your private registry and authenticate against the same host.
+### Block Public Registries 
 
-- Mapped to: `/usr/src/app/config.js` (in the remediate container)
-- Key settings:
-  - `packageRules` with `matchManagers: ["sbt"]` and your `registryUrls`
-  - `hostRules` with `hostType: "maven"` and `matchHost = <your-domain>` (domain only, no path)
+Prevent fallback to public registries:
+```yaml
+extra_hosts:
+  - "repo.maven.apache.org:127.0.0.1"
+  - "repo1.maven.org:127.0.0.1"
+  - "repo2.maven.org:127.0.0.1"
+  - "repo.scala-sbt.org:127.0.0.1"
+  - "repo.typesafe.com:127.0.0.1"
+```
 
-### 4) `docker-compose.yaml`
-**Purpose:** Wires the system together. Passes environment variables, mounts files, and (optionally) blocks public registries.
-
-- Sets `SBT_OPTS=-Dsbt.override.build.repos=true` for the scanner
-- Mounts:
-  - `repositories` and `credentials.sbt` into the **scanner** container
-  - `config.js` into the **remediate** container
-- Optional: `extra_hosts` to block public registries
-
-### 4) `.env`
-**Purpose:** Holds secrets and URLs (e.g., `SBT_USER`, `SBT_PASS`, `SBT_RELEASES`, etc.).  
+---
 
