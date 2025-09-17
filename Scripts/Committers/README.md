@@ -25,6 +25,8 @@ This script pulls all of the projects in an organization and then retrieves the 
 Afterwards the scripts combines all of the data pulled for each project, prints to the screen and also saves to a repos.txt
 
 The WS_API_KEY environment variable is optional. If this is not specified in the script, then the Login API will authenticate to the last organization the user accessed in the Mend UI.
+
+MEND_ONLY_UPDATED_REPOS is an optional environment variable that will only retrieve repos that have been scanned in the last 90 days
 ## Usage
 ```shell
 export MEND_USER_KEY="An administrator's userkey"
