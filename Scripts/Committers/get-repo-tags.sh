@@ -83,19 +83,30 @@ REMOTEURL=()
 echo -e "\n\nGetting Tags"
 echo "-----------------"
 # Loop through each entity in $PROJECT_ENTITIES and get the tag repoFullName.
+
+: > repos.txt
+
+# Loop through each entity in $PROJECT_ENTITIES and get the tag repoFullName.
 for (( i=0; i<=$NUM_ENTITIES-1; i++ ))
 do
         CURRENT_PROJECT_NAME=$(echo $PROJECT_ENTITIES | jq -r ".[$i].name" )
         echo "Getting TAGS for PROJECT $(($i+1))/$NUM_ENTITIES: $CURRENT_PROJECT_NAME"
 		
-    	  CURRENT_PROJECT_TAGS=$(echo $PROJECT_ENTITIES | jq ".[$i].tags" )
+    	CURRENT_PROJECT_TAGS=$(echo $PROJECT_ENTITIES | jq ".[$i].tags" )
 
         REPOFULLNAME_TAG=$(echo $CURRENT_PROJECT_TAGS | jq -r '.[] | select(.key | startswith("repoFullName")) | .value')
-        REPOFULLNAME+=($REPOFULLNAME_TAG)
+        if [[ -n "$REPOFULLNAME_TAG" ]]; then
+             REPOFULLNAME_TAG=${REPOFULLNAME_TAG// /%20}
+             REPOFULLNAME+=("$REPOFULLNAME_TAG")
+        fi
 
         REMOTEURL_TAG=$(echo $CURRENT_PROJECT_TAGS | jq -r '.[] | select(.key | startswith("remoteUrl")) | .value')
-        REMOTEURL+=($REMOTEURL_TAG)
+        if [[ -n "$REMOTEURL_TAG" ]]; then
+            REMOTEURL_TAG=${REMOTEURL_TAG// /%20}
+            REMOTEURL+=("$REMOTEURL_TAG")
+        fi
 done
+
 
 
 
