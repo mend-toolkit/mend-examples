@@ -16,7 +16,6 @@ BEGIN_DATE="01 Jan 2023"
 SCM=https://github.com
 workdir=$PWD
 
-: > committers.txt
 if [ -z "$1" ]
 then
     echo "Please pass a text file to read repositories from such as deduprepos.txt"
