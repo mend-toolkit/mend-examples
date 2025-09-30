@@ -1,6 +1,4 @@
 [repositories]
-local
-private-releases: https://<artifactory_instance>jfrog.io/artifactory/libs-release
-private-snapshots: https://<artifactory_instance>.jfrog.io/artifactory/libs-snapshot
-private-sbt-plugins: https://<artifactory_instance>.jfrog.io/artifactory/sbt-plugins/, \
-  [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]
+  local
+  my-ivy-proxy-releases: https://<artifactory>.jfrog.io/artifactory/sbt-plugins/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]
+  my-maven-proxy-releases: https://<artifactory>.jfrog.io/artifactory/libs-release/
