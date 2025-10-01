@@ -1,163 +1,222 @@
-## 10) Scala (SBT)
+# 10) SBT
 
-SBT (Scala Build Tool) by default resolves dependencies from Maven Central and sbt community plugin repositories. 
-To comply with private-registry-only policies, configure Mend to resolve Scala/SBT dependencies solely through your private Artifactory repositories.
+This guide explains how to set up and run no-host-rule private registry configuration for SBT (Scala) package manager.
 
----
+## **📂 Structure**
 
-### Create Environment Variables
+Your setup includes the following important files:
 
-Add to your `.env` or directly under `environment:` in `docker-compose.yml`:
+- **docker-compose.yaml** → Defines the Renovate container and volume mappings
+- **config.js** → Renovate configuration (registries, host rules)
+- **global.sbt** → Global SBT settings for dependency resolvers
+- **credentials** → Artifactory credentials for SBT
+- **repositories** → SBT repositories configuration
+- **.env** → Environment varialbes for config.js
+- **credentials.properties** → Coursier credentials
 
-```dotenv
-# Scanner credentials
-SBT_USER=<artifactory_user_or_token>
-SBT_PASS=<password_or_access_token>
-SBT_REALM=Artifactory Realm
-SBT_REGISTRY_HOST=<artifactory_domain>                      # e.g. rivernetm.jfrog.io  (NO https://)
-SBT_BASE_URL=https://<artifactory_domain>/artifactory
-SBT_RELEASES=https://<artifactory_domain>/artifactory/libs-release
-SBT_SNAPSHOTS=https://<artifactory_domain>/artifactory/libs-snapshot
-SBT_PLUGIN_RELEASES=https://<artifactory_domain>/artifactory/sbt-plugins
+## **⚙️ Configuration**
 
-# Renovate (Remediate) credentials
-RENOVATE_HOST=<artifactory_domain>                          # bare domain, no scheme
-RENOVATE_USER=<artifactory_user_or_token>
-RENOVATE_PASS=<password_or_access_token>
-RENOVATE_MAVEN_REGISTRY=https://<artifactory_domain>/artifactory/libs-release
-RENOVATE_IVY_REGISTRY=https://<artifactory_domain>/artifactory/sbt-plugins
-RENOVATE_GRADLE_PLUGINS=https://<artifactory_domain>/artifactory/gradle-plugins
+1. Docker-compose.yaml
+
+   Adjust the paths according to your actual setup.
+
+```
+services:
+  remediate:
+    image: wss-remediate:25.8.1
+    container_name: remediate-server
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/home/ubuntu/agent-4-github-enterprise-25.8.1.2/wss-configuration/config/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      - "/home/ubuntu/SBT/config.js:/usr/src/app/config.js"
+    restart: always
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+  app:
+    build:
+      context: /home/ubuntu/agent-4-github-enterprise-25.8.1.2/wss-ghe-app/docker
+    image: wss-ghe-app:25.8.1.2
+    container_name: wss-ghe-app
+    env_file:
+      - .env
+    ports:
+      - "9494:9494"
+      - "5678:5678"
+    volumes:
+      - "/home/ubuntu/agent-4-github-enterprise-25.8.1.2/wss-configuration/config/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+    restart: always
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+  scanner:
+    build:
+      context: /home/ubuntu/agent-4-github-enterprise-25.8.1.12/wss-scanner/docker
+      dockerfile: Dockerfilefull
+    image: wss-scanner:25.8.1.1
+    container_name: wss-scanner-ghe
+    env_file:
+    - .env
+    ports:
+      - "9393:9393"
+    volumes:
+      - "/home/ubuntu/agent-4-github-enterprise-25.8.1.2/wss-configuration/config/prop.json:/etc/usr/local/whitesource/conf/prop.json"
+      # SBT repositories
+      - "/home/ubuntu/SBT/repositories:/home/wss-scanner/.sbt/repositories:ro"
+      # Ivy credentials
+      - "/home/ubuntu/SBT/.credentials:/home/wss-scanner/.ivy2/.credentials:ro"
+      # Global sbt settings
+      - "/home/ubuntu/SBT/global.sbt:/home/wss-scanner/.sbt/1.0/global.sbt:ro"
+      # Coursier credentials
+      - "/home/ubuntu/SBT/credentials.properties:/home/wss-scanner/.config/coursier/credentials.properties:ro"
+      # Writable caches
+      - "./sbt-cache/coursier:/home/wss-scanner/.cache/coursier:rw"
+      - "./sbt-cache/ivy2:/home/wss-scanner/.ivy2:rw"
+      - "./sbt-cache/boot:/home/wss-scanner/.sbt/boot:rw"
+      - "./sbt-cache/containerbase:/tmp/containerbase/cache:rw"
+    environment:
+      SBT_CREDENTIALS: "/home/wss-scanner/.ivy2/.credentials"
+      SBT_OPTS: >
+        -Dfile.encoding=utf-8
+        -Djline.terminal=off
+        -Dsbt.log.noformat=true
+        -Dsbt.repository.config=/home/wss-scanner/.sbt/repositories
+        -Dsbt.global.base=/home/wss-scanner/.sbt
+        -Dsbt.boot.directory=/home/wss-scanner/.sbt/boot
+        -Dsbt.ivy.home=/home/wss-scanner/.ivy2
+        -Dsbt.override.build.repos=true
+        -Dsbt.ivy.home=/home/wss-scanner/.ivy2
+        -Dsbt.boot.credentials=/home/wss-scanner/.ivy2/.credentials
+      COURSIER_CACHE: /home/wss-scanner/.cache/coursier
+      COURSIER_NO_DEFAULT: "true"
+      SBT_HOME: /home/wss-scanner/.sbt
+      JAVA_OPTS: >-
+        --add-opens java.base/java.util=ALL-UNNAMED
+        --add-opens java.base/sun.reflect.generics.reflectiveObjects=ALL-UNNAMED
+    extra_hosts:
+      # Block Maven Central repositories
+      - "repo.maven.apache.org:127.0.0.1"
+      - "repo1.maven.org:127.0.0.1"
+      - "repo2.maven.org:127.0.0.1"
+      - "repo.scala-sbt.org:127.0.0.1"
+      - "dl.bintray.com:127.0.0.1"
+      - "oss.sonatype.org:127.0.0.1"
+      - "s01.oss.sonatype.org:127.0.0.1"
+      - "repo.typesafe.com:127.0.0.1"
+    restart: always
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+volumes:
+  sbt-coursier-cache:
+  sbt-ivy-cache:
+  sbt-boot-cache:
+  sbt-containerbase-cache:
+networks:
+  default:
+    name: my_bridge
 ```
 
----
 
-### Package Manager Settings
 
-Create the following files on the host and map them into the scanner container:
+### **config.js**
 
-**`~/.sbt/repositories`**
-```ini
-[repositories]
-local
-private-releases: ${SBT_RELEASES}
-private-snapshots: ${SBT_SNAPSHOTS}
-private-sbt-plugins: ${SBT_PLUGIN_RELEASES},   [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]
-```
+Renovate is configured to fetch dependencies from JFrog Artifactory:
 
-**`~/.sbt/1.0/credentials.sbt`**
-```scala
-import scala.sys.env
-
-credentials += Credentials(
-  env.getOrElse("SBT_REALM", "Artifactory Realm"),
-  env.getOrElse("SBT_REGISTRY_HOST", ""),  // e.g. rivernetm.jfrog.io
-  env.getOrElse("SBT_USER", ""),
-  env.getOrElse("SBT_PASS", "")
-)
-```
-
-**`~/.sbt/1.0/global.sbt`** — recommended to ensure dependency resolution during scans:
-```scala
-ThisBuild / useCoursier := false                      // or configure COURSIER_* env if you prefer Coursier
-ThisBuild / update / aggregate := true
-Compile / compile := (Compile / compile).dependsOn(Compile / update).value
-Test    / compile := (Test    / compile).dependsOn(Test    / update).value
-ThisBuild / evictionErrorLevel := Level.Info
-```
-
----
-
-### Remediate/Renovate Configuration
-
-Provide `config.js` for Renovate so private repos are used for Scala artifacts:
-
-```js
+```2. Global SBT Settings (
 module.exports = {
-  hostRules: [
-    {
-      hostType: "maven",
-      matchHost: process.env.RENOVATE_HOST,
-      username: process.env.RENOVATE_USER,
-      password: process.env.RENOVATE_PASS
-    },
-    {
-      hostType: "ivy",
-      matchHost: process.env.RENOVATE_HOST,
-      username: process.env.RENOVATE_USER,
-      password: process.env.RENOVATE_PASS
-    }
-  ],
   packageRules: [
     {
-      matchManagers: ["maven", "gradle"],
-      registryUrls: [process.env.RENOVATE_MAVEN_REGISTRY]
-    },
-    {
-      matchManagers: ["gradle"],
-      additionalRegistryUrls: [process.env.RENOVATE_GRADLE_PLUGINS]
+      matchManagers: ["sbt"],
+      matchDatasources: ["maven"],
+      registryUrls: ["https://<artifactory>.jfrog.io/artifactory/libs-release"]
     },
     {
       matchManagers: ["sbt"],
-      registryUrls: [
-        process.env.RENOVATE_MAVEN_REGISTRY,
-        process.env.RENOVATE_IVY_REGISTRY
-      ]
+      matchDatasources: ["maven"],
+      registryUrls: ["https://<artifactory>.jfrog.io/artifactory/sbt-plugins"]
     }
   ],
-  prConcurrentLimit: 5,
-  prHourlyLimit: 3
+  hostRules: [
+    {
+      hostType: "maven",
+      matchHost: "rivernetm.jfrog.io",
+      username: process.env.SBT_USER || "",
+      password: process.env.SBT_PASS || ""
+    }
+  ]
 };
 ```
 
-Mount it into the remediate container at `/usr/src/app/config.js`.
+### **global.sbt**
 
----
+Contains repository resolvers and ensures SBT uses Artifactory:
 
-### Map Files and Variables
-
-**Scanner container (docker-compose):**
-```yaml
-environment:
-  SBT_OPTS: "-Dsbt.override.build.repos=true"
-  SBT_USER: ${SBT_USER}
-  SBT_PASS: ${SBT_PASS}
-  SBT_REALM: ${SBT_REALM}
-  SBT_REGISTRY_HOST: ${SBT_REGISTRY_HOST}
-  SBT_BASE_URL: ${SBT_BASE_URL}
-  SBT_RELEASES: ${SBT_RELEASES}
-  SBT_SNAPSHOTS: ${SBT_SNAPSHOTS}
-  SBT_PLUGIN_RELEASES: ${SBT_PLUGIN_RELEASES}
-
-volumes:
-  - ./SBT/repositories:/home/wss-scanner/.sbt/repositories:ro
-  - ./SBT/credentials.sbt:/home/wss-scanner/.sbt/1.0/credentials.sbt:ro
-  - ./SBT/global.sbt:/home/wss-scanner/.sbt/1.0/global.sbt:ro
+```
+credentials += Credentials(Path.userHome / ".sbt" / "1.0" / "credentials")
 ```
 
-**Remediate container (docker-compose):**
-```yaml
-environment:
-  RENOVATE_HOST: ${RENOVATE_HOST}
-  RENOVATE_USER: ${RENOVATE_USER}
-  RENOVATE_PASS: ${RENOVATE_PASS}
-  RENOVATE_MAVEN_REGISTRY: ${RENOVATE_MAVEN_REGISTRY}
-  RENOVATE_IVY_REGISTRY: ${RENOVATE_IVY_REGISTRY}
-  RENOVATE_GRADLE_PLUGINS: ${RENOVATE_GRADLE_PLUGINS}
+### **credentials**
 
-volumes:
-  - ./SBT/config.js:/usr/src/app/config.js:ro
+Defines SBT authentication for Artifactory:
+
+```
+realm=Artifactory Realm
+host=<artifactory>.jfrog.io
+user=<username>
+password=<access token>
 ```
 
----
+### **repositories**
 
-### Block Public Registries
+Configures where SBT fetches dependencies:
 
-Prevent fallback to public registries (optional once Artifactory virtuals are confirmed):
-```yaml
-extra_hosts:
-  - "repo.maven.apache.org:127.0.0.1"
-  - "repo1.maven.org:127.0.0.1"
-  - "repo2.maven.org:127.0.0.1"
-  - "repo.scala-sbt.org:127.0.0.1"
-  - "repo.typesafe.com:127.0.0.1"
 ```
+[repositories]
+  local
+  my-ivy-proxy-releases: https://<artifactory>.jfrog.io/artifactory/sbt-plugins/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]
+  my-maven-proxy-releases: https://<artifactory>.jfrog.io/artifactory/libs-release/
+```
+
+An example for the repositories in the artifactory:
+
+| **Virtual Repository** | **Remote Repository**       | **URL**                                                  | **Purpose**                                                  |
+| ---------------------- | --------------------------- | -------------------------------------------------------- | ------------------------------------------------------------ |
+| sbt-plugins            | sbt-plugins-releases-remote | http://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/  | Main source for sbt plugins.                                 |
+| sbt-plugins            | sbt-ivy-remote              | http://repo.typesafe.com/typesafe/ivy-releases/          | Legacy/Typesafe Ivy repo for sbt plugins and older artifacts. |
+| libs-release           | sbt-maven-remote            | https://repo.scala-sbt.org/scalasbt/maven-releases       | sbt artifacts published in Maven style.                      |
+| libs-release           | sbt-plugin-remote           | https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/ | sbt plugin artifacts published in Maven style (redundant but safe to keep). |
+| libs-release           | maven-central-remote        | https://repo1.maven.org/maven2/                          | Standard Maven Central repository.                           |
+
+
+
+### **.env**
+
+Add Artifactory credentials:
+
+```
+# .env
+SBT_REGISTRY=https://<artifactory>.jfrog.io/artifactory/libs-release
+SBT_USER=<artifactory username>
+SBT_PASS=<access token>
+```
+
+After creating all the files and making sure the paths and credentials are correct run on your host:
+
+```
+sudo mkdir -p ./sbt-cache/.sbt-boot ./sbt-cache/coursier ./sbt-cache/tmp /home/ubuntu/.ivy2
+sudo chown -R 1000:1000 ./sbt-cache /home/ubuntu/.ivy2
+```
+
+This ensures volumes are writable by wss-scanner user.
+
+**Run docker compose up -d**
