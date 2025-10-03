@@ -125,6 +125,7 @@ function env_port_check() {
         # Start a listener on the designated port in the background, storing the process ID
         echo "Listening on: $PORT"
         timeout 15s nc -lp $PORT &
+		sleep 2
 
         # Check for connection success
         echo "Testing connection to: $PUBLIC_IP:$PORT"
