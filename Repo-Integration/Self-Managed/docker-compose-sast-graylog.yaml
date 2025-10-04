@@ -1,0 +1,156 @@
+services:
+
+  remediate:
+    build: 
+      context: ${BASE_DIR}/${VERSION}/wss-remediate/docker
+    image: wss-remediate:${REMEDIATE}
+    container_name: remediate-server
+    env_file:
+      - .env
+    ports:
+      - "8582:8080"
+    volumes: 
+      - ${BASE_DIR}/prop.json:/etc/usr/local/whitesource/conf/prop.json
+    depends_on:
+      graylog:
+        condition: "service_healthy"
+    restart: always
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://0.0.0.0:5140"
+        tag: "remediate-server"
+
+  app:
+    build: 
+      context: ${BASE_DIR}/${VERSION}/wss-${SCM}-app/docker
+    image: wss-${SCM}-app:${CONTROLLER}
+    container_name: wss-${SCM}-app
+    env_file:
+      - .env
+      - .env-sast
+    ports:
+      - "9494:9494"
+      - "5678:5678"
+    volumes: 
+      - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
+    depends_on:
+      graylog:
+        condition: "service_healthy"
+      remediate:
+        condition: "service_started"
+    restart: always
+    logging:
+        driver: syslog
+        options:
+          syslog-address: "tcp://0.0.0.0:5140"
+          tag: wss-${SCM}-app
+
+  scanner:
+    build: 
+      context: ${BASE_DIR}/${VERSION}/wss-scanner/docker
+      dockerfile: Dockerfilefull
+    image: wss-scanner:${SCANNER}
+    container_name: wss-scanner
+    env_file:
+      - .env
+    ports:
+      - "9393:9393"
+    volumes: 
+      - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
+    depends_on:
+      graylog:
+        condition: "service_healthy"
+      remediate:
+        condition: "service_started"
+    restart: always
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://0.0.0.0:5140"
+        tag: "wss-scanner"
+
+  mongodb:
+    image: "mongo:5.0"
+    hostname: "mongodb"
+    volumes:
+      - "mongodb_data:/data/db"
+    restart: "on-failure"
+
+  datanode:
+    image: "graylog/graylog-datanode:6.0"
+    hostname: "datanode-1"
+    env_file:
+      - .env
+    ulimits:
+      memlock:
+        hard: -1
+        soft: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "8999:8999/tcp" #DataNode API
+      - "9200:9200/tcp"
+      - "9300:9300/tcp"
+    volumes:
+      - "graylog-datanode:/var/lib/graylog-datanode"
+    restart: "on-failure"
+    depends_on:
+      - "mongodb"
+
+  graylog:
+    image: "graylog/graylog:6.0"
+    hostname: "graylog-server"
+    depends_on:
+      mongodb:
+        condition: "service_started"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    entrypoint: "/usr/bin/tini -- wait-for-it datanode:9200 -- /docker-entrypoint.sh"
+    env_file:
+      - .env
+    ports:
+      - "5140:5140/udp" #Syslog
+      - "5140:5140/tcp" #Syslog
+      - "9000:9000/tcp" #Server API
+    volumes:
+      - "graylog_data:/usr/share/graylog/data/data"
+      - "graylog_config:/usr/share/graylog/data/config"
+      - "graylog_journal:/usr/share/graylog/data/journal"
+      - "${MEND_DIR}/graylog/:/usr/share/graylog/data/contentpacks"
+    healthcheck:
+      test: "bash -c 'printf \"GET / HTTP/1.1\n\n\" > /dev/tcp/0.0.0.0/5140; exit $?;'"
+      interval: 30s
+      timeout: 5s
+      retries: 10
+    restart: "on-failure"
+
+volumes:
+  mongodb_data: 
+  graylog-datanode: 
+  graylog_data: 
+  graylog_journal: 
+  graylog_config:
+        
+  scanner-sast:
+    image: wss-scanner:${SCANNER}
+    container_name: wss-scanner-sast
+    env_file:
+      - .env
+      - .env-sast
+    ports:
+      - "9292:9292"
+    volumes:
+      - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
+    restart: always
+    logging:
+      driver: local
+      options:
+        max-size: 1m
+        max-file: "5"
+        
+networks: 
+  default:
+    name: ${SCM}_bridge
+    external: false
