@@ -125,13 +125,6 @@ services:
       timeout: 5s
       retries: 10
     restart: "on-failure"
-
-volumes:
-  mongodb_data: 
-  graylog-datanode: 
-  graylog_data: 
-  graylog_journal: 
-  graylog_config:
         
   scanner-sast:
     image: wss-scanner:${SCANNER}
@@ -145,12 +138,19 @@ volumes:
       - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
     restart: always
     logging:
-      driver: local
+      driver: syslog
       options:
-        max-size: 1m
-        max-file: "5"
+        syslog-address: "tcp://0.0.0.0:5140"
+        tag: "wss-scanner-sast"
         
 networks: 
   default:
     name: ${SCM}_bridge
     external: false
+
+volumes:
+  mongodb_data: 
+  graylog-datanode: 
+  graylog_data: 
+  graylog_journal: 
+  graylog_config:
