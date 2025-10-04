@@ -69,7 +69,28 @@ services:
       options:
         syslog-address: "tcp://0.0.0.0:5140"
         tag: "wss-scanner"
-
+  scanner-sast:
+    image: wss-scanner:${SCANNER}
+    container_name: wss-scanner-sast
+    env_file:
+      - .env
+      - .env-sast
+    ports:
+      - "9292:9292"
+    volumes:
+      - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
+    depends_on:
+      graylog:
+        condition: "service_healthy"
+      remediate:
+        condition: "service_started"
+    restart: always
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://0.0.0.0:5140"
+        tag: "wss-scanner-sast"
+        
   mongodb:
     image: "mongo:5.0"
     hostname: "mongodb"
@@ -125,23 +146,6 @@ services:
       timeout: 5s
       retries: 10
     restart: "on-failure"
-        
-  scanner-sast:
-    image: wss-scanner:${SCANNER}
-    container_name: wss-scanner-sast
-    env_file:
-      - .env
-      - .env-sast
-    ports:
-      - "9292:9292"
-    volumes:
-      - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
-    restart: always
-    logging:
-      driver: syslog
-      options:
-        syslog-address: "tcp://0.0.0.0:5140"
-        tag: "wss-scanner-sast"
         
 networks: 
   default:
