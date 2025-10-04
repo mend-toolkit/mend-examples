@@ -282,4 +282,7 @@ if [[ $USE_GRAYLOG -eq 1 ]]; then
     echo "${cyn}sudo sysctl -p${end}"
     echo "${cyn}You will also want to edit the docker.service file under /etc/systemd and add this to the ExecStart command:${end}"
     echo "${cyn}-H tcp://0.0.0.0:2375"
+	echo "${cyn}Then finally restart the Docker service with these new settings:${end}"
+    echo "${cyn}sudo systemctl daemon-reload && sudo systemctl restart docker"
+
 fi
