@@ -114,7 +114,7 @@ sudo sysctl -p
 - After running this, wait until all containers are created.  Do not be concerned if the self-managed-graylog container has errored out as unhealthy.  This will occur until the manual setup below been performed.  If this occurs, you will need to rerun the ```docker compose up``` commmand.  The Mend repo integration containers will not start unless the Graylog healthcheck passes which runs every 30 secs which occurs on every startup.
   - Run `docker compose logs --follow` in a terminal to get the username and password for first time login
   - Navigate to http://your-host-ip-address:9000 and log in with username: `admin` and password: `the password shown in the graylog logs`
-  - Follow the setup steps and keep all of the defaults.  Be sure to go through all the steps of creating and installing a CA.
+  - Follow the setup steps and keep all of the defaults.  Be sure to go through all the steps of creating a CA and provisioning certificates.
   - After clicking "resume setup" all containers should be created and healthy and Graylog will automatically install the Mend Content Pack and start accepting input from the integrations which will also start  
   - Log into the platform with with the username: admin and the password you set in `$graylog_root_password`  
   - Click the Dashboards link at the top and view the Controller, Scanner, and Remediate Search Dashboards to ensure the integration is running, and Graylog is ingesting messages from the integration
