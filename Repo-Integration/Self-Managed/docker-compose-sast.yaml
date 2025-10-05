@@ -60,13 +60,16 @@ services:
         max-file: "5"
 
   scanner-sast:
-    image: wss-scanner:${SCANNER}
+    build:
+      context: ${BASE_DIR}/${VERSION}/wss-scanner/docker
+      dockerfile: DockerfileSast
+    image: wss-scanner-sast:${SCANNER}
     container_name: wss-scanner-sast
     env_file:
       - .env
       - .env-sast
     ports:
-      - "9292:9292"
+      - "9292:9393"
     volumes:
       - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
     restart: always
