@@ -70,13 +70,16 @@ services:
         syslog-address: "tcp://0.0.0.0:5140"
         tag: "wss-scanner"
   scanner-sast:
-    image: wss-scanner:${SCANNER}
+    build:
+      context: ${BASE_DIR}/${VERSION}/wss-scanner/docker
+      dockerfile: DockerfileSast
+    image: wss-scanner-sast:${SCANNER}
     container_name: wss-scanner-sast
     env_file:
       - .env
       - .env-sast
     ports:
-      - "9292:9292"
+      - "9292:9393"
     volumes:
       - ${BASE_DIR}/:/etc/usr/local/whitesource/conf/
     depends_on:
