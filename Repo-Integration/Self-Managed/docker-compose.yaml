@@ -70,14 +70,14 @@ services:
         tag: "wss-scanner"
 
   mongodb:
-    image: "mongo:5.0"
+    image: "mongo:8.0"
     hostname: "mongodb"
     volumes:
       - "mongodb_data:/data/db"
     restart: "on-failure"
 
   datanode:
-    image: "graylog/graylog-datanode:6.0"
+    image: "graylog/graylog-datanode:6.1"
     hostname: "datanode-1"
     env_file:
       - .env
@@ -99,7 +99,7 @@ services:
       - "mongodb"
 
   graylog:
-    image: "graylog/graylog:6.0"
+    image: "graylog/graylog:6.1"
     hostname: "graylog-server"
     depends_on:
       mongodb:

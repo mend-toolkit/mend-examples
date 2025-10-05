@@ -25,7 +25,7 @@ else
     lines=`cat ${file}`
 fi
 
-for line in $lines; do
+while IFS= read -r line; do
     cd $workdir
     echo "Cloning $line"
     git clone --filter=blob:none --no-checkout $line $workdir/currentrepo
@@ -38,8 +38,9 @@ for line in $lines; do
     else
         cd $workdir/currentrepo
 
+        default_ref=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null || echo origin/HEAD)
         # Pull the committers emails based on the $BEGIN_DATE variable
-        COMMITTERS=$(git shortlog -sce --since="$BEGIN_DATE" | sed 's/^ *\([0-9]*\) \(.*\) <\([^>]*\)>$/\3/')
+        COMMITTERS=$(git shortlog -sce --since="$BEGIN_DATE" "$default_ref" | sed 's/^ *\([0-9]*\) \(.*\) <\([^>]*\)>$/\3/')
         echo "Found the following committers"
         echo "-----------------"
         printf '%s\n' $COMMITTERS
@@ -49,6 +50,6 @@ for line in $lines; do
 
         # Cleans up cloned directory
         cd $workdir && rm -rf $workdir/currentrepo
-    fi
+  fi
 
-done
+done < "$file"

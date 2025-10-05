@@ -130,7 +130,8 @@ function env_port_check() {
     for PORT in "${EXTERNAL_PORTS[@]}"; do
         # Start a listener on the designated port in the background, storing the process ID
         echo "Listening on: $PORT"
-        nc -lp $PORT &
+        timeout 15s nc -lp $PORT &
+		sleep 2
 
         # Check for connection success
         echo "Testing connection to: $PUBLIC_IP:$PORT"
@@ -218,6 +219,8 @@ function create_env_file() {
     echo "GITHUB_COM_TOKEN=${github_com_token}" >> ${REPO_INTEGRATION_DIR}/.env
     echo "EXTERNAL_LOG_IN_CONSOLE=true" >> ${REPO_INTEGRATION_DIR}/.env
     echo "MEND_ADVANCED_MERGE_CONFIDENCE_ENABLED=true" >> ${REPO_INTEGRATION_DIR}/.env
+    echo "MEND_SCA_ORCHESTRATOR_ENABLED=true" >> ${REPO_INTEGRATION_DIR}/.env
+    echo "MEND_AI_ENABLE_CODE_CAPABILITIES=true" >> ${REPO_INTEGRATION_DIR}/.env
 
     if [[ $USE_GRAYLOG -eq 1 ]]; then
         # Add Graylog Password and Secret
@@ -284,5 +287,8 @@ if [[ $USE_GRAYLOG -eq 1 ]]; then
     echo "${cyn}sudo sh -c 'echo \"vm.max_map_count=262144\" >> /etc/sysctl.conf'${end}"
     echo "${cyn}sudo sysctl -p${end}"
     echo "${cyn}You will also want to edit the docker.service file under /etc/systemd and add this to the ExecStart command:${end}"
-    echo "${cyn}-H tcp://0.0.0.0.:2375"
+    echo "${cyn}-H tcp://0.0.0.0:2375"
+	echo "${cyn}Then finally restart the Docker service with these new settings:${end}"
+    echo "${cyn}sudo systemctl daemon-reload && sudo systemctl restart docker"
+
 fi

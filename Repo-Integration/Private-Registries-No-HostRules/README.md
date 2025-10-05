@@ -149,7 +149,23 @@ Go's `datasource` in Renovate doesn't support private registries; use `GOPROXY`.
 > [!WARNING]  
 Map the file into the container as `NuGet.Config` with the correct capitalization. This is because the container already creates this file when installing the dotnet CLI, and needs to be overridden.
 
-8. **Docker**:
+8. **Conda**:
+
+   - For the environment variables you need two different usernames, two different URLs, and the password:
+      - `CONDA_REGISTRY: https://<artifactory-instance>.jfrog.io/artifactory/api/conda/<conda_registry>`
+      - `CONDA_CHANNEL: <artifactory-instance>.jfrog.io/artifactory/api/conda/<conda_registry>`
+      - `CONDA_USER: user.name@domain.com`
+      - `CONDA_USER_ENCODED: user.name%40domain.com`
+      - `CONDA_PASS: <password>`
+
+   - For the scanner container, the Unified Agent runs ``conda create env -f <environment>.yml`` to create an environment based off of the file provided in the repository. It then resolves the dependencies based off of that.  
+   **NOTE**: Due to conda's behavior, it will fail if it resolves packages that have not been added to the private registry already for that  OS. Please make sure that the packages have been resolved already in the private registry for linux-64.
+   - Add the following [.condarc](./Conda/.condarc) file as a volume map into the home directory: `/path/to/.condarc:/home/wss-scanner/.condarc`
+   - In the scanner container set the environment variables for: `CONDA_CHANNEL`, `CONDA_USER_ENCODED`, `CONDA_PASS`
+
+   - For your config.js use the `CONDA_REGISTRY` environment variable and then use `CONDA_USER` and `CONDA_PASS` for the credentials.
+
+9. **Docker**:
 
    - The integration itself doesn't perform image scans.
    - Only Remediate/Renovate require credentials.

@@ -1,7 +1,7 @@
 The following scripts can be used to gather data from the Mend.io application and different Source Control Management systems in order to understand how many developers are currently working on repositories throughout the calendar year.
 
 > [!IMPORTANT]
-The project tags repoFullName and remoteUrl are only populated by the [Unified CLI](https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html) and [repository integration](https://docs.mend.io/bundle/integrations/page/repo_integrations.html) scans (with exception for Developer Platform).  [Unified Agent](https://docs.mend.io/bundle/unified_agent/page/getting_started_with_the_unified_agent.html) and [Developer Platform](https://docs.mend.io/bundle/platform/page/mend_developer_platform.html) users will need to provide a list of repositories manually to run the [get-committers.sh](./get-committers.sh) script.
+The project tags repoFullName and remoteUrl are only populated by the [Unified CLI](https://docs.mend.io/bundle/integrations/page/scan_with_the_mend_cli.html) and [repository integration](https://docs.mend.io/bundle/integrations/page/repo_integrations.html) scans.  [Unified Agent](https://docs.mend.io/bundle/unified_agent/page/getting_started_with_the_unified_agent.html) and [Developer Platform](https://docs.mend.io/bundle/platform/page/mend_developer_platform.html) users will need to provide a list of repositories manually to run the [get-committers.sh](./get-committers.sh) script.
 
 
 
@@ -25,6 +25,8 @@ This script pulls all of the projects in an organization and then retrieves the 
 Afterwards the scripts combines all of the data pulled for each project, prints to the screen and also saves to a repos.txt
 
 The WS_API_KEY environment variable is optional. If this is not specified in the script, then the Login API will authenticate to the last organization the user accessed in the Mend UI.
+
+MEND_ONLY_UPDATED_REPOS is an optional environment variable that will only retrieve repos that have been scanned in the last 90 days
 ## Usage
 ```shell
 export MEND_USER_KEY="An administrator's userkey"
