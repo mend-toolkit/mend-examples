@@ -61,8 +61,14 @@ fi
 
 echo "Successfully retrieved JWT token."
 
+echo "Reading CSV file: $CSV_FILE"
+echo "---"
 
-while IFS=',' read -r productName projectName projectOwner; do
+while IFS=',' read -r productName projectName <&3 || [[ -n "$productName" ]]; do
+  # Strip carriage returns from Windows-style line endings
+  productName=$(echo "$productName" | tr -d '\r')
+  projectName=$(echo "$projectName" | tr -d '\r')
+  
   echo "Processing product: $productName"
 
   #Create Product
@@ -90,7 +96,7 @@ EOF
   fi
 
   created=$(echo "$productResponse" | jq -r '.additionalData.created')
-  if $created; then
+  if [[ "$created" == "true" ]]; then
     echo "Created product $productName"
   else
     echo "Product $productName already exists. Using existing product token."
@@ -100,14 +106,34 @@ EOF
   if [[ -n "$projectName" ]]; then
     echo "Searching for project: $projectName"
 
-    # Call Get Product Projects
-    projectResponse=$(curl -s -X GET "https://api-${MEND_URL}/api/v2.0/orgs/${ORG_TOKEN}/projects" \
-      -H "Authorization: Bearer ${JWT_TOKEN}")
-      
-
-    # Find the projectToken matching the projectName
-    projectToken=$(echo "$projectResponse" | jq -r --arg name "$projectName" '.retVal[] | select(.name == $name) | .uuid')
+    # Call Get Product Projects with pagination
+    page=0
+    projectToken=""
+    projectResponse=""
     
+    while [[ -z "$projectToken" ]]; do
+      projectResponse=$(curl -s -X GET "https://api-${MEND_URL}/api/v2.0/orgs/${ORG_TOKEN}/projects?page=${page}&pageSize=10000" \
+        -H "Authorization: Bearer ${JWT_TOKEN}")
+        
+
+      # Find the projectToken matching the projectName
+      projectToken=$(echo "$projectResponse" | jq -r --arg name "$projectName" '.retVal[] | select(.name == $name) | .uuid')
+      
+      # Check if project was found or if we've reached the last page
+      isLastPage=$(echo "$projectResponse" | jq -r '.additionalData.isLastPage')
+      
+      if [[ -n "$projectToken" ]]; then
+        # Project found
+        break
+      elif [[ "$isLastPage" == "true" ]]; then
+        # Reached last page without finding project
+        break
+      else
+        # Continue to next page
+        page=$((page + 1))
+        echo "Project not found on page $((page - 1)), checking page ${page}..."
+      fi
+    done
 
     if [[ -z "$projectToken" ]]; then
       echo "Error: Project '$projectName' not found. Skipping reassignment."
@@ -137,4 +163,7 @@ EOF
 
   fi
 
-done < "$CSV_FILE"
+done 3< "$CSV_FILE"
+
+echo ""
+echo "=== Finished processing all CSV entries ==="
