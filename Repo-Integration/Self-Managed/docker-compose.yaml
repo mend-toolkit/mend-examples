@@ -70,7 +70,7 @@ services:
         tag: "wss-scanner"
 
   mongodb:
-    image: "mongo:8.0"
+    image: "mongo:8.2"
     hostname: "mongodb"
     volumes:
       - "mongodb_data:/data/db"
