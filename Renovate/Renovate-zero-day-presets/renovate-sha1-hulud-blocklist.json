@@ -1,0 +1,3210 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "description": ["Renovate rules to block NPM packages affected by Sha1-Hulud zero-day attack"],
+    "packageRules": [
+      {
+        "matchPackageNames": ["@zapier/zapier-sdk"],
+        "allowedVersions": "!/^(0\\.15\\.5|0\\.15\\.6|0\\.15\\.7)$/"
+      },
+      {
+        "matchPackageNames": ["zapier-platform-core"],
+        "allowedVersions": "!/^(18\\.0\\.2|18\\.0\\.3|18\\.0\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["zapier-platform-cli"],
+        "allowedVersions": "!/^(18\\.0\\.2|18\\.0\\.3|18\\.0\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["zapier-platform-schema"],
+        "allowedVersions": "!/^(18\\.0\\.2|18\\.0\\.3|18\\.0\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/mcp-integration"],
+        "allowedVersions": "!/^(3\\.0\\.1|3\\.0\\.2|3\\.0\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/secret-scrubber"],
+        "allowedVersions": "!/^(1\\.1\\.3|1\\.1\\.4|1\\.1\\.5)$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/ai-actions-react"],
+        "allowedVersions": "!/^(0\\.1\\.12|0\\.1\\.13|0\\.1\\.14)$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/stubtree"],
+        "allowedVersions": "!/^(0\\.1\\.2|0\\.1\\.3|0\\.1\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/babel-preset-zapier"],
+        "allowedVersions": "!/^(6\\.4\\.1|6\\.4\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["zapier-scripts"],
+        "allowedVersions": "!/^(7\\.8\\.3|7\\.8\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["zapier-platform-legacy-scripting-runner"],
+        "allowedVersions": "!/^(4\\.0\\.2|4\\.0\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/ens-validation"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/content-hash"],
+        "allowedVersions": "!/^3\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["ethereum-ens"],
+        "allowedVersions": "!/^0\\.8\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/react-ens-address"],
+        "allowedVersions": "!/^0\\.0\\.32$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/ens-contracts"],
+        "allowedVersions": "!/^1\\.6\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/ensjs"],
+        "allowedVersions": "!/^4\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/ens-archived-contracts"],
+        "allowedVersions": "!/^0\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/dnssecoraclejs"],
+        "allowedVersions": "!/^0\\.2\\.9$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/address-encoder"],
+        "allowedVersions": "!/^0\\.1\\.5$/"
+      },
+      {
+        "matchPackageNames": ["typeorm-orbit"],
+        "allowedVersions": "!/^0\\.2\\.27$/"
+      },
+      {
+        "matchPackageNames": ["orbit-nebula-draw-tools"],
+        "allowedVersions": "!/^1\\.0\\.10$/"
+      },
+      {
+        "matchPackageNames": ["@orbitgtbelgium/orbit-components"],
+        "allowedVersions": "!/^1\\.2\\.9$/"
+      },
+      {
+        "matchPackageNames": ["@orbitgtbelgium/time-slider"],
+        "allowedVersions": "!/^1\\.0\\.187$/"
+      },
+      {
+        "matchPackageNames": ["@orbitgtbelgium/mapbox-gl-draw-cut-polygon-mode"],
+        "allowedVersions": "!/^2\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/atrix-postgres"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["command-irail"],
+        "allowedVersions": "!/^0\\.5\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/fsm"],
+        "allowedVersions": "!/^3\\.4\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/trigo-hapijs"],
+        "allowedVersions": "!/^5\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["trigo-react-app"],
+        "allowedVersions": "!/^4\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["react-element-prompt-inspector"],
+        "allowedVersions": "!/^0\\.1\\.18$/"
+      },
+      {
+        "matchPackageNames": ["bool-expressions"],
+        "allowedVersions": "!/^0\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["atrix-mongoose"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["orbit-boxicons"],
+        "allowedVersions": "!/^2\\.1\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/atrix"],
+        "allowedVersions": "!/^7\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["redux-forge"],
+        "allowedVersions": "!/^2\\.5\\.3$/"
+      },
+      {
+        "matchPackageNames": ["atrix"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/atrix-acl"],
+        "allowedVersions": "!/^4\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["crypto-addr-codec"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["@trigo/atrix-swagger"],
+        "allowedVersions": "!/^3\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/atrix-soap"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/keycloak-api"],
+        "allowedVersions": "!/^1\\.3\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/atrix-elasticsearch"],
+        "allowedVersions": "!/^2\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/hapi-auth-signedlink"],
+        "allowedVersions": "!/^1\\.3\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/atrix-pubsub"],
+        "allowedVersions": "!/^4\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/atrix-orientdb"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/node-soap"],
+        "allowedVersions": "!/^0\\.5\\.4$/"
+      },
+      {
+        "matchPackageNames": ["eslint-config-trigo"],
+        "allowedVersions": "!/^22\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/atrix-redis"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/eslint-config-trigo"],
+        "allowedVersions": "!/^3\\.3\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/jsdt"],
+        "allowedVersions": "!/^0\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/pathfinder-ui-css"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@mparpaillon/imagesloaded"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["@mparpaillon/connector-parse"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["orbit-nebula-editor"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@louisle2/cortex-js"],
+        "allowedVersions": "!/^0\\.1\\.6$/"
+      },
+      {
+        "matchPackageNames": ["react-component-taggers"],
+        "allowedVersions": "!/^0\\.1\\.9$/"
+      },
+      {
+        "matchPackageNames": ["token.js-fork"],
+        "allowedVersions": "!/^0\\.7\\.32$/"
+      },
+      {
+        "matchPackageNames": ["@orbitgtbelgium/mapbox-gl-draw-scale-rotate-mode"],
+        "allowedVersions": "!/^1\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["orbit-soap"],
+        "allowedVersions": "!/^0\\.43\\.13$/"
+      },
+      {
+        "matchPackageNames": ["react-library-setup"],
+        "allowedVersions": "!/^0\\.0\\.6$/"
+      },
+      {
+        "matchPackageNames": ["exact-ticker"],
+        "allowedVersions": "!/^0\\.3\\.5$/"
+      },
+      {
+        "matchPackageNames": ["jan-browser"],
+        "allowedVersions": "!/^0\\.13\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@louisle2/core"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["lite-serper-mcp-server"],
+        "allowedVersions": "!/^0\\.2\\.2$/"
+      },
+      {
+        "matchPackageNames": ["cpu-instructions"],
+        "allowedVersions": "!/^0\\.0\\.14$/"
+      },
+      {
+        "matchPackageNames": ["evm-checkcode-cli"],
+        "allowedVersions": "!/^(1\\.0\\.12|1\\.0\\.13)$/"
+      },
+      {
+        "matchPackageNames": ["bytecode-checker-cli"],
+        "allowedVersions": "!/^(1\\.0\\.8|1\\.0\\.9)$/"
+      },
+      {
+        "matchPackageNames": ["gate-evm-check-code2"],
+        "allowedVersions": "!/^(2\\.0\\.3|2\\.0\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["devstart-cli"],
+        "allowedVersions": "!/^1\\.0\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@postman/pm-bin-windows-x64"],
+        "allowedVersions": "!/^(1\\.24\\.3|1\\.24\\.5)$/"
+      },
+      {
+        "matchPackageNames": ["package-tester"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@postman/postman-mcp-server"],
+        "allowedVersions": "!/^2\\.4\\.12$/"
+      },
+      {
+        "matchPackageNames": ["@postman/postman-collection-fork"],
+        "allowedVersions": "!/^(4\\.3\\.3|4\\.3\\.5)$/"
+      },
+      {
+        "matchPackageNames": ["@postman/pm-bin-macos-arm64"],
+        "allowedVersions": "!/^(1\\.24\\.3|1\\.24\\.5)$/"
+      },
+      {
+        "matchPackageNames": ["@trefox/sleekshop-js"],
+        "allowedVersions": "!/^0\\.1\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@postman/mcp-ui-client"],
+        "allowedVersions": "!/^(5\\.5\\.1|5\\.5\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@postman/pm-bin-macos-x64"],
+        "allowedVersions": "!/^(1\\.24\\.3|1\\.24\\.5)$/"
+      },
+      {
+        "matchPackageNames": ["@postman/final-node-keytar"],
+        "allowedVersions": "!/^(7\\.9\\.1|7\\.9\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@postman/pretty-ms"],
+        "allowedVersions": "!/^(6\\.1\\.1|6\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@postman/postman-mcp-cli"],
+        "allowedVersions": "!/^(1\\.0\\.3|1\\.0\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["@postman/secret-scanner-wasm"],
+        "allowedVersions": "!/^(2\\.1\\.2|2\\.1\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@postman/wdio-junit-reporter"],
+        "allowedVersions": "!/^(0\\.0\\.4|0\\.0\\.5|0\\.0\\.6)$/"
+      },
+      {
+        "matchPackageNames": ["@postman/wdio-allure-reporter"],
+        "allowedVersions": "!/^(0\\.0\\.7|0\\.0\\.8)$/"
+      },
+      {
+        "matchPackageNames": ["@caretive/caret-cli"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["mcp-use"],
+        "allowedVersions": "!/^(1\\.4\\.2|1\\.4\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@mcp-use/inspector"],
+        "allowedVersions": "!/^(0\\.6\\.2|0\\.6\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["create-mcp-use-app"],
+        "allowedVersions": "!/^(0\\.5\\.3|0\\.5\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["@mcp-use/cli"],
+        "allowedVersions": "!/^(2\\.2\\.6|2\\.2\\.7)$/"
+      },
+      {
+        "matchPackageNames": ["@mcp-use/mcp-use"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["skills-use"],
+        "allowedVersions": "!/^(0\\.1\\.1|0\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["zuper-cli"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["test-hardhat-app"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["zuper-stream"],
+        "allowedVersions": "!/^2\\.0\\.9$/"
+      },
+      {
+        "matchPackageNames": ["redux-router-kit"],
+        "allowedVersions": "!/^(1\\.2\\.2|1\\.2\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["create-hardhat3-app"],
+        "allowedVersions": "!/^(1\\.1\\.1|1\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["test-foundry-app"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["zuper-sdk"],
+        "allowedVersions": "!/^1\\.0\\.57$/"
+      },
+      {
+        "matchPackageNames": ["zapier-async-storage"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["gate-evm-tools-test"],
+        "allowedVersions": "!/^(1\\.0\\.5|1\\.0\\.6)$/"
+      },
+      {
+        "matchPackageNames": ["claude-token-updater"],
+        "allowedVersions": "!/^(1\\.0\\.2|1\\.0\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@markvivanco/app-version-checker"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["@hapheus/n8n-nodes-pgp"],
+        "allowedVersions": "!/^(1\\.5\\.0|1\\.5\\.1)$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/atrix-mongoose"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["esbuild-plugin-httpfile"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["open2internet"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["vite-plugin-httpfile"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["webpack-loader-httpfile"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["bun-plugin-httpfile"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["poper-react-sdk"],
+        "allowedVersions": "!/^0\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/react-native-devtools"],
+        "allowedVersions": "!/^0\\.1\\.3$/"
+      },
+      {
+        "matchPackageNames": ["discord-bot-server"],
+        "allowedVersions": "!/^0\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/eslint-plugin-zapier"],
+        "allowedVersions": "!/^11\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["n8n-nodes-tmdb"],
+        "allowedVersions": "!/^(0\\.5\\.0|0\\.5\\.1)$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/wizard"],
+        "allowedVersions": "!/^1\\.18\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/mock"],
+        "allowedVersions": "!/^2\\.1\\.52$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/web-dev-server"],
+        "allowedVersions": "!/^1\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/ai-actions"],
+        "allowedVersions": "!/^0\\.1\\.18$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/twitter-followers-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/siphash"],
+        "allowedVersions": "!/^1\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/spectral-api-ruleset"],
+        "allowedVersions": "!/^1\\.9\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/op-resolver-contracts"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/rrweb-snapshot"],
+        "allowedVersions": "!/^0\\.0\\.31$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/rrweb-replay"],
+        "allowedVersions": "!/^0\\.0\\.19$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/rrweb-record"],
+        "allowedVersions": "!/^0\\.0\\.31$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/rrweb-player"],
+        "allowedVersions": "!/^0\\.0\\.31$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/rrweb"],
+        "allowedVersions": "!/^0\\.0\\.31$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/rrdom"],
+        "allowedVersions": "!/^0\\.0\\.31$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/plugin-server"],
+        "allowedVersions": "!/^1\\.10\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/piscina"],
+        "allowedVersions": "!/^3\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/nuxt"],
+        "allowedVersions": "!/^1\\.2\\.9$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/hedgehog-mode"],
+        "allowedVersions": "!/^0\\.0\\.42$/"
+      },
+      {
+        "matchPackageNames": ["@postman/tunnel-agent"],
+        "allowedVersions": "!/^(0\\.6\\.5|0\\.6\\.6)$/"
+      },
+      {
+        "matchPackageNames": ["@postman/pm-bin-linux-x64"],
+        "allowedVersions": "!/^1\\.24\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@postman/node-keytar"],
+        "allowedVersions": "!/^7\\.9\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/browserslist-config-zapier"],
+        "allowedVersions": "!/^(1\\.0\\.3|1\\.0\\.5)$/"
+      },
+      {
+        "matchPackageNames": ["@postman/csv-parse"],
+        "allowedVersions": "!/^4\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@postman/aether-icons"],
+        "allowedVersions": "!/^2\\.23\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/ccip-read-dns-gateway"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/subdomain-registrar"],
+        "allowedVersions": "!/^0\\.2\\.4$/"
+      },
+      {
+        "matchPackageNames": ["avm-tool"],
+        "allowedVersions": "!/^0\\.16\\.0-beta\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/ens-avatar"],
+        "allowedVersions": "!/^1\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/blacklist"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/hackathon-registrar"],
+        "allowedVersions": "!/^1\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/name-wrapper"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/ensjs-react"],
+        "allowedVersions": "!/^0\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/server-analytics"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/thorin"],
+        "allowedVersions": "!/^0\\.6\\.51$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/test-utils"],
+        "allowedVersions": "!/^1\\.3\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/renewal"],
+        "allowedVersions": "!/^0\\.0\\.13$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/dnsprovejs"],
+        "allowedVersions": "!/^0\\.5\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/durin"],
+        "allowedVersions": "!/^0\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/web3modal"],
+        "allowedVersions": "!/^1\\.10\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/durin-middleware"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/eth-ens-namehash"],
+        "allowedVersions": "!/^2\\.0\\.16$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/generator-react-sdk"],
+        "allowedVersions": "!/^1\\.1\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/html-template"],
+        "allowedVersions": "!/^(3\\.3\\.2|3\\.3\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/java-spring-template"],
+        "allowedVersions": "!/^(1\\.6\\.1|1\\.6\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/modelina"],
+        "allowedVersions": "!/^5\\.10\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/nodejs-template"],
+        "allowedVersions": "!/^(3\\.0\\.5|3\\.0\\.6)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/nunjucks-filters"],
+        "allowedVersions": "!/^2\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/python-paho-template"],
+        "allowedVersions": "!/^(0\\.2\\.1\\.14|0\\.2\\.15)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/studio"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/diff"],
+        "allowedVersions": "!/^(0\\.5\\.1|0\\.5\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/dnssec-oracle-anchors"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/offchain-resolver-contracts"],
+        "allowedVersions": "!/^0\\.2\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/curvearithmetics"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/ui"],
+        "allowedVersions": "!/^3\\.4\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/cypress-metamask"],
+        "allowedVersions": "!/^1\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/buffer"],
+        "allowedVersions": "!/^0\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/ccip-read-cf-worker"],
+        "allowedVersions": "!/^0\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/ccip-read-router"],
+        "allowedVersions": "!/^0\\.0\\.7$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/ccip-read-worker-viem"],
+        "allowedVersions": "!/^0\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/ens-test-env"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/hardhat-chai-matchers-viem"],
+        "allowedVersions": "!/^0\\.1\\.15$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/hardhat-toolbox-viem-extended"],
+        "allowedVersions": "!/^0\\.0\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/renewal-widget"],
+        "allowedVersions": "!/^0\\.1\\.10$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/reverse-records"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/solsha1"],
+        "allowedVersions": "!/^0\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/unicode-confusables"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/unruggable-gateways"],
+        "allowedVersions": "!/^0\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/vite-plugin-i18next-loader"],
+        "allowedVersions": "!/^4\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@trigo/bool-expressions"],
+        "allowedVersions": "!/^4\\.1\\.3$/"
+      },
+      {
+        "matchPackageNames": ["posthog-node"],
+        "allowedVersions": "!/^5\\.11\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/css-to-react-native-transform"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/native"],
+        "allowedVersions": "!/^0\\.1\\.32$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/node-server"],
+        "allowedVersions": "!/^1\\.1\\.19$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/react-absolute"],
+        "allowedVersions": "!/^0\\.8\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/react-daum-postcode"],
+        "allowedVersions": "!/^1\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/react-kakaosdk"],
+        "allowedVersions": "!/^0\\.9\\.27$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/react-native-actionsheet"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/react-native-fast-image"],
+        "allowedVersions": "!/^8\\.5\\.13$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/react-native-kakao-channel"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/react-native-kakao-navi"],
+        "allowedVersions": "!/^2\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/react-native-less-transformer"],
+        "allowedVersions": "!/^1\\.0\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/react-native-naver-login"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/react-native-simple-video"],
+        "allowedVersions": "!/^1\\.0\\.13$/"
+      },
+      {
+        "matchPackageNames": ["@actbase/react-native-tiktok"],
+        "allowedVersions": "!/^1\\.1\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@alexcolls/nuxt-socket.io"],
+        "allowedVersions": "!/^(0\\.0\\.7|0\\.0\\.8)$/"
+      },
+      {
+        "matchPackageNames": ["@alexcolls/nuxt-ux"],
+        "allowedVersions": "!/^(0\\.6\\.1|0\\.6\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@aryanhussain/my-angular-lib"],
+        "allowedVersions": "!/^0\\.0\\.23$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/avro-schema-parser"],
+        "allowedVersions": "!/^3\\.0\\.25$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/bundler"],
+        "allowedVersions": "!/^(0\\.6\\.5|0\\.6\\.6)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/cli"],
+        "allowedVersions": "!/^(4\\.1\\.2|4\\.1\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/converter"],
+        "allowedVersions": "!/^1\\.6\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/dotnet-rabbitmq-template"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/edavisualiser"],
+        "allowedVersions": "!/^(1\\.2\\.1|1\\.2\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/generator"],
+        "allowedVersions": "!/^2\\.8\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/generator-components"],
+        "allowedVersions": "!/^(0\\.3\\.2|0\\.3\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/generator-helpers"],
+        "allowedVersions": "!/^0\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/go-watermill-template"],
+        "allowedVersions": "!/^(0\\.2\\.76|0\\.2\\.77)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/java-spring-cloud-stream-template"],
+        "allowedVersions": "!/^(0\\.13\\.5|0\\.13\\.6)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/java-template"],
+        "allowedVersions": "!/^(0\\.3\\.5|0\\.3\\.6)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/keeper"],
+        "allowedVersions": "!/^(0\\.0\\.2|0\\.0\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/markdown-template"],
+        "allowedVersions": "!/^(1\\.6\\.8|1\\.6\\.9)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/modelina-cli"],
+        "allowedVersions": "!/^(5\\.10\\.2|5\\.10\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/multi-parser"],
+        "allowedVersions": "!/^2\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/nodejs-ws-template"],
+        "allowedVersions": "!/^(0\\.10\\.1|0\\.10\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/openapi-schema-parser"],
+        "allowedVersions": "!/^3\\.0\\.25$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/optimizer"],
+        "allowedVersions": "!/^(1\\.0\\.5|1\\.0\\.6)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/parser"],
+        "allowedVersions": "!/^(3\\.4\\.1|3\\.4\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/php-template"],
+        "allowedVersions": "!/^(0\\.1\\.1|0\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/problem"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/protobuf-schema-parser"],
+        "allowedVersions": "!/^(3\\.5\\.2|3\\.5\\.3|3\\.6\\.1)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/react-component"],
+        "allowedVersions": "!/^2\\.6\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/server-api"],
+        "allowedVersions": "!/^(0\\.6\\.24|0\\.16\\.25)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/specs"],
+        "allowedVersions": "!/^(6\\.8\\.2|6\\.9\\.1|6\\.10\\.1)$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/web-component"],
+        "allowedVersions": "!/^(2\\.6\\.6|2\\.6\\.7)$/"
+      },
+      {
+        "matchPackageNames": ["@dev-blinq/ai-qa-logic"],
+        "allowedVersions": "!/^1\\.0\\.19$/"
+      },
+      {
+        "matchPackageNames": ["@dev-blinq/cucumber_client"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["@everreal/web-analytics"],
+        "allowedVersions": "!/^0\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@ifings/design-system"],
+        "allowedVersions": "!/^4\\.9\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@lessondesk/api-client"],
+        "allowedVersions": "!/^(9\\.12\\.2|9\\.12\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@lessondesk/babel-preset"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@lessondesk/eslint-config"],
+        "allowedVersions": "!/^1\\.4\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@lessondesk/schoolbus"],
+        "allowedVersions": "!/^(5\\.2\\.2|5\\.2\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@kvytech/cli"],
+        "allowedVersions": "!/^0\\.0\\.7$/"
+      },
+      {
+        "matchPackageNames": ["@kvytech/components"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@kvytech/habbit-e2e-test"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@kvytech/medusa-plugin-announcement"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@kvytech/medusa-plugin-management"],
+        "allowedVersions": "!/^0\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@kvytech/medusa-plugin-newsletter"],
+        "allowedVersions": "!/^0\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@kvytech/medusa-plugin-product-reviews"],
+        "allowedVersions": "!/^0\\.0\\.9$/"
+      },
+      {
+        "matchPackageNames": ["@kvytech/medusa-plugin-promotion"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@kvytech/web"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/agent"],
+        "allowedVersions": "!/^1\\.24\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/ai"],
+        "allowedVersions": "!/^7\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/automatic-cohorts-plugin"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["@posthog/bitbucket-release-tracker"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/cli"],
+        "allowedVersions": "!/^(0\\.5\\.14|0\\.5\\.15)$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/clickhouse"],
+        "allowedVersions": "!/^1\\.7\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/core"],
+        "allowedVersions": "!/^1\\.5\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/currency-normalization-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/customerio-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/databricks-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/drop-events-on-property-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/event-sequence-timer-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/filter-out-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/first-time-event-tracker"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/geoip-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/github-release-tracking-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/gitub-star-sync-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/heartbeat-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/icons"],
+        "allowedVersions": "!/^0\\.36\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/ingestion-alert-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/intercom-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/kinesis-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/laudspeaker-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/lemon-ui"],
+        "allowedVersions": "!/^0\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/maxmind-plugin"],
+        "allowedVersions": "!/^0\\.1\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/migrator3000-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/netdata-event-processing"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/nextjs"],
+        "allowedVersions": "!/^0\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/nextjs-config"],
+        "allowedVersions": "!/^1\\.5\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/pagerduty-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/plugin-contrib"],
+        "allowedVersions": "!/^0\\.0\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/plugin-unduplicates"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/postgres-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/react-rrweb-player"],
+        "allowedVersions": "!/^1\\.1\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/sendgrid-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/snowflake-export-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/taxonomy-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/twilio-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/url-normalizer-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/variance-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/zendesk-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["posthog-docusaurus"],
+        "allowedVersions": "!/^2\\.0\\.6$/"
+      },
+      {
+        "matchPackageNames": ["posthog-react-native"],
+        "allowedVersions": "!/^4\\.12\\.5$/"
+      },
+      {
+        "matchPackageNames": ["posthog-react-native-session-replay"],
+        "allowedVersions": "!/^1\\.2\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@quick-start-soft/quick-document-translator"],
+        "allowedVersions": "!/^1\\.4\\.2511142126$/"
+      },
+      {
+        "matchPackageNames": ["@quick-start-soft/quick-git-clean-markdown"],
+        "allowedVersions": "!/^1\\.4\\.2511142126$/"
+      },
+      {
+        "matchPackageNames": ["@quick-start-soft/quick-markdown"],
+        "allowedVersions": "!/^1\\.4\\.2511142126$/"
+      },
+      {
+        "matchPackageNames": ["@quick-start-soft/quick-markdown-compose"],
+        "allowedVersions": "!/^1\\.4\\.2506300029$/"
+      },
+      {
+        "matchPackageNames": ["@quick-start-soft/quick-markdown-image"],
+        "allowedVersions": "!/^1\\.4\\.2511142126$/"
+      },
+      {
+        "matchPackageNames": ["@quick-start-soft/quick-markdown-print"],
+        "allowedVersions": "!/^1\\.4\\.2511142126$/"
+      },
+      {
+        "matchPackageNames": ["@quick-start-soft/quick-markdown-translator"],
+        "allowedVersions": "!/^1\\.4\\.2509202331$/"
+      },
+      {
+        "matchPackageNames": ["@quick-start-soft/quick-remove-image-background"],
+        "allowedVersions": "!/^1\\.4\\.2511142126$/"
+      },
+      {
+        "matchPackageNames": ["@quick-start-soft/quick-task-refine"],
+        "allowedVersions": "!/^1\\.4\\.2511142126$/"
+      },
+      {
+        "matchPackageNames": ["@strapbuild/react-native-date-time-picker"],
+        "allowedVersions": "!/^2\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@strapbuild/react-native-perspective-image-cropper"],
+        "allowedVersions": "!/^0\\.4\\.15$/"
+      },
+      {
+        "matchPackageNames": ["@strapbuild/react-native-perspective-image-cropper-2"],
+        "allowedVersions": "!/^0\\.4\\.7$/"
+      },
+      {
+        "matchPackageNames": ["@strapbuild/react-native-perspective-image-cropper-poojan31"],
+        "allowedVersions": "!/^0\\.4\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@commute/bloom"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@commute/market-data"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@clausehq/flows-step-jsontoxml"],
+        "allowedVersions": "!/^0\\.1\\.1\\.14$/"
+      },
+      {
+        "matchPackageNames": ["@ifelsedeveloper/protocol-contracts-svm-idl"],
+        "allowedVersions": "!/^(0\\.1\\.2|0\\.1\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@osmanekrem/error-handler"],
+        "allowedVersions": "!/^1\\.2\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/rrweb-utils"],
+        "allowedVersions": "!/^0\\.0\\.31$/"
+      },
+      {
+        "matchPackageNames": ["@seung-ju/next"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@seung-ju/openapi-generator"],
+        "allowedVersions": "!/^0\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@seung-ju/react-hooks"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@seung-ju/react-native-action-sheet"],
+        "allowedVersions": "!/^0\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@thedelta/eslint-config"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@tiaanduplessis/json"],
+        "allowedVersions": "!/^(2\\.0\\.2|2\\.0\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@tiaanduplessis/react-progressbar"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@varsityvibe/api-client"],
+        "allowedVersions": "!/^(1\\.3\\.36|1\\.3\\.37)$/"
+      },
+      {
+        "matchPackageNames": ["@varsityvibe/validation-schemas"],
+        "allowedVersions": "!/^(0\\.6\\.7|0\\.6\\.8)$/"
+      },
+      {
+        "matchPackageNames": ["asyncapi-preview"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["axios-builder"],
+        "allowedVersions": "!/^1\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["axios-cancelable"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["axios-timed"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["barebones-css"],
+        "allowedVersions": "!/^(1\\.1\\.3|1\\.1\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["blinqio-executions-cli"],
+        "allowedVersions": "!/^1\\.0\\.41$/"
+      },
+      {
+        "matchPackageNames": ["bytes-to-x"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["calc-loan-interest"],
+        "allowedVersions": "!/^1\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["capacitor-plugin-apptrackingios"],
+        "allowedVersions": "!/^0\\.0\\.21$/"
+      },
+      {
+        "matchPackageNames": ["capacitor-plugin-purchase"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["capacitor-plugin-scgssigninwithgoogle"],
+        "allowedVersions": "!/^0\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["capacitor-purchase-history"],
+        "allowedVersions": "!/^0\\.0\\.10$/"
+      },
+      {
+        "matchPackageNames": ["capacitor-voice-recorder-wav"],
+        "allowedVersions": "!/^6\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["chrome-extension-downloads"],
+        "allowedVersions": "!/^(0\\.0\\.3|0\\.0\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["coinmarketcap-api"],
+        "allowedVersions": "!/^(3\\.1\\.2|3\\.1\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["compare-obj"],
+        "allowedVersions": "!/^(1\\.1\\.1|1\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["create-glee-app"],
+        "allowedVersions": "!/^(0\\.2\\.2|0\\.2\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["designstudiouiux"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["dotnet-template"],
+        "allowedVersions": "!/^(0\\.0\\.3|0\\.0\\.4|1\\.1\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["drop-events-on-property-plugin"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["enforce-branch-name"],
+        "allowedVersions": "!/^1\\.1\\.3$/"
+      },
+      {
+        "matchPackageNames": ["eslint-config-zeallat-base"],
+        "allowedVersions": "!/^1\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["expo-audio-session"],
+        "allowedVersions": "!/^0\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["feature-flip"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["fittxt"],
+        "allowedVersions": "!/^(1\\.0\\.2|1\\.0\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["flapstacks"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["flatten-unflatten"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["formik-error-focus"],
+        "allowedVersions": "!/^2\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["formik-store"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["fuzzy-finder"],
+        "allowedVersions": "!/^(1\\.0\\.5|1\\.0\\.6)$/"
+      },
+      {
+        "matchPackageNames": ["gatsby-plugin-cname"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["get-them-args"],
+        "allowedVersions": "!/^1\\.3\\.3$/"
+      },
+      {
+        "matchPackageNames": ["github-action-for-generator"],
+        "allowedVersions": "!/^(2\\.1\\.27|2\\.1\\.28)$/"
+      },
+      {
+        "matchPackageNames": ["gitsafe"],
+        "allowedVersions": "!/^1\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["go-template"],
+        "allowedVersions": "!/^(0\\.1\\.8|0\\.1\\.9)$/"
+      },
+      {
+        "matchPackageNames": ["haufe-axera-api-client"],
+        "allowedVersions": "!/^(0\\.0\\.1|0\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["hyperterm-hipster"],
+        "allowedVersions": "!/^1\\.0\\.7$/"
+      },
+      {
+        "matchPackageNames": ["image-to-uri"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["iron-shield-miniapp"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["ito-button"],
+        "allowedVersions": "!/^8\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["itobuz-angular"],
+        "allowedVersions": "!/^0\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["itobuz-angular-auth"],
+        "allowedVersions": "!/^8\\.0\\.11$/"
+      },
+      {
+        "matchPackageNames": ["jacob-zuma"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["jquery-bindings"],
+        "allowedVersions": "!/^(1\\.1\\.2|1\\.1\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["just-toasty"],
+        "allowedVersions": "!/^1\\.7\\.1$/"
+      },
+      {
+        "matchPackageNames": ["kill-port"],
+        "allowedVersions": "!/^(2\\.0\\.2|2\\.0\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["korea-administrative-area-geo-json-util"],
+        "allowedVersions": "!/^1\\.0\\.7$/"
+      },
+      {
+        "matchPackageNames": ["license-o-matic"],
+        "allowedVersions": "!/^(1\\.2\\.1|1\\.2\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["lint-staged-imagemin"],
+        "allowedVersions": "!/^(1\\.3\\.1|1\\.3\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["luno-api"],
+        "allowedVersions": "!/^1\\.2\\.3$/"
+      },
+      {
+        "matchPackageNames": ["manual-billing-system-miniapp-api"],
+        "allowedVersions": "!/^1\\.3\\.1$/"
+      },
+      {
+        "matchPackageNames": ["medusa-plugin-announcement"],
+        "allowedVersions": "!/^0\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["medusa-plugin-logs"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["medusa-plugin-momo"],
+        "allowedVersions": "!/^0\\.0\\.68$/"
+      },
+      {
+        "matchPackageNames": ["medusa-plugin-product-reviews-kvy"],
+        "allowedVersions": "!/^0\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["medusa-plugin-zalopay"],
+        "allowedVersions": "!/^0\\.0\\.40$/"
+      },
+      {
+        "matchPackageNames": ["nanoreset"],
+        "allowedVersions": "!/^(7\\.0\\.1|7\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["next-circular-dependency"],
+        "allowedVersions": "!/^(1\\.0\\.2|1\\.0\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["obj-to-css"],
+        "allowedVersions": "!/^(1\\.0\\.2|1\\.0\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["okta-react-router-6"],
+        "allowedVersions": "!/^5\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["parcel-plugin-asset-copier"],
+        "allowedVersions": "!/^(1\\.1\\.2|1\\.1\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["pico-uid"],
+        "allowedVersions": "!/^(1\\.0\\.3|1\\.0\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["posthog-js"],
+        "allowedVersions": "!/^1\\.297\\.3$/"
+      },
+      {
+        "matchPackageNames": ["posthog-plugin-hello-world"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["ra-data-firebase"],
+        "allowedVersions": "!/^(1\\.0\\.7|1\\.0\\.8)$/"
+      },
+      {
+        "matchPackageNames": ["react-jam-icons"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["react-keycloak-context"],
+        "allowedVersions": "!/^(1\\.0\\.8|1\\.0\\.9)$/"
+      },
+      {
+        "matchPackageNames": ["react-native-datepicker-modal"],
+        "allowedVersions": "!/^(1\\.3\\.1|1\\.3\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["react-native-email"],
+        "allowedVersions": "!/^(2\\.1\\.1|2\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["react-native-fetch"],
+        "allowedVersions": "!/^(2\\.0\\.1|2\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["react-native-get-pixel-dimensions"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["react-native-jam-icons"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["react-native-log-level"],
+        "allowedVersions": "!/^(1\\.2\\.1|1\\.2\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["react-native-phone-call"],
+        "allowedVersions": "!/^(1\\.2\\.1|1\\.2\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["react-native-retriable-fetch"],
+        "allowedVersions": "!/^(2\\.0\\.1|2\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["react-native-use-modal"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["react-native-view-finder"],
+        "allowedVersions": "!/^(1\\.2\\.1|1\\.2\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["react-native-websocket"],
+        "allowedVersions": "!/^(1\\.0\\.3|1\\.0\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["react-native-worklet-functions"],
+        "allowedVersions": "!/^3\\.3\\.3$/"
+      },
+      {
+        "matchPackageNames": ["react-qr-image"],
+        "allowedVersions": "!/^1\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["sa-company-registration-number-regex"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["sa-id-gen"],
+        "allowedVersions": "!/^(1\\.0\\.4|1\\.0\\.5)$/"
+      },
+      {
+        "matchPackageNames": ["scgs-capacitor-subscribe"],
+        "allowedVersions": "!/^1\\.0\\.11$/"
+      },
+      {
+        "matchPackageNames": ["scgsffcreator"],
+        "allowedVersions": "!/^1\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["set-nested-prop"],
+        "allowedVersions": "!/^(2\\.0\\.1|2\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["shell-exec"],
+        "allowedVersions": "!/^(1\\.1\\.3|1\\.1\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["shinhan-limit-scrap"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["sort-by-distance"],
+        "allowedVersions": "!/^2\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["stoor"],
+        "allowedVersions": "!/^2\\.3\\.2$/"
+      },
+      {
+        "matchPackageNames": ["svelte-autocomplete-select"],
+        "allowedVersions": "!/^1\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["tenacious-fetch"],
+        "allowedVersions": "!/^(2\\.3\\.2|2\\.3\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["test23112222-api"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["undefsafe-typed"],
+        "allowedVersions": "!/^(1\\.0\\.3|1\\.0\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["url-encode-decode"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["web-types-htmx"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["web-types-lit"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["wenk"],
+        "allowedVersions": "!/^(1\\.0\\.9|1\\.0\\.10)$/"
+      },
+      {
+        "matchPackageNames": ["@accordproject/concerto-analysis"],
+        "allowedVersions": "!/^3\\.24\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@accordproject/markdown-docx"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["@accordproject/markdown-it-cicero"],
+        "allowedVersions": "!/^0\\.16\\.26$/"
+      },
+      {
+        "matchPackageNames": ["@clausehq/flows-step-sendgridemail"],
+        "allowedVersions": "!/^0\\.1\\.14$/"
+      },
+      {
+        "matchPackageNames": ["@fishingbooker/browser-sync-plugin"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["@fishingbooker/react-swiper"],
+        "allowedVersions": "!/^0\\.1\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@lpdjs/firestore-repo-service"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["count-it-down"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["hopedraw"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["hope-mapboxdraw"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["invo"],
+        "allowedVersions": "!/^0\\.2\\.2$/"
+      },
+      {
+        "matchPackageNames": ["mon-package-react-typescript"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["piclite"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["tcsp-draw-test"],
+        "allowedVersions": "!/^1\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["uplandui"],
+        "allowedVersions": "!/^0\\.5\\.4$/"
+      },
+      {
+        "matchPackageNames": ["best_gpio_controller"],
+        "allowedVersions": "!/^1\\.0\\.10$/"
+      },
+      {
+        "matchPackageNames": ["@commute/market-data-chartjs"],
+        "allowedVersions": "!/^2\\.3\\.1$/"
+      },
+      {
+        "matchPackageNames": ["asciitranslator"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["simplejsonform"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@browserbasehq/stagehand-docs"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@vishadtyagi/full-year-calendar"],
+        "allowedVersions": "!/^0\\.1\\.11$/"
+      },
+      {
+        "matchPackageNames": ["react-data-to-export"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["my-saeed-lib"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@livecms/live-edit"],
+        "allowedVersions": "!/^0\\.0\\.32$/"
+      },
+      {
+        "matchPackageNames": ["insomnia-plugin-random-pick"],
+        "allowedVersions": "!/^1\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@livecms/nuxt-live-edit"],
+        "allowedVersions": "!/^1\\.9\\.2$/"
+      },
+      {
+        "matchPackageNames": ["vue-browserupdate-nuxt"],
+        "allowedVersions": "!/^1\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["solomon-v3-ui-wrapper"],
+        "allowedVersions": "!/^1\\.6\\.1$/"
+      },
+      {
+        "matchPackageNames": ["solomon-api-stories"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["solomon-v3-stories"],
+        "allowedVersions": "!/^1\\.15\\.6$/"
+      },
+      {
+        "matchPackageNames": ["rediff-viewer"],
+        "allowedVersions": "!/^0\\.0\\.7$/"
+      },
+      {
+        "matchPackageNames": ["rediff"],
+        "allowedVersions": "!/^1\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["jaetut-varit-test"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["erosolar-cli"],
+        "allowedVersions": "!/^1\\.1\\.0$/"
+      },
+      {
+        "matchPackageNames": ["@browserbasehq/bb9"],
+        "allowedVersions": "!/^1\\.2\\.21$/"
+      },
+      {
+        "matchPackageNames": ["create-director-app"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@browserbasehq/sdk-functions"],
+        "allowedVersions": "!/^0\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@browserbasehq/director-ai"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@browserbasehq/mcp"],
+        "allowedVersions": "!/^2\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@browserbasehq/mcp-server-browserbase"],
+        "allowedVersions": "!/^2\\.4\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@browserbasehq/stagehand"],
+        "allowedVersions": "!/^3\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["02-echo"],
+        "allowedVersions": "!/^0\\.0\\.7$/"
+      },
+      {
+        "matchPackageNames": ["@accordproject/concerto-linter"],
+        "allowedVersions": "!/^3\\.24\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@accordproject/concerto-linter-default-ruleset"],
+        "allowedVersions": "!/^3\\.24\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@accordproject/concerto-metamodel"],
+        "allowedVersions": "!/^3\\.12\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@accordproject/concerto-types"],
+        "allowedVersions": "!/^3\\.24\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@accordproject/template-engine"],
+        "allowedVersions": "!/^2\\.7\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@afetcan/api"],
+        "allowedVersions": "!/^0\\.0\\.13$/"
+      },
+      {
+        "matchPackageNames": ["@afetcan/storage"],
+        "allowedVersions": "!/^0\\.0\\.27$/"
+      },
+      {
+        "matchPackageNames": ["@alaan/s2s-auth"],
+        "allowedVersions": "!/^2\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@alexadark/amadeus-api"],
+        "allowedVersions": "!/^1\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@alexadark/gatsby-theme-events"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@alexadark/gatsby-theme-wordpress-blog"],
+        "allowedVersions": "!/^2\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@alexadark/reusable-functions"],
+        "allowedVersions": "!/^1\\.5\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@antstackio/eslint-config-antstack"],
+        "allowedVersions": "!/^0\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@antstackio/express-graphql-proxy"],
+        "allowedVersions": "!/^0\\.2\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@antstackio/graphql-body-parser"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@antstackio/json-to-graphql"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@antstackio/shelbysam"],
+        "allowedVersions": "!/^1\\.1\\.7$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/avro-schema-parser"],
+        "allowedVersions": "!/^3\\.0\\.26$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/converter"],
+        "allowedVersions": "!/^1\\.6\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/generator"],
+        "allowedVersions": "!/^2\\.8\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/generator-helpers"],
+        "allowedVersions": "!/^0\\.2\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/generator-react-sdk"],
+        "allowedVersions": "!/^1\\.1\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/modelina"],
+        "allowedVersions": "!/^5\\.10\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/multi-parser"],
+        "allowedVersions": "!/^2\\.2\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/nunjucks-filters"],
+        "allowedVersions": "!/^2\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/openapi-schema-parser"],
+        "allowedVersions": "!/^3\\.0\\.26$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/react-component"],
+        "allowedVersions": "!/^2\\.6\\.7$/"
+      },
+      {
+        "matchPackageNames": ["@asyncapi/studio"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@bdkinc/knex-ibmi"],
+        "allowedVersions": "!/^0\\.5\\.7$/"
+      },
+      {
+        "matchPackageNames": ["@chtijs/eslint-config"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@clausehq/flows-step-httprequest"],
+        "allowedVersions": "!/^0\\.1\\.14$/"
+      },
+      {
+        "matchPackageNames": ["@clausehq/flows-step-jsontoxml"],
+        "allowedVersions": "!/^0\\.1\\.14$/"
+      },
+      {
+        "matchPackageNames": ["@clausehq/flows-step-mqtt"],
+        "allowedVersions": "!/^0\\.1\\.14$/"
+      },
+      {
+        "matchPackageNames": ["@clausehq/flows-step-taskscreateurl"],
+        "allowedVersions": "!/^0\\.1\\.14$/"
+      },
+      {
+        "matchPackageNames": ["@cllbk/ghl"],
+        "allowedVersions": "!/^1\\.3\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@dev-blinq/blinqioclient"],
+        "allowedVersions": "!/^1\\.0\\.21$/"
+      },
+      {
+        "matchPackageNames": ["@dev-blinq/cucumber-js"],
+        "allowedVersions": "!/^1\\.0\\.131$/"
+      },
+      {
+        "matchPackageNames": ["@dev-blinq/cucumber_client"],
+        "allowedVersions": "!/^1\\.0\\.738$/"
+      },
+      {
+        "matchPackageNames": ["@dev-blinq/ui-systems"],
+        "allowedVersions": "!/^1\\.0\\.93$/"
+      },
+      {
+        "matchPackageNames": ["@ensdomains/address-encoder"],
+        "allowedVersions": "!/^1\\.1\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@everreal/react-charts"],
+        "allowedVersions": "!/^2\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@everreal/validate-esmoduleinterop-imports"],
+        "allowedVersions": "!/^1\\.4\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@everreal/web-analytics"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@faq-component/core"],
+        "allowedVersions": "!/^0\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@faq-component/react"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@fishingbooker/browser-sync-plugin"],
+        "allowedVersions": "!/^1\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@fishingbooker/react-loader"],
+        "allowedVersions": "!/^1\\.0\\.7$/"
+      },
+      {
+        "matchPackageNames": ["@fishingbooker/react-pagination"],
+        "allowedVersions": "!/^2\\.0\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@fishingbooker/react-raty"],
+        "allowedVersions": "!/^2\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@hover-design/core"],
+        "allowedVersions": "!/^0\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@hover-design/react"],
+        "allowedVersions": "!/^0\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@huntersofbook/auth-vue"],
+        "allowedVersions": "!/^0\\.4\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@huntersofbook/core"],
+        "allowedVersions": "!/^0\\.5\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@huntersofbook/core-nuxt"],
+        "allowedVersions": "!/^0\\.4\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@huntersofbook/form-naiveui"],
+        "allowedVersions": "!/^0\\.5\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@huntersofbook/i18n"],
+        "allowedVersions": "!/^0\\.8\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@huntersofbook/ui"],
+        "allowedVersions": "!/^0\\.5\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@hyperlook/telemetry-sdk"],
+        "allowedVersions": "!/^1\\.0\\.19$/"
+      },
+      {
+        "matchPackageNames": ["@ifings/metatron3"],
+        "allowedVersions": "!/^0\\.1\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@jayeshsadhwani/telemetry-sdk"],
+        "allowedVersions": "!/^1\\.0\\.14$/"
+      },
+      {
+        "matchPackageNames": ["@lessondesk/electron-group-api-client"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@lessondesk/material-icons"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@lessondesk/react-table-context"],
+        "allowedVersions": "!/^2\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@lui-ui/lui-nuxt"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@lui-ui/lui-tailwindcss"],
+        "allowedVersions": "!/^0\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@lui-ui/lui-vue"],
+        "allowedVersions": "!/^1\\.0\\.13$/"
+      },
+      {
+        "matchPackageNames": ["@markvivanco/app-version-checker"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@mcp-use/cli"],
+        "allowedVersions": "!/^(2\\.2\\.6|2\\.2\\.7)$/"
+      },
+      {
+        "matchPackageNames": ["@ntnx/passport-wso2"],
+        "allowedVersions": "!/^0\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@ntnx/t"],
+        "allowedVersions": "!/^0\\.0\\.101$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/accordion"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/alert-dialog"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/arrow"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/aspect-ratio"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/avatar"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/checkbox"],
+        "allowedVersions": "!/^0\\.6\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/collapsible"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/collection"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/dialog"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/direction"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/dismissable-layer"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/focus-guards"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/focus-scope"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/hover-card"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/label"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/menu"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/motion"],
+        "allowedVersions": "!/^0\\.4\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/motion-nuxt"],
+        "allowedVersions": "!/^0\\.2\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/popover"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/popper"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/portal"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/presence"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/primitive"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/primitives"],
+        "allowedVersions": "!/^0\\.7\\.9$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/primitives-nuxt"],
+        "allowedVersions": "!/^0\\.3\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/progress"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/provide"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/radio-group"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/roving-focus"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/scroll-area"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/separator"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/slider"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/slot"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/switch"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/tabs"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/toast"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/toggle"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/toggle-group"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/toolbar"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/tooltip"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/use-composable"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/utils"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@oku-ui/visually-hidden"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@osmanekrem/bmad"],
+        "allowedVersions": "!/^1\\.0\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@pergel/cli"],
+        "allowedVersions": "!/^0\\.11\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@pergel/module-box"],
+        "allowedVersions": "!/^0\\.6\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@pergel/module-graphql"],
+        "allowedVersions": "!/^0\\.6\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@pergel/module-ui"],
+        "allowedVersions": "!/^0\\.0\\.9$/"
+      },
+      {
+        "matchPackageNames": ["@pergel/nuxt"],
+        "allowedVersions": "!/^0\\.25\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@posthog/automatic-cohorts-plugin"],
+        "allowedVersions": "!/^0\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@postman/csv-parse"],
+        "allowedVersions": "!/^4\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@postman/final-node-keytar"],
+        "allowedVersions": "!/^7\\.9\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@postman/node-keytar"],
+        "allowedVersions": "!/^7\\.9\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@postman/pm-bin-linux-x64"],
+        "allowedVersions": "!/^(1\\.24\\.4|1\\.24\\.5)$/"
+      },
+      {
+        "matchPackageNames": ["@postman/postman-mcp-cli"],
+        "allowedVersions": "!/^1\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@postman/postman-mcp-server"],
+        "allowedVersions": "!/^2\\.4\\.10$/"
+      },
+      {
+        "matchPackageNames": ["@postman/pretty-ms"],
+        "allowedVersions": "!/^6\\.1\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@postman/secret-scanner-wasm"],
+        "allowedVersions": "!/^2\\.1\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@postman/tunnel-agent"],
+        "allowedVersions": "!/^0\\.6\\.7$/"
+      },
+      {
+        "matchPackageNames": ["@postman/wdio-allure-reporter"],
+        "allowedVersions": "!/^0\\.0\\.9$/"
+      },
+      {
+        "matchPackageNames": ["@pradhumngautam/common-app"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@productdevbook/animejs-vue"],
+        "allowedVersions": "!/^0\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@productdevbook/auth"],
+        "allowedVersions": "!/^0\\.2\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@productdevbook/chatwoot"],
+        "allowedVersions": "!/^2\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@productdevbook/motion"],
+        "allowedVersions": "!/^1\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@productdevbook/ts-i18n"],
+        "allowedVersions": "!/^1\\.4\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@pruthvi21/use-debounce"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@relyt/claude-context-core"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@relyt/claude-context-mcp"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@seezo/sdr-mcp-server"],
+        "allowedVersions": "!/^0\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@silgi/better-auth"],
+        "allowedVersions": "!/^0\\.8\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@silgi/drizzle"],
+        "allowedVersions": "!/^0\\.8\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@silgi/ecosystem"],
+        "allowedVersions": "!/^0\\.7\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@silgi/graphql"],
+        "allowedVersions": "!/^0\\.7\\.15$/"
+      },
+      {
+        "matchPackageNames": ["@silgi/module-builder"],
+        "allowedVersions": "!/^0\\.8\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@silgi/openapi"],
+        "allowedVersions": "!/^0\\.7\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@silgi/permission"],
+        "allowedVersions": "!/^0\\.6\\.8$/"
+      },
+      {
+        "matchPackageNames": ["@silgi/ratelimit"],
+        "allowedVersions": "!/^0\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@silgi/scalar"],
+        "allowedVersions": "!/^0\\.6\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@silgi/yoga"],
+        "allowedVersions": "!/^0\\.7\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@sme-ui/aoma-vevasound-metadata-lib"],
+        "allowedVersions": "!/^0\\.1\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@suraj_h/medium-common"],
+        "allowedVersions": "!/^1\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@trackstar/angular-trackstar-link"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@trackstar/react-trackstar-link"],
+        "allowedVersions": "!/^2\\.0\\.21$/"
+      },
+      {
+        "matchPackageNames": ["@trackstar/react-trackstar-link-upgrade"],
+        "allowedVersions": "!/^1\\.1\\.10$/"
+      },
+      {
+        "matchPackageNames": ["@trackstar/test-angular-package"],
+        "allowedVersions": "!/^0\\.0\\.9$/"
+      },
+      {
+        "matchPackageNames": ["@trackstar/test-package"],
+        "allowedVersions": "!/^1\\.1\\.5$/"
+      },
+      {
+        "matchPackageNames": ["@trpc-rate-limiter/cloudflare"],
+        "allowedVersions": "!/^0\\.1\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@trpc-rate-limiter/hono"],
+        "allowedVersions": "!/^0\\.1\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@varsityvibe/utils"],
+        "allowedVersions": "!/^5\\.0\\.6$/"
+      },
+      {
+        "matchPackageNames": ["@viapip/eslint-config"],
+        "allowedVersions": "!/^0\\.2\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/alexa-types"],
+        "allowedVersions": "!/^2\\.15\\.61$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/anthropic"],
+        "allowedVersions": "!/^(0\\.4\\.4|0\\.4\\.5)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/api-sdk"],
+        "allowedVersions": "!/^3\\.28\\.59$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/backend-utils"],
+        "allowedVersions": "!/^(5\\.0\\.1|5\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/base-types"],
+        "allowedVersions": "!/^(2\\.136\\.2|2\\.136\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/body-parser"],
+        "allowedVersions": "!/^(1\\.21\\.2|1\\.21\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/chat-types"],
+        "allowedVersions": "!/^(2\\.14\\.58|2\\.14\\.59)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/circleci-config-sdk-orb-import"],
+        "allowedVersions": "!/^(0\\.2\\.1|0\\.2\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/commitlint-config"],
+        "allowedVersions": "!/^2\\.6\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/common"],
+        "allowedVersions": "!/^(8\\.9\\.1|8\\.9\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/default-prompt-wrappers"],
+        "allowedVersions": "!/^(1\\.7\\.3|1\\.7\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/dependency-cruiser-config"],
+        "allowedVersions": "!/^(1\\.8\\.11|1\\.8\\.12)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/dtos-interact"],
+        "allowedVersions": "!/^(1\\.40\\.1|1\\.40\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/encryption"],
+        "allowedVersions": "!/^(0\\.3\\.2|0\\.3\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/eslint-config"],
+        "allowedVersions": "!/^(7\\.16\\.4|7\\.16\\.5)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/eslint-plugin"],
+        "allowedVersions": "!/^(1\\.6\\.1|1\\.6\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/exception"],
+        "allowedVersions": "!/^(1\\.10\\.1|1\\.10\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/fetch"],
+        "allowedVersions": "!/^(1\\.11\\.1|1\\.11\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/general-types"],
+        "allowedVersions": "!/^(3\\.2\\.22|3\\.2\\.23)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/git-branch-check"],
+        "allowedVersions": "!/^1\\.4\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/google-dfes-types"],
+        "allowedVersions": "!/^(2\\.17\\.12|2\\.17\\.13)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/google-types"],
+        "allowedVersions": "!/^2\\.21\\.13$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/husky-config"],
+        "allowedVersions": "!/^1\\.3\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/logger"],
+        "allowedVersions": "!/^(2\\.4\\.2|2\\.4\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/metrics"],
+        "allowedVersions": "!/^(1\\.5\\.1|1\\.5\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/natural-language-commander"],
+        "allowedVersions": "!/^(0\\.5\\.2|0\\.5\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/nestjs-common"],
+        "allowedVersions": "!/^(2\\.75\\.2|2\\.75\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/nestjs-mongodb"],
+        "allowedVersions": "!/^(1\\.3\\.1|1\\.3\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/nestjs-rate-limit"],
+        "allowedVersions": "!/^(1\\.3\\.2|1\\.3\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/nestjs-redis"],
+        "allowedVersions": "!/^(1\\.3\\.1|1\\.3\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/nestjs-timeout"],
+        "allowedVersions": "!/^1\\.3\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/npm-package-json-lint-config"],
+        "allowedVersions": "!/^1\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/openai"],
+        "allowedVersions": "!/^(3\\.2\\.2|3\\.2\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/pino"],
+        "allowedVersions": "!/^(6\\.11\\.3|6\\.11\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/pino-pretty"],
+        "allowedVersions": "!/^(4\\.4\\.1|4\\.4\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/prettier-config"],
+        "allowedVersions": "!/^1\\.10\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/react-chat"],
+        "allowedVersions": "!/^1\\.65\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/runtime"],
+        "allowedVersions": "!/^(1\\.29\\.1|1\\.29\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/runtime-client-js"],
+        "allowedVersions": "!/^(1\\.17\\.2|1\\.17\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/sdk-runtime"],
+        "allowedVersions": "!/^(1\\.43\\.1|1\\.43\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/secrets-provider"],
+        "allowedVersions": "!/^1\\.9\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/semantic-release-config"],
+        "allowedVersions": "!/^1\\.4\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/serverless-plugin-typescript"],
+        "allowedVersions": "!/^(2\\.1\\.7|2\\.1\\.8)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/slate-serializer"],
+        "allowedVersions": "!/^(1\\.7\\.3|1\\.7\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/stitches-react"],
+        "allowedVersions": "!/^(2\\.3\\.2|2\\.3\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/storybook-config"],
+        "allowedVersions": "!/^(1\\.2\\.2|1\\.2\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/stylelint-config"],
+        "allowedVersions": "!/^1\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/test-common"],
+        "allowedVersions": "!/^(2\\.1\\.1|2\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/tsconfig"],
+        "allowedVersions": "!/^1\\.12\\.1$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/tsconfig-paths"],
+        "allowedVersions": "!/^(1\\.1\\.4|1\\.1\\.5)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/utils-designer"],
+        "allowedVersions": "!/^1\\.74\\.20$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/verror"],
+        "allowedVersions": "!/^1\\.1\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/vite-config"],
+        "allowedVersions": "!/^(2\\.6\\.2|2\\.6\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/vitest-config"],
+        "allowedVersions": "!/^(1\\.10\\.2|1\\.10\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/voice-types"],
+        "allowedVersions": "!/^(2\\.10\\.58|2\\.10\\.59)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/voiceflow-types"],
+        "allowedVersions": "!/^(3\\.32\\.45|3\\.32\\.46)$/"
+      },
+      {
+        "matchPackageNames": ["@voiceflow/widget"],
+        "allowedVersions": "!/^(1\\.7\\.18|1\\.7\\.19)$/"
+      },
+      {
+        "matchPackageNames": ["@vucod/email"],
+        "allowedVersions": "!/^0\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/ai-actions"],
+        "allowedVersions": "!/^(0\\.1\\.19|0\\.1\\.20)$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/babel-preset-zapier"],
+        "allowedVersions": "!/^6\\.4\\.2$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/browserslist-config-zapier"],
+        "allowedVersions": "!/^1\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/eslint-plugin-zapier"],
+        "allowedVersions": "!/^(11\\.0\\.4|11\\.0\\.5)$/"
+      },
+      {
+        "matchPackageNames": ["@zapier/spectral-api-ruleset"],
+        "allowedVersions": "!/^(1\\.9\\.2|1\\.9\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["ai-crowl-shield"],
+        "allowedVersions": "!/^1\\.0\\.7$/"
+      },
+      {
+        "matchPackageNames": ["arc-cli-fc"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["automation_model"],
+        "allowedVersions": "!/^1\\.0\\.491$/"
+      },
+      {
+        "matchPackageNames": ["avvvatars-vue"],
+        "allowedVersions": "!/^1\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["benmostyn-frame-print"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["better-auth-nuxt"],
+        "allowedVersions": "!/^0\\.0\\.10$/"
+      },
+      {
+        "matchPackageNames": ["bidirectional-adapter"],
+        "allowedVersions": "!/^(1\\.2\\.2|1\\.2\\.3|1\\.2\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["blob-to-base64"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["ceviz"],
+        "allowedVersions": "!/^0\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["colors-regex"],
+        "allowedVersions": "!/^2\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["composite-reducer"],
+        "allowedVersions": "!/^(1\\.0\\.2|1\\.0\\.3|1\\.0\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["create-silgi"],
+        "allowedVersions": "!/^0\\.3\\.1$/"
+      },
+      {
+        "matchPackageNames": ["css-dedoupe"],
+        "allowedVersions": "!/^0\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["csv-tool-cli"],
+        "allowedVersions": "!/^1\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["dashboard-empty-state"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["dialogflow-es"],
+        "allowedVersions": "!/^(1\\.1\\.2|1\\.1\\.3|1\\.1\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["docusaurus-plugin-vanilla-extract"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["dont-go"],
+        "allowedVersions": "!/^1\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["easypanel-sdk"],
+        "allowedVersions": "!/^0\\.3\\.2$/"
+      },
+      {
+        "matchPackageNames": ["email-deliverability-tester"],
+        "allowedVersions": "!/^1\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["esbuild-plugin-brotli"],
+        "allowedVersions": "!/^0\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["esbuild-plugin-eta"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["eslint-config-nitpicky"],
+        "allowedVersions": "!/^4\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["expo-router-on-rails"],
+        "allowedVersions": "!/^0\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["express-starter-template"],
+        "allowedVersions": "!/^1\\.0\\.10$/"
+      },
+      {
+        "matchPackageNames": ["expressos"],
+        "allowedVersions": "!/^1\\.1\\.3$/"
+      },
+      {
+        "matchPackageNames": ["fat-fingered"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["firestore-search-engine"],
+        "allowedVersions": "!/^1\\.2\\.3$/"
+      },
+      {
+        "matchPackageNames": ["frontity-starter-theme"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["gatsby-plugin-antd"],
+        "allowedVersions": "!/^2\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["generator-meteor-stock"],
+        "allowedVersions": "!/^0\\.1\\.6$/"
+      },
+      {
+        "matchPackageNames": ["generator-ng-itobuz"],
+        "allowedVersions": "!/^0\\.0\\.15$/"
+      },
+      {
+        "matchPackageNames": ["gulp-inject-envs"],
+        "allowedVersions": "!/^(1\\.2\\.1|1\\.2\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["hover-design-prototype"],
+        "allowedVersions": "!/^0\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["httpness"],
+        "allowedVersions": "!/^(1\\.0\\.2|1\\.0\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["hyper-fullfacing"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["ids-css"],
+        "allowedVersions": "!/^1\\.5\\.1$/"
+      },
+      {
+        "matchPackageNames": ["ids-enterprise-mcp-server"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["ids-enterprise-typings"],
+        "allowedVersions": "!/^20\\.1\\.6$/"
+      },
+      {
+        "matchPackageNames": ["insomnia-plugin-random-pick"],
+        "allowedVersions": "!/^1\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["itobuz-angular-button"],
+        "allowedVersions": "!/^8\\.0\\.11$/"
+      },
+      {
+        "matchPackageNames": ["jsonsurge"],
+        "allowedVersions": "!/^1\\.0\\.7$/"
+      },
+      {
+        "matchPackageNames": ["kwami"],
+        "allowedVersions": "!/^(1\\.5\\.9|1\\.5\\.10)$/"
+      },
+      {
+        "matchPackageNames": ["lang-codes"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["lui-vue-test"],
+        "allowedVersions": "!/^0\\.70\\.9$/"
+      },
+      {
+        "matchPackageNames": ["mod10-check-digit"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["n8n-nodes-vercel-ai-sdk"],
+        "allowedVersions": "!/^0\\.1\\.7$/"
+      },
+      {
+        "matchPackageNames": ["n8n-nodes-viral-app"],
+        "allowedVersions": "!/^0\\.2\\.5$/"
+      },
+      {
+        "matchPackageNames": ["next-simple-google-analytics"],
+        "allowedVersions": "!/^(1\\.1\\.1|1\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["next-styled-nprogress"],
+        "allowedVersions": "!/^(1\\.0\\.4|1\\.0\\.5)$/"
+      },
+      {
+        "matchPackageNames": ["ngx-useful-swiper-prosenjit"],
+        "allowedVersions": "!/^9\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["ngx-wooapi"],
+        "allowedVersions": "!/^12\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["nitro-graphql"],
+        "allowedVersions": "!/^1\\.5\\.12$/"
+      },
+      {
+        "matchPackageNames": ["nitro-kutu"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["nitrodeploy"],
+        "allowedVersions": "!/^1\\.0\\.8$/"
+      },
+      {
+        "matchPackageNames": ["nitroping"],
+        "allowedVersions": "!/^0\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["normal-store"],
+        "allowedVersions": "!/^(1\\.3\\.1|1\\.3\\.2|1\\.3\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["nuxt-keycloak"],
+        "allowedVersions": "!/^0\\.2\\.2$/"
+      },
+      {
+        "matchPackageNames": ["orchestrix"],
+        "allowedVersions": "!/^12\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["pdf-annotation"],
+        "allowedVersions": "!/^0\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["pergel"],
+        "allowedVersions": "!/^0\\.13\\.2$/"
+      },
+      {
+        "matchPackageNames": ["pergeltest"],
+        "allowedVersions": "!/^0\\.0\\.25$/"
+      },
+      {
+        "matchPackageNames": ["pkg-readme"],
+        "allowedVersions": "!/^1\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["prime-one-table"],
+        "allowedVersions": "!/^0\\.0\\.19$/"
+      },
+      {
+        "matchPackageNames": ["prompt-eng"],
+        "allowedVersions": "!/^1\\.0\\.50$/"
+      },
+      {
+        "matchPackageNames": ["prompt-eng-server"],
+        "allowedVersions": "!/^1\\.0\\.18$/"
+      },
+      {
+        "matchPackageNames": ["puny-req"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["ra-auth-firebase"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["react-favic"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["react-hook-form-persist"],
+        "allowedVersions": "!/^(3\\.0\\.1|3\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["react-linear-loader"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["react-micromodal.js"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["react-native-google-maps-directions"],
+        "allowedVersions": "!/^2\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["react-native-modest-checkbox"],
+        "allowedVersions": "!/^3\\.3\\.1$/"
+      },
+      {
+        "matchPackageNames": ["react-native-modest-storage"],
+        "allowedVersions": "!/^2\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["react-packery-component"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["react-scrambled-text"],
+        "allowedVersions": "!/^1\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["revenuecat"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["rollup-plugin-httpfile"],
+        "allowedVersions": "!/^0\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["samesame"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["schob"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["selenium-session"],
+        "allowedVersions": "!/^1\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["selenium-session-client"],
+        "allowedVersions": "!/^1\\.0\\.4$/"
+      },
+      {
+        "matchPackageNames": ["shelf-jwt-sessions"],
+        "allowedVersions": "!/^0\\.1\\.2$/"
+      },
+      {
+        "matchPackageNames": ["silgi"],
+        "allowedVersions": "!/^0\\.43\\.30$/"
+      },
+      {
+        "matchPackageNames": ["solomon-v3-stories"],
+        "allowedVersions": "!/^1\\.15\\.6$/"
+      },
+      {
+        "matchPackageNames": ["south-african-id-info"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["stat-fns"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["sufetch"],
+        "allowedVersions": "!/^0\\.4\\.1$/"
+      },
+      {
+        "matchPackageNames": ["super-commit"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["svelte-toasty"],
+        "allowedVersions": "!/^(1\\.1\\.2|1\\.1\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["tanstack-shadcn-table"],
+        "allowedVersions": "!/^1\\.1\\.5$/"
+      },
+      {
+        "matchPackageNames": ["tavily-module"],
+        "allowedVersions": "!/^1\\.0\\.1$/"
+      },
+      {
+        "matchPackageNames": ["tcsp"],
+        "allowedVersions": "!/^2\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["tcsp-test-vd"],
+        "allowedVersions": "!/^2\\.4\\.4$/"
+      },
+      {
+        "matchPackageNames": ["template-lib"],
+        "allowedVersions": "!/^(1\\.1\\.3|1\\.1\\.4)$/"
+      },
+      {
+        "matchPackageNames": ["template-micro-service"],
+        "allowedVersions": "!/^(1\\.0\\.2|1\\.0\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["tiaan"],
+        "allowedVersions": "!/^1\\.0\\.2$/"
+      },
+      {
+        "matchPackageNames": ["tiptap-shadcn-vue"],
+        "allowedVersions": "!/^0\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["toonfetch"],
+        "allowedVersions": "!/^0\\.3\\.2$/"
+      },
+      {
+        "matchPackageNames": ["ts-relay-cursor-paging"],
+        "allowedVersions": "!/^2\\.1\\.1$/"
+      },
+      {
+        "matchPackageNames": ["typeface-antonio-complete"],
+        "allowedVersions": "!/^1\\.0\\.5$/"
+      },
+      {
+        "matchPackageNames": ["typefence"],
+        "allowedVersions": "!/^(1\\.2\\.2|1\\.2\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["unadapter"],
+        "allowedVersions": "!/^0\\.1\\.3$/"
+      },
+      {
+        "matchPackageNames": ["unemail"],
+        "allowedVersions": "!/^0\\.3\\.1$/"
+      },
+      {
+        "matchPackageNames": ["unsearch"],
+        "allowedVersions": "!/^0\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["upload-to-play-store"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["use-unsaved-changes"],
+        "allowedVersions": "!/^1\\.0\\.9$/"
+      },
+      {
+        "matchPackageNames": ["v-plausible"],
+        "allowedVersions": "!/^1\\.2\\.1$/"
+      },
+      {
+        "matchPackageNames": ["valid-south-african-id"],
+        "allowedVersions": "!/^1\\.0\\.3$/"
+      },
+      {
+        "matchPackageNames": ["vf-oss-template"],
+        "allowedVersions": "!/^(1\\.0\\.1|1\\.0\\.2|1\\.0\\.3)$/"
+      },
+      {
+        "matchPackageNames": ["victoria-wallet-constants"],
+        "allowedVersions": "!/^(0\\.1\\.1|0\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["victoria-wallet-core"],
+        "allowedVersions": "!/^(0\\.1\\.1|0\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["victoria-wallet-type"],
+        "allowedVersions": "!/^(0\\.1\\.1|0\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["victoria-wallet-utils"],
+        "allowedVersions": "!/^(0\\.1\\.1|0\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["victoria-wallet-validator"],
+        "allowedVersions": "!/^(0\\.1\\.1|0\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["victoriaxoaquyet-wallet-core"],
+        "allowedVersions": "!/^(0\\.2\\.1|0\\.2\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["wallet-evm"],
+        "allowedVersions": "!/^(0\\.3\\.1|0\\.3\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["wallet-type"],
+        "allowedVersions": "!/^(0\\.1\\.1|0\\.1\\.2)$/"
+      },
+      {
+        "matchPackageNames": ["web-scraper-mcp"],
+        "allowedVersions": "!/^1\\.1\\.4$/"
+      },
+      {
+        "matchPackageNames": ["wellness-expert-ng-gallery"],
+        "allowedVersions": "!/^5\\.1\\.1$/"
+      }
+    ]
+}
