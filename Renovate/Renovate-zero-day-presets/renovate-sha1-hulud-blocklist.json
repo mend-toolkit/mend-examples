@@ -42,12 +42,6 @@
     },
     {
       "matchPackageNames": [
-        "@accordproject/markdown-docx"
-      ],
-      "enabled": false
-    },
-    {
-      "matchPackageNames": [
         "@accordproject/markdown-it-cicero"
       ],
       "allowedVersions": "!/^0\\.16\\.26$/"
@@ -434,7 +428,7 @@
       "matchPackageNames": [
         "@asyncapi/server-api"
       ],
-      "allowedVersions": "!/^(0\\.16\\.25|0\\.6\\.24)$/"
+      "allowedVersions": "!/^(0\\.16\\.25|0\\.16\\.24)$/"
     },
     {
       "matchPackageNames": [
