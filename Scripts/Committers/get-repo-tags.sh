@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ******** Mend Script to pull the repoFullName and remoteUrl values from the tags of Mend Projects integrated with the repository integration or Unified CLI ********
+# ******** Mend Script to pull the repoFullName and remoteUrl values from the tags of Mend Projects integrated with the repository integration********
 # 
 # Users should edit this file to add any steps for consuming the information provided by the API requests however needed.
 # 
