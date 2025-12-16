@@ -1,3 +1,5 @@
 # Mend Renovate Enterprise
 
-## Useful guides and examples
+Useful guides and examples
+- Deployment
+- Sample configurations (coming soon)
