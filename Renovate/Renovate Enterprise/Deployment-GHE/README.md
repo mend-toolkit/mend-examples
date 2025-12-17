@@ -1,4 +1,4 @@
-# Mend Renovate Enterprise Deployment Steps for GitHub Enterprise
+# Mend Renovate Enterprise - Deployment Steps for GitHub Enterprise
 
 ## DISCLAIMER
 
