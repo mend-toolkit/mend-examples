@@ -201,7 +201,7 @@ that can be inherited by all onboarded organizations.
 5. **Register the Renovate GitHub application**
 
 - Register a private [GitHub app](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app) according to [these instructions](https://github.com/mend/renovate-ce-ee/blob/main/docs/setup-for-github.md#create-and-configure-the-github-app-bot).
-- For deployments with large numbers of GitHub organizations, the same GitHub App should be installed in each organization to be onboarded to a single Renovate EE cluster.
+- For deployments with multiple GitHub organizations, the same GitHub App should be installed in each organization to be onboarded to a single Renovate EE cluster.
 - If you want to group certain organizations separately (e.g., by function, team, or other criteria), you can register additional GitHub Apps and deploy separate Renovate EE clusters for each group.
 - For the Webhook URL field in the GitHub app, use the ingress load balancer for the Renovate Server endpoint url you will expose from the corresponding Renovate EE cluster that will handle those organizations.
 
