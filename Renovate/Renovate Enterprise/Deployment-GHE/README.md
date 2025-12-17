@@ -1,4 +1,4 @@
-# Mend Renovate Enterprise -- Deployment Steps for GitHub Enterprise
+# Mend Renovate Enterprise Deployment Steps for GitHub Enterprise
 
 ## DISCLAIMER
 
@@ -365,6 +365,7 @@ that can be inherited by all onboarded organizations.
   - If you plan to use shared global presets across multiple organizations, create a `renovate-config` repository in a dedicated GitHub organization.
   - This repository will host enterprise-wide presets that can be referenced by all other organizations.
   - Add any shared global [custom presets](https://docs.renovatebot.com/config-presets/) as `{{preset-name}}.json` files in this repository.
+  - It is not necessary to install the Renovate GitHub App in this organization.
   - **Important**: Ensure your `config.js` includes `hostRules` to allow Workers processing repos in other organizations to access this dedicated org's preset repository (see the "Renovate Configuration Structure" section above for details).
 
 - **Organization-Level Configuration**
@@ -374,6 +375,7 @@ that can be inherited by all onboarded organizations.
     - Any organization-specific pre-defined [custom presets](https://docs.renovatebot.com/config-presets/) as `{{preset-name}}.json` files
   - The `org-inherited-config.json` file should be visible (read-only) to developers to help them understand the base configuration Renovate uses.
   - Organization-level configs and presets can extend shared global presets from the dedicated org (if used) via the `"extends"` clause.
+  - **Important**: The `renovate-config` repository must be added to the list of repositories the Renovate app has access to.
 
 > [!NOTE]
 > You should include any mandatory or optional [shared presets](https://docs.renovatebot.com/config-overview/#shared-presets) files you want to provide for your developer teams. Repository-level configuration files (`renovate.json`) can be added later by individual development teams in their repositories.
