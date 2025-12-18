@@ -23,9 +23,10 @@ For high-availability and horizontal scalability, Renovate Enterprise consists o
 _Renovate Server_ & _Renovate Worker_, along with the following supporting infrastructure:
 
 - PostgreSQL
-- Redis Package Cache
-- S3 Repo Cache
-- S3 Job Logs
+- Redis Package Cache (Optional)
+- S3 Repo Cache (Optional)
+- S3 Job Logs (Optional)
+- Kafka Event Broker (Optional)
 
 In general, an enterprise deployment consists of running 2-3 Renovate Server replicas,
 and as many Renovate Worker replicas as required based on the number of active repos onboarded to Renovate,
