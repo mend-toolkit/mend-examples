@@ -15,7 +15,7 @@ In most cases, linked referenced content will not be duplicated here.
 
 ## Renovate EE Architecture
 
-![Renovate Enterprise Architecture](mend-renovate-ee-v2.png)
+![Renovate Enterprise Architecture](mend-renovate-ee-v3.png)
 
 ## Technical Background
 
