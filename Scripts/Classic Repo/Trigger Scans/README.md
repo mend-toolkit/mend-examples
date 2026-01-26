@@ -1,4 +1,4 @@
-# Combined Mend Repository Scan Script (Python)
+# Mend Repository Manual Scan Script
 
 A Python script that automates triggering Mend scans across multiple repositories by pulling repository information from Mend project tags and creating scan configurations.
 
@@ -20,6 +20,7 @@ A Python script that automates triggering Mend scans across multiple repositorie
 
 ```bash
 pip install requests
+
 ```
 
 ### Git
