@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Combined Mend Script to pull repo tags, deduplicate, and process repositories
+Mend Script to pull repo tags, deduplicate, and process repositories for manually triggering scans
 
 This script:
 1. Pulls all repoFullName and remoteUrl values from the tags of Mend Projects
@@ -10,8 +10,10 @@ This script:
 For more information on the APIs used, please check our REST API documentation page:
 https://docs.mend.io/bundle/mend-api-2-0/page/index.html
 
+
 Prerequisites:
 pip install requests
+
 MEND_USER_KEY - An administrator's userkey
 MEND_EMAIL - The administrator's email
 WS_APIKEY - API Key for organization (optional)
