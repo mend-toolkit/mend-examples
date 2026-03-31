@@ -191,7 +191,26 @@ The host rule provided in the ``config.js`` file will not force Remediate/Renova
 > [!NOTE]  
 Many packages don't follow the "SemVer" versioning scheme, which is the default for the ``docker`` manager. Refer to [https://docs.renovatebot.com/docker/#version-compatibility](https://docs.renovatebot.com/docker/#version-compatibility) for details on changing versioning for specific packages. This can be handled directly in the repository and does not need to be handled at the container level. Refer to [https://docs.renovatebot.com/modules/versioning/](https://docs.renovatebot.com/modules/versioning/) for more information on supported versioning schemes and custom versioning.
 
-9. **Ruby**:
+10. **SPM (Swift Package Manager)**:
+
+   - Swift packages are resolved through an Artifactory remote repository that proxies GitHub.
+   - The scanner uses a ``registries.json`` file (mounted to ``/home/wss-scanner/.swiftpm/configuration/registries.json``) to set Artifactory as the default registry with ``type: "basic"`` authentication.
+   - Credentials for the scanner are provided via a ``.netrc`` file (mounted to ``/home/wss-scanner/.netrc``). Copy ``.netrc.example`` to ``.netrc`` and fill in your credentials.
+   - For the remediate container, set ``SPM_REGISTRY``, ``SPM_REGISTRY_HOST``, ``SPM_USER``, and ``SPM_PASS``, then map ``config.js`` to ``/usr/src/app/config.js``.
+   - Mount the ``swiftpm-config/`` directory to ``/home/wss-scanner/.swiftpm/configuration`` with read-write access (SwiftPM writes cache metadata there).
+
+> [!NOTE]
+> The ``.netrc`` format does not support comments. Do not add ``#`` comment lines to the ``.netrc`` file or credential parsing will break.
+
+11. **Cargo (Rust)**:
+
+   - Cargo dependencies are redirected from crates.io to Artifactory using a ``config.toml`` file (mounted to ``/home/wss-scanner/.cargo/config.toml``).
+   - The ``[source.crates-io] replace-with = "artifactory"`` entry silently redirects all crates.io lookups — no changes are needed to any repository's ``Cargo.toml``.
+   - The sparse index protocol (``sparse+https://...``) is required; enable **Sparse Index** on the Artifactory remote repository (requires Artifactory 7.47+ and Cargo 1.68+).
+   - Scanner authentication uses a ``credentials.toml`` file (mounted to ``/home/wss-scanner/.cargo/credentials.toml``). Copy ``credentials.toml.example`` to ``credentials.toml`` and fill in your token. The token must be in ``Basic <base64(username:password)>`` format — generate with ``echo -n "user:pass" | base64``.
+   - For the remediate container, set ``CARGO_REGISTRY``, ``CARGO_REGISTRY_HOST``, ``CARGO_USER``, and ``CARGO_PASS``, then map ``config.js`` to ``/usr/src/app/config.js``.
+
+12. **Ruby**:
 
    - Does not have any configuration files. Although a ``.gemrc`` file can be used, there is no need with the use of environment variables.
    - Specifying URL/credentials are different for the scanner and remediate. Both will be specified in this section.

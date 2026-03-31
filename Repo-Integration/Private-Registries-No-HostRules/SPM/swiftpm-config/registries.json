@@ -1,0 +1,14 @@
+{
+  "registries": {
+    "[default]": {
+      "url": "https://<artifactory_instance>.jfrog.io/artifactory/api/swift/<swift_registry>/",
+      "supportsAvailability": false
+    }
+  },
+  "authentication": {
+    "<artifactory_instance>.jfrog.io": {
+      "type": "basic"
+    }
+  },
+  "version": 1
+}

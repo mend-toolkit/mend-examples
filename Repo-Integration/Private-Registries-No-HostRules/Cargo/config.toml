@@ -1,0 +1,5 @@
+[source.crates-io]
+replace-with = "artifactory"
+
+[registries.artifactory]
+index = "sparse+https://<artifactory_instance>.jfrog.io/artifactory/api/cargo/<cargo_registry>/index/"

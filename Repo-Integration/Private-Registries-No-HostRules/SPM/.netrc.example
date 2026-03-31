@@ -1,0 +1,3 @@
+machine <artifactory_instance>.jfrog.io
+login <username>
+password <password>
