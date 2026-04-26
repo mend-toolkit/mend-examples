@@ -97,13 +97,3 @@ docker compose up -d
 docker compose ps
 # Expected: remediate-server, wss-ghe-app, wss-scanner-ghe — all Up
 ```
-
----
-
-## References
-
-- [Cargo Source Replacement](https://doc.rust-lang.org/cargo/reference/source-replacement.html)
-- [Cargo Registry Authentication](https://doc.rust-lang.org/cargo/reference/registry-authentication.html)
-- [JFrog Artifactory Cargo Repository](https://jfrog.com/help/r/jfrog-artifactory-documentation/cargo-registry)
-- [JFrog Cargo Sparse Index](https://jfrog.com/help/r/jfrog-artifactory-documentation/index-cargo-repositories-using-sparse-indexing)
-- [Renovate Cargo Manager](https://docs.renovatebot.com/modules/manager/cargo/)
