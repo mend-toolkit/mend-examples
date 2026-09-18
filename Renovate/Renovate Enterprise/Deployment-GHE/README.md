@@ -91,26 +91,41 @@ that can be inherited by all onboarded organizations.
 ### Configuration Hierarchy (lowest to highest priority)
 
 ```
-- Environment Variables (Server & Worker) - Self-hosted configuration options
+- Renovate default values
   └─ config.js - Static configuration requiring secrets or cross-org access
-     └─ Shared Cross-Org Global Presets (Optional)
-        └─ Organization-Level Configuration
-           └─ Organization-Level Presets
-              └─ Repository-Level Configuration (Highest Priority)
+     └─ Environment Variables (Worker) - Self-hosted configuration options
+        └─ Presets extended from org-inherited-config.json
+           └─ Organization-Level Configuration
+              └─ Presets extended from renovate.json
+                 └─ Repository-Level Configuration (Highest Priority)
 ```
+
+> [!NOTE]
+> `config.js` and the Worker environment variables are both Renovate CLI global
+> configuration. `config.js` is read first and the environment variables are merged
+> over it, so an environment variable wins where both set the same option. Options
+> flagged as mergeable combine the two values instead of replacing, with the
+> `config.js` entries ordered first.
+
+> [!NOTE]
+> The Server's `MEND_RNV_*` variables are not part of this hierarchy. They configure
+> Renovate EE itself.
 
 ### Configuration Layers Explained
 
-- **Environment variables (server and worker)**
-  - Used for setting [self-hosted configuration options](https://docs.renovatebot.com/self-hosted-configuration/#self-hosted-configuration-options)
-  - Examples: `RENOVATE_ONBOARDING`, `RENOVATE_REQUIRE_CONFIG`, `RENOVATE_INHERIT_CONFIG`
-
 - **`config.js`** - mapped into the Workers at deploy time
   - Used for configuration items that do not change and/or require secrets
+  - Read before the Worker environment variables, so an environment variable setting
+    the same option takes precedence
   - **Private registry `hostRules`**: Authentication for Artifactory, npm registries, Maven repositories, etc.
   - **Cross-org `hostRules`**: Required when using a dedicated organization for shared presets
     - When presets are hosted in `{{dedicatedOrg}}/renovate-config`, but repos are in `{{otherOrg}}/{{repo}}`
     - The `hostRules` in `config.js` must grant access to the dedicated org's repository
+
+- **Environment variables (Worker)**
+  - Used for setting [self-hosted configuration options](https://docs.renovatebot.com/self-hosted-configuration/#self-hosted-configuration-options)
+  - Examples: `RENOVATE_ONBOARDING`, `RENOVATE_REQUIRE_CONFIG`, `RENOVATE_INHERIT_CONFIG`
+  - Set on the Worker pods
 
 - **Shared Global Presets (Optional - Dedicated Organization)**
   - `{{dedicatedOrg}}/renovate-config/{{preset-name}}.json`
