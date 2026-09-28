@@ -99,7 +99,7 @@ services:
       - "mongodb"
 
   graylog:
-    image: "graylog/graylog:6.1"
+    image: "graylog/graylog:6.3"
     hostname: "graylog-server"
     depends_on:
       mongodb:
